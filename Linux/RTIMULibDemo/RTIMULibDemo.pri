@@ -26,6 +26,8 @@ DEPENDPATH += $$PWD
 
 HEADERS += RTIMULibDemo.h \
         SelectIMUDlg.h \
+        SelectPSDlg.h \
+        SelectHSDlg.h \
         SelectFusionDlg.h \
         IMUThread.h \
         AccelCalDlg.h \
@@ -34,6 +36,8 @@ HEADERS += RTIMULibDemo.h \
 SOURCES += main.cpp \
         RTIMULibDemo.cpp \
         SelectIMUDlg.cpp \
+        SelectPSDlg.cpp \
+        SelectHSDlg.cpp \
         SelectFusionDlg.cpp \
         IMUThread.cpp \
         AccelCalDlg.cpp \

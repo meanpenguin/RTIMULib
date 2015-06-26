@@ -39,7 +39,7 @@
 
 // global constants for 9 DoF fusion and AHRS (Attitude and Heading Reference System)
 # define GyroMeasError M_PI * (40.0f / 180.0f);   // gyroscope measurement error in rads/s (start at 40 deg/s)
-# define GyroMeasDrift M_PI * (0.0f  / 180.0f);   // gyroscope measurement drift in rad/s/s (start at 0.0 deg/s/s)
+# define GyroMeasDrift M_PI * (1.0f  / 180.0f);   // gyroscope measurement drift in rad/s/s (start at 0.0 deg/s/s)
 // There is a trade-off in the beta parameter between accuracy and response speed.
 // In the original Madgwick study, beta of 0.041 (corresponding to GyroMeasError
 // of 2.7 degrees/s) was found to give optimal accuracy.
@@ -123,192 +123,188 @@ void RTFusionAHRS::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
             return;
 
         calculatePose(data.accel, data.compass, settings->m_compassAdjDeclination);
-
     
-    // =================================================
-    //    AHRS
-    //
-    // Previous Q Pose; short name local variables for readability
-    float q1 = m_stateQ.scalar();
-    float q2 = m_stateQ.x();
-    float q3 = m_stateQ.y();
-    float q4 = m_stateQ.z();   
+        // =================================================
+        //    AHRS
+        //
+        // Previous Q Pose; short name local variables for readability
+        float q1 = m_stateQ.scalar();
+        float q2 = m_stateQ.x();
+        float q3 = m_stateQ.y();
+        float q4 = m_stateQ.z();   
 
-    float ax, ay, az, mx, my, mz, gx, gy, gz;           // accelerometer, magnetometer, gyroscope
+        float ax, ay, az, mx, my, mz, gx, gy, gz;           // accelerometer, magnetometer, gyroscope
 
-    float gerrx, gerry, gerrz; // gyro bias error
+        float gerrx, gerry, gerrz; // gyro bias error
 
-    float norm;
-    float hx, hy, _2bx, _2bz;
-    float s1, s2, s3, s4;
-    float qDot1, qDot2, qDot3, qDot4;
-   
-    float _2q1mx,_2q1my, _2q1mz,_2q2mx;
-    float _4bx, _4bz;
-    float _2q1, _2q2, _2q3, _2q4;
-    float q1q1, q1q2, q1q3, q1q4, q2q2, q2q3, q2q4, q3q4, q3q3, q4q4;  
-    float _4q1, _4q2, _4q3, _8q2, _8q3;
-    float _2q3q4, _2q1q3;
+        float norm;
+        float hx, hy, _2bx, _2bz;
+        float s1, s2, s3, s4;
+        float qDot1, qDot2, qDot3, qDot4;
 
-    if (m_enableCompass) {
-      mx = m_compass.x();
-      my = m_compass.y();
-      mz = m_compass.z();
-    } else {
-      mx = 0.0f;
-      my = 0.0f;
-      mz = 0.0f; }   
+        float _2q1mx,_2q1my, _2q1mz,_2q2mx;
+        float _4bx, _4bz;
+        float _2q1, _2q2, _2q3, _2q4;
+        float q1q1, q1q2, q1q3, q1q4, q2q2, q2q3, q2q4, q3q4, q3q3, q4q4;  
+        float _4q1, _4q2, _4q3, _8q2, _8q3;
+        float _2q3q4, _2q1q3;
 
-    if (m_enableAccel) {
-      ax = m_accel.x();
-      ay = m_accel.y();
-      az = m_accel.z();
-    } else {
-      ax = 0.0f;
-      ay = 0.0f;
-      az = 0.0f; }   
+        if (m_enableCompass) {
+          mx = m_compass.x();
+          my = m_compass.y();
+          mz = m_compass.z();
+        } else {
+          mx = 0.0f;
+          my = 0.0f;
+          mz = 0.0f; }   
 
-   if (m_enableGyro) {
-      gx=m_gyro.x();
-      gy=m_gyro.y();
-      gz=m_gyro.z();
-    } else { return; }   // We need to have valid gyroscope data
+        if (m_enableAccel) {
+          ax = m_accel.x();
+          ay = m_accel.y();
+          az = m_accel.z();
+        } else {
+          ax = 0.0f;
+          ay = 0.0f;
+          az = 0.0f; }   
 
-    ////////////////////////////////////////////////////////////////////////////
-    // Regular Algorithm
+       if (m_enableGyro) {
+          gx=m_gyro.x();
+          gy=m_gyro.y();
+          gz=m_gyro.z();
+        } else { return; }   // We need to have valid gyroscope data
 
-    // Rate of change of quaternion from gyroscope
-    qDot1 = 0.5f * (-q2 * gx - q3 * gy - q4 * gz); // s
-    qDot2 = 0.5f * ( q1 * gx + q3 * gz - q4 * gy); // x
-    qDot3 = 0.5f * ( q1 * gy - q2 * gz + q4 * gx); // y
-    qDot4 = 0.5f * ( q1 * gz + q2 * gy - q3 * gx); // z
-    
-    if (!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
-        // Use this algorithm if accelerometer is valid 
-	// If accelerometer is not valid, update pose based on previous qDot
+        ////////////////////////////////////////////////////////////////////////////
+        // Regular Algorithm
 
-        // Normalise accelerometer measurement
-        norm = sqrt(ax * ax + ay * ay + az * az);
-        if (norm == 0.0) return; // handle NaN
-        ax /= norm;
-        ay /= norm;
-        az /= norm;  
+        // Rate of change of quaternion from gyroscope
+        qDot1 = 0.5f * (-q2 * gx - q3 * gy - q4 * gz); // s
+        qDot2 = 0.5f * ( q1 * gx + q3 * gz - q4 * gy); // x
+        qDot3 = 0.5f * ( q1 * gy - q2 * gz + q4 * gx); // y
+        qDot4 = 0.5f * ( q1 * gz + q2 * gy - q3 * gx); // z
 
-	// Auxiliary variables to avoid repeated arithmetic
-         _2q1 = 2.0f * q1;
-         _2q2 = 2.0f * q2;
-         _2q3 = 2.0f * q3;
-         _2q4 = 2.0f * q4;
-         q1q1 = q1 * q1;
-         q2q2 = q2 * q2;
-         q3q3 = q3 * q3;
-         q4q4 = q4 * q4;  
-         
-        if(((mx == 0.0f) && (my == 0.0f) && (mz == 0.0f))) {
-            // If magnetometer is invalid
+        if (!((ax == 0.0f) && (ay == 0.0f) && (az == 0.0f))) {
+            // Use this algorithm if accelerometer is valid 
+            // If accelerometer is not valid, update pose based on previous qDot
 
-            // Auxiliary variables to avoid repeated arithmetic
-            _4q1 = 4.0f * q1;
-            _4q2 = 4.0f * q2;
-            _4q3 = 4.0f * q3;
-            _8q2 = 8.0f * q2;
-            _8q3 = 8.0f * q3;
-
-            // Gradient decent algorithm corrective step
-            s1 = _4q1 * q3q3 + _2q3 * ax + _4q1 * q2q2 - _2q2 * ay;
-            s2 = _4q2 * q4q4 - _2q4 * ax + 4.0f * q1q1 * q2 - _2q1 * ay - _4q2 + _8q2 * q2q2 + _8q2 * q3q3 + _4q2 * az;
-            s3 = 4.0f * q1q1 * q3 + _2q1 * ax + _4q3 * q4q4 - _2q4 * ay - _4q3 + _8q3 * q2q2 + _8q3 * q3q3 + _4q3 * az;
-            s4 = 4.0f * q2q2 * q4 - _2q2 * ax + 4.0f * q3q3 * q4 - _2q3 * ay;
-
-         } else { 
-            // Valid magnetometer available use this code
-
-            // Normalise magnetometer measurement
-            norm = sqrt(mx * mx + my * my + mz * mz);
+            // Normalise accelerometer measurement
+            norm = sqrt(ax * ax + ay * ay + az * az);
             if (norm == 0.0) return; // handle NaN
-            mx /= norm;
-            my /= norm;
-            mz /= norm;
+            ax /= norm;
+            ay /= norm;
+            az /= norm;  
 
             // Auxiliary variables to avoid repeated arithmetic
-            q1q2 = q1 * q2;
-            q1q3 = q1 * q3;
-            q1q4 = q1 * q4;
-            q2q3 = q2 * q3;
-            q2q4 = q2 * q4;
-	    q3q4 = q3 * q4;
-            _2q1q3 = 2.0f * q1q3;
-            _2q3q4 = 2.0f * q3q4;
-            _2q1mx = 2.0f * q1 * mx;
-            _2q1my = 2.0f * q1 * my;
-            _2q1mz = 2.0f * q1 * mz;
-            _2q2mx = 2.0f * q2 * mx;
-          
-            // Reference direction of Earth's magnetic field
-             hx = mx * q1q1 - _2q1my * q4 + _2q1mz * q3 + mx * q2q2 + _2q2 * my * q3 + _2q2 * mz * q4 - mx * q3q3 - mx * q4q4;
-             hy = _2q1mx * q4 + my * q1q1 - _2q1mz * q2 + _2q2mx * q3 - my * q2q2 + my * q3q3 + _2q3 * mz * q4 - my * q4q4;
-            _2bx = sqrt(hx * hx + hy * hy);
-            _2bz = -_2q1mx * q3 + _2q1my * q2 + mz * q1q1 + _2q2mx * q4 - mz * q2q2 + _2q3 * my * q4 - mz * q3q3 + mz * q4q4;
-            _4bx = 2.0f * _2bx;
-            _4bz = 2.0f * _2bz;  
-           
-            // Gradient decent algorithm corrective step
-            s1 = -_2q3 * (2.0f * q2q4 - _2q1q3 - ax) + _2q2 * (2.0f * q1q2 + _2q3q4 - ay) - _2bz * q3 * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (-_2bx * q4 + _2bz * q2) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + _2bx * q3 * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
-            s2 =  _2q4 * (2.0f * q2q4 - _2q1q3 - ax) + _2q1 * (2.0f * q1q2 + _2q3q4 - ay) - 4.0f * q2 * (1.0f - 2.0f * q2q2 - 2.0f * q3q3 - az) + _2bz * q4 * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (_2bx * q3 + _2bz * q1) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + (_2bx * q4 - _4bz * q2) * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
-            s3 = -_2q1 * (2.0f * q2q4 - _2q1q3 - ax) + _2q4 * (2.0f * q1q2 + _2q3q4 - ay) - 4.0f * q3 * (1.0f - 2.0f * q2q2 - 2.0f * q3q3 - az) + (-_4bx * q3 - _2bz * q1) * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (_2bx * q2 + _2bz * q4) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + (_2bx * q1 - _4bz * q3) * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
-            s4 =  _2q2 * (2.0f * q2q4 - _2q1q3 - ax) + _2q3 * (2.0f * q1q2 + _2q3q4 - ay) + (-_4bx * q4 + _2bz * q2) * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (-_2bx * q1 + _2bz * q3) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + _2bx * q2 * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
-        
-         } // END valid magnetometer
+             _2q1 = 2.0f * q1;
+             _2q2 = 2.0f * q2;
+             _2q3 = 2.0f * q3;
+             _2q4 = 2.0f * q4;
+             q1q1 = q1 * q1;
+             q2q2 = q2 * q2;
+             q3q3 = q3 * q3;
+             q4q4 = q4 * q4;  
 
-        norm = sqrt(s1 * s1 + s2 * s2 + s3 * s3 + s4 * s4);    // normalise step magnitude
+            if(((mx == 0.0f) && (my == 0.0f) && (mz == 0.0f))) {
+                // If magnetometer is invalid
+
+                // Auxiliary variables to avoid repeated arithmetic
+                _4q1 = 4.0f * q1;
+                _4q2 = 4.0f * q2;
+                _4q3 = 4.0f * q3;
+                _8q2 = 8.0f * q2;
+                _8q3 = 8.0f * q3;
+
+                // Gradient decent algorithm corrective step
+                s1 = _4q1 * q3q3 + _2q3 * ax + _4q1 * q2q2 - _2q2 * ay;
+                s2 = _4q2 * q4q4 - _2q4 * ax + 4.0f * q1q1 * q2 - _2q1 * ay - _4q2 + _8q2 * q2q2 + _8q2 * q3q3 + _4q2 * az;
+                s3 = 4.0f * q1q1 * q3 + _2q1 * ax + _4q3 * q4q4 - _2q4 * ay - _4q3 + _8q3 * q2q2 + _8q3 * q3q3 + _4q3 * az;
+                s4 = 4.0f * q2q2 * q4 - _2q2 * ax + 4.0f * q3q3 * q4 - _2q3 * ay;
+
+             } else { 
+                // Valid magnetometer available use this code
+
+                // Normalise magnetometer measurement
+                norm = sqrt(mx * mx + my * my + mz * mz);
+                if (norm == 0.0) return; // handle NaN
+                mx /= norm;
+                my /= norm;
+                mz /= norm;
+
+                // Auxiliary variables to avoid repeated arithmetic
+                q1q2 = q1 * q2;
+                q1q3 = q1 * q3;
+                q1q4 = q1 * q4;
+                q2q3 = q2 * q3;
+                q2q4 = q2 * q4;
+                q3q4 = q3 * q4;
+                _2q1q3 = 2.0f * q1q3;
+                _2q3q4 = 2.0f * q3q4;
+                _2q1mx = 2.0f * q1 * mx;
+                _2q1my = 2.0f * q1 * my;
+                _2q1mz = 2.0f * q1 * mz;
+                _2q2mx = 2.0f * q2 * mx;
+
+                // Reference direction of Earth's magnetic field
+                 hx = mx * q1q1 - _2q1my * q4 + _2q1mz * q3 + mx * q2q2 + _2q2 * my * q3 + _2q2 * mz * q4 - mx * q3q3 - mx * q4q4;
+                 hy = _2q1mx * q4 + my * q1q1 - _2q1mz * q2 + _2q2mx * q3 - my * q2q2 + my * q3q3 + _2q3 * mz * q4 - my * q4q4;
+                _2bx = sqrt(hx * hx + hy * hy);
+                _2bz = -_2q1mx * q3 + _2q1my * q2 + mz * q1q1 + _2q2mx * q4 - mz * q2q2 + _2q3 * my * q4 - mz * q3q3 + mz * q4q4;
+                _4bx = 2.0f * _2bx;
+                _4bz = 2.0f * _2bz;  
+
+                // Gradient decent algorithm corrective step
+                s1 = -_2q3 * (2.0f * q2q4 - _2q1q3 - ax) + _2q2 * (2.0f * q1q2 + _2q3q4 - ay) - _2bz * q3 * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (-_2bx * q4 + _2bz * q2) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + _2bx * q3 * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
+                s2 =  _2q4 * (2.0f * q2q4 - _2q1q3 - ax) + _2q1 * (2.0f * q1q2 + _2q3q4 - ay) - 4.0f * q2 * (1.0f - 2.0f * q2q2 - 2.0f * q3q3 - az) + _2bz * q4 * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (_2bx * q3 + _2bz * q1) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + (_2bx * q4 - _4bz * q2) * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
+                s3 = -_2q1 * (2.0f * q2q4 - _2q1q3 - ax) + _2q4 * (2.0f * q1q2 + _2q3q4 - ay) - 4.0f * q3 * (1.0f - 2.0f * q2q2 - 2.0f * q3q3 - az) + (-_4bx * q3 - _2bz * q1) * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (_2bx * q2 + _2bz * q4) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + (_2bx * q1 - _4bz * q3) * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
+                s4 =  _2q2 * (2.0f * q2q4 - _2q1q3 - ax) + _2q3 * (2.0f * q1q2 + _2q3q4 - ay) + (-_4bx * q4 + _2bz * q2) * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (-_2bx * q1 + _2bz * q3) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + _2bx * q2 * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
+
+             } // END valid magnetometer
+
+            norm = sqrt(s1 * s1 + s2 * s2 + s3 * s3 + s4 * s4);    // normalise step magnitude
+            if (norm == 0.0) return; // handle NaN
+            s1 /= norm;
+            s2 /= norm;
+            s3 /= norm;
+            s4 /= norm; 
+
+            // Compute estimated gyroscope biases
+            gerrx = _2q1 * s2 - _2q2 * s1 - _2q3 * s4 + _2q4 * s3;
+            gerry = _2q1 * s3 + _2q2 * s4 - _2q3 * s1 - _2q4 * s2;
+            gerrz = _2q1 * s4 - _2q2 * s3 + _2q3 * s2 - _2q4 * s1;
+
+            // Compute and remove gyroscope biases
+            m_gbiasx += gerrx * m_timeDelta * m_zeta;
+            m_gbiasy += gerry * m_timeDelta * m_zeta;
+            m_gbiasz += gerrz * m_timeDelta * m_zeta;
+
+            gx -= m_gbiasx;
+            gy -= m_gbiasy;
+            gz -= m_gbiasz;
+
+             // Apply feedback step
+            qDot1 -= m_beta * s1;
+            qDot2 -= m_beta * s2;
+            qDot3 -= m_beta * s3;
+            qDot4 -= m_beta * s4;
+
+        } // END if valid accelerometer
+
+        // Integrate to yield quaternion
+        q1 += qDot1 * m_timeDelta;
+        q2 += qDot2 * m_timeDelta;
+        q3 += qDot3 * m_timeDelta;
+        q4 += qDot4 * m_timeDelta;
+
+        norm = sqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);    // normalise quaternion
         if (norm == 0.0) return; // handle NaN
-        s1 /= norm;
-        s2 /= norm;
-        s3 /= norm;
-        s4 /= norm; 
+        q1 /= norm;
+        q2 /= norm;
+        q3 /= norm;
+        q4 /= norm;
 
-        // Compute estimated gyroscope biases
-        gerrx = _2q1 * s2 - _2q2 * s1 - _2q3 * s4 + _2q4 * s3;
-        gerry = _2q1 * s3 + _2q2 * s4 - _2q3 * s1 - _2q4 * s2;
-        gerrz = _2q1 * s4 - _2q2 * s3 + _2q3 * s2 - _2q4 * s1;
-
-        // Compute and remove gyroscope biases
-        m_gbiasx += gerrx * m_timeDelta * m_zeta;
-        m_gbiasy += gerry * m_timeDelta * m_zeta;
-        m_gbiasz += gerrz * m_timeDelta * m_zeta;
-
-        m_AHRSgyroBias.setX(m_gbiasx);
-        m_AHRSgyroBias.setY(m_gbiasy);
-        m_AHRSgyroBias.setZ(m_gbiasz);
-        // gx -= m_gbiasx;
-        // gy -= m_gbiasy;
-        // gz -= m_gbiasz;
-
-         // Apply feedback step
-        qDot1 -= m_beta * s1;
-        qDot2 -= m_beta * s2;
-        qDot3 -= m_beta * s3;
-        qDot4 -= m_beta * s4;
-
-    } // END if valid accelerometer
-      
-    // Integrate to yield quaternion
-    q1 += qDot1 * m_timeDelta;
-    q2 += qDot2 * m_timeDelta;
-    q3 += qDot3 * m_timeDelta;
-    q4 += qDot4 * m_timeDelta;
-      
-    norm = sqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);    // normalise quaternion
-    if (norm == 0.0) return; // handle NaN
-    q1 /= norm;
-    q2 /= norm;
-    q3 /= norm;
-    q4 /= norm;
-        
-    m_stateQ.setScalar(q1);
-    m_stateQ.setX(q2);
-    m_stateQ.setX(q3);
-    m_stateQ.setX(q4);
+        m_stateQ.setScalar(q1);
+        m_stateQ.setX(q2);
+        m_stateQ.setY(q3);
+        m_stateQ.setZ(q4);
     } // end not first time
 
     // =================================================
@@ -328,7 +324,7 @@ void RTFusionAHRS::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
             HAL_INFO(RTMath::displayRadians("Measured quat", m_measuredPose));
             HAL_INFO(RTMath::display("AHRS quat", m_stateQ));
             HAL_INFO(RTMath::display("Error quat", m_stateQError));
-            HAL_INFO(RTMath::displayRadians("AHRS Gyro Bias", m_AHRSgyroBias));
+            HAL_INFO3("AHRS Gyro Bias: %f, %f, % f\n", m_gbiasx, m_gbiasy, m_gbiasz);
          }
 
     data.fusionPoseValid = true;

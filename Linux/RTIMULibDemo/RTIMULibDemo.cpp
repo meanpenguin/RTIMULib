@@ -51,6 +51,8 @@ RTIMULibDemo::RTIMULibDemo()
     connect(ui.actionCalibrateAccelerometers, SIGNAL(triggered()), this, SLOT(onCalibrateAccelerometers()));
     connect(ui.actionCalibrateMagnetometers, SIGNAL(triggered()), this, SLOT(onCalibrateMagnetometers()));
     connect(ui.actionSelectIMU, SIGNAL(triggered()), this, SLOT(onSelectIMU()));
+    connect(ui.actionSelectPS, SIGNAL(triggered()), this, SLOT(onSelectPS()));
+    connect(ui.actionSelectHS, SIGNAL(triggered()), this, SLOT(onSelectHS()));
     connect(m_enableGyro, SIGNAL(stateChanged(int)), this, SLOT(onEnableGyro(int)));
     connect(m_enableAccel, SIGNAL(stateChanged(int)), this, SLOT(onEnableAccel(int)));
     connect(m_enableCompass, SIGNAL(stateChanged(int)), this, SLOT(onEnableCompass(int)));

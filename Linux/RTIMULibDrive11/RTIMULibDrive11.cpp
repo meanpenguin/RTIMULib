@@ -57,7 +57,7 @@ int main()
     imu->setGyroEnable(true);
     imu->setAccelEnable(true);
     imu->setCompassEnable(true);
-    imu->setDebugEnable(false);
+    imu->setDebugEnable(false); // turn on if you want to see Fusion information
         
     //  set up pressure sensor
 

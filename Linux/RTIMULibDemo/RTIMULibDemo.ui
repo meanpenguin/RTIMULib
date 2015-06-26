@@ -42,6 +42,8 @@
     </property>
     <addaction name="actionSelectFusionAlgorithm"/>
     <addaction name="actionSelectIMU"/>
+    <addaction name="actionSelectPS"/>
+    <addaction name="actionSelectHS"/>
     <addaction name="actionCalibrateAccelerometers"/>
     <addaction name="actionCalibrateMagnetometers"/>
     <addaction name="actionExit"/>
@@ -61,6 +63,10 @@
    </attribute>
    <addaction name="actionSelectIMU"/>
    <addaction name="separator"/>
+   <addaction name="actionSelectPS"/>
+   <addaction name="separator"/>
+   <addaction name="actionSelectHS"/>
+   <addaction name="separator"/>
    <addaction name="actionSelectFusionAlgorithm"/>
    <addaction name="separator"/>
    <addaction name="actionCalibrateAccelerometers"/>
@@ -73,6 +79,16 @@
   <action name="actionSelectIMU">
    <property name="text">
     <string>Select IMU</string>
+   </property>
+  </action>
+  <action name="actionSelectPS">
+   <property name="text">
+    <string>Select Pressure</string>
+   </property>
+  </action>
+  <action name="actionSelectHS">
+   <property name="text">
+    <string>Select Humidity</string>
    </property>
   </action>
   <action name="actionSelectFusionAlgorithm">

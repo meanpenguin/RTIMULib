@@ -25,32 +25,32 @@
 
 RTIMULIBPATH  = ../../RTIMULib
 
-CC    		= gcc
-CXX   		= g++
+CC    			= gcc
+CXX   			= g++
 DEFINES       	=
-CFLAGS		= -pipe -O2 -Wall -W $(DEFINES)
+CFLAGS			= -pipe -O2 -Wall -W $(DEFINES)
 CXXFLAGS      	= -pipe -O2 -Wall -W $(DEFINES)
 INCPATH       	= -I. -I$(RTIMULIBPATH)
-LINK  		= g++
-LFLAGS		= -Wl,-O1
-LIBS  		= -L/usr/lib/arm-linux-gnueabihf
-COPY  		= cp -f
+LINK  			= g++
+LFLAGS			= -Wl,-O1
+LIBS  			= -L/usr/lib/arm-linux-gnueabihf
+COPY  			= cp -f
 COPY_FILE     	= $(COPY)
 COPY_DIR      	= $(COPY) -r
-STRIP 		= strip
+STRIP 			= strip
 INSTALL_FILE  	= install -m 644 -p
 INSTALL_DIR   	= $(COPY_DIR)
 INSTALL_PROGRAM = install -m 755 -p
 DEL_FILE      	= rm -f
 SYMLINK       	= ln -f -s
 DEL_DIR       	= rmdir
-MOVE  		= mv -f
+MOVE  			= mv -f
 CHK_DIR_EXISTS	= test -d
-MKDIR		= mkdir -p
+MKDIR			= mkdir -p
 
 # Output directory
 
-OBJECTS_DIR	= objects/
+OBJECTS_DIR   = objects/
 
 # Files
 

@@ -11,7 +11,7 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>.</sourceRootElem>
-                <sourceRootElem>../../RTIMULib</sourceRootElem>
+                <sourceRootElem>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

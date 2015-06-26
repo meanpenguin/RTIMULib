@@ -8,8 +8,8 @@
       <in>IMUThread.h</in>
       <in>MagCalDlg.cpp</in>
       <in>MagCalDlg.h</in>
-      <in>RTIMULibDemoGL.cpp</in>
-      <in>RTIMULibDemoGL.h</in>
+      <in>RTIMULibDemo.cpp</in>
+      <in>RTIMULibDemo.h</in>
       <in>SelectFusionDlg.cpp</in>
       <in>SelectFusionDlg.h</in>
       <in>SelectHSDlg.cpp</in>

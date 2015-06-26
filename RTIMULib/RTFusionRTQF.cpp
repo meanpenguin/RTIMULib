@@ -145,6 +145,13 @@ void RTFusionRTQF::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
 
         predict();
         update();
+        
+        if (m_enableCompass || m_enableAccel) {
+            m_stateQError = m_measuredQPose - m_stateQ;
+        } else {
+            m_stateQError = RTQuaternion();
+        }
+
         m_stateQ.toEuler(m_fusionPose);
         m_fusionQPose = m_stateQ;
 

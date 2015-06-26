@@ -14,6 +14,7 @@
       </df>
       <in>RTIMULibDrive11.cpp</in>
     </df>
+    <itemPath>Makefile</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

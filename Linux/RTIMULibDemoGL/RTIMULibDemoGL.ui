@@ -33,7 +33,7 @@
      <x>0</x>
      <y>0</y>
      <width>658</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuActions">
@@ -42,9 +42,10 @@
     </property>
     <addaction name="actionSelectFusionAlgorithm"/>
     <addaction name="actionSelectIMU"/>
+    <addaction name="actionSelectPS"/>
+    <addaction name="actionSelectHS"/>
     <addaction name="actionCalibrateAccelerometers"/>
     <addaction name="actionCalibrateMagnetometers"/>
-    <addaction name="actionSelectPsensor"/>
     <addaction name="actionExit"/>
    </widget>
    <addaction name="menuActions"/>
@@ -62,13 +63,16 @@
    </attribute>
    <addaction name="actionSelectIMU"/>
    <addaction name="separator"/>
+   <addaction name="actionSelectPS"/>
+   <addaction name="separator"/>
+   <addaction name="actionSelectHS"/>
+   <addaction name="separator"/>
    <addaction name="actionSelectFusionAlgorithm"/>
    <addaction name="separator"/>
    <addaction name="actionCalibrateAccelerometers"/>
    <addaction name="separator"/>
    <addaction name="actionCalibrateMagnetometers"/>
    <addaction name="separator"/>
-   <addaction name="actionSelectPsensor"/>
    <addaction name="separator"/>
    <addaction name="actionExit"/>
    <addaction name="separator"/>
@@ -76,6 +80,16 @@
   <action name="actionSelectIMU">
    <property name="text">
     <string>Select IMU</string>
+   </property>
+  </action>
+  <action name="actionSelectPS">
+   <property name="text">
+    <string>Select Pressure</string>
+   </property>
+  </action>
+  <action name="actionSelectHS">
+   <property name="text">
+    <string>Select Humidity</string>
    </property>
   </action>
   <action name="actionSelectFusionAlgorithm">
@@ -91,11 +105,6 @@
   <action name="actionCalibrateAccelerometers">
    <property name="text">
     <string>Calibrate accelerometers</string>
-   </property>
-  </action>
-  <action name="actionSelectPsensor">
-   <property name="text">
-    <string>Select Psensor</string>
    </property>
   </action>
   <action name="actionExit">
