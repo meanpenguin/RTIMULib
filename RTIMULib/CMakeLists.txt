@@ -48,6 +48,7 @@ SET(LIBRTIMU_SRCS
     RTFusionRTQF.cpp
     RTMath.cpp
     RTFusionKalman4.cpp
+    RTFusionAHRS.cpp
     RTIMUAccelCal.cpp
     RTIMUHal.cpp
     RTIMUMagCal.cpp
@@ -68,6 +69,7 @@ SET(LIBRTIMU_SRCS
     IMUDrivers/RTPressureLPS25H.cpp
     IMUDrivers/RTPressureMS5611.cpp
     IMUDrivers/RTPressureMS5637.cpp
+    IMUDrivers/RTPressureMS5803.cpp
     IMUDrivers/RTHumidity.cpp
     IMUDrivers/RTHumidityHTS221.cpp
     IMUDrivers/RTHumidityHTU21D.cpp

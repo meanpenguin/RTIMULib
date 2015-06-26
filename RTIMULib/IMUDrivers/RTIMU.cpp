@@ -25,7 +25,7 @@
 #include "RTIMU.h"
 #include "RTFusionKalman4.h"
 #include "RTFusionRTQF.h"
-
+#include "RTFusionAHRS.h"
 #include "RTIMUNull.h"
 #include "RTIMUMPU9150.h"
 #include "RTIMUMPU9250.h"
@@ -143,7 +143,11 @@ RTIMU::RTIMU(RTIMUSettings *settings)
     case RTFUSION_TYPE_RTQF:
         m_fusion = new RTFusionRTQF();
         break;
-
+        
+    case RTFUSION_TYPE_AHRS:
+        m_fusion = new RTFusionAHRS();
+        break;
+        
     default:
         m_fusion = new RTFusion();
         break;

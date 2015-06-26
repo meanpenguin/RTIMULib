@@ -44,6 +44,7 @@
     <addaction name="actionSelectIMU"/>
     <addaction name="actionCalibrateAccelerometers"/>
     <addaction name="actionCalibrateMagnetometers"/>
+    <addaction name="actionSelectPsensor"/>
     <addaction name="actionExit"/>
    </widget>
    <addaction name="menuActions"/>
@@ -67,6 +68,8 @@
    <addaction name="separator"/>
    <addaction name="actionCalibrateMagnetometers"/>
    <addaction name="separator"/>
+   <addaction name="actionSelectPsensor"/>
+   <addaction name="separator"/>
    <addaction name="actionExit"/>
    <addaction name="separator"/>
   </widget>
@@ -88,6 +91,11 @@
   <action name="actionCalibrateAccelerometers">
    <property name="text">
     <string>Calibrate accelerometers</string>
+   </property>
+  </action>
+  <action name="actionSelectPsensor">
+   <property name="text">
+    <string>Select Psensor</string>
    </property>
   </action>
   <action name="actionExit">

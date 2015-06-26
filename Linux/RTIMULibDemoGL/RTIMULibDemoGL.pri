@@ -2,7 +2,7 @@
 #//
 #//  This file is part of RTIMULib
 #//
-#//  Copyright (c) 2014-2015, richards-tech, LLC
+#//  Copyright (c) 2014, richards-tech
 #//
 #//  Permission is hereby granted, free of charge, to any person obtaining a copy of
 #//  this software and associated documentation files (the "Software"), to deal in
@@ -27,6 +27,7 @@ DEPENDPATH += $$PWD
 HEADERS += RTIMULibDemoGL.h \
         SelectIMUDlg.h \
         SelectFusionDlg.h \
+	addedSelectPsensorDlg.h \
         IMUThread.h \
         AccelCalDlg.h \
         MagCalDlg.h \
@@ -35,6 +36,7 @@ SOURCES += main.cpp \
         RTIMULibDemoGL.cpp \
         SelectIMUDlg.cpp \
         SelectFusionDlg.cpp \
+	addedSelectPsensorDlg.cpp \
         IMUThread.cpp \
         AccelCalDlg.cpp \
         MagCalDlg.cpp \

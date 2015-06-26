@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014-2015, richards-tech, LLC
+//  Copyright (c) 2014, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -141,6 +141,10 @@ void RTIMULibDemoGL::onCalibrateMagnetometers()
     emit newIMU();
 }
 
+void RTIMULibDemoGL::onCalibratePressureSensor()
+{
+    }
+
 void RTIMULibDemoGL::newIMUData(const RTIMU_DATA& data)
 {
     m_imuData = data;
@@ -160,6 +164,12 @@ void RTIMULibDemoGL::onEnableAccel(int state)
 }
 
 void RTIMULibDemoGL::onEnableCompass(int state)
+{
+    if (m_imuThread->getIMU() != NULL)
+        m_imuThread->getIMU()->setCompassEnable(state == Qt::Checked);
+}
+
+void RTIMULibDemoGL::onEnableTemperature(int state)
 {
     if (m_imuThread->getIMU() != NULL)
         m_imuThread->getIMU()->setCompassEnable(state == Qt::Checked);
@@ -215,12 +225,6 @@ void RTIMULibDemoGL::timerEvent(QTimerEvent *event)
         } else {
             m_pressure->setText("0");
             m_height->setText("0");
-        }
-
-        if (m_imuData.humidityValid) {
-            m_humidity->setText(QString::number(m_imuData.humidity, 'f', 2));
-        } else {
-            m_humidity->setText("0");
         }
 
         if (m_imuData.temperatureValid)
@@ -445,16 +449,6 @@ void RTIMULibDemoGL::layoutWindow()
     dataLayout = new QHBoxLayout();
     dataLayout->addSpacing(30);
     dataLayout->addWidget(m_temperature);
-    dataLayout->setAlignment(Qt::AlignLeft);
-    vLayout->addLayout(dataLayout);
-
-    vLayout->addSpacing(10);
-    vLayout->addWidget(new QLabel("Humidity (RH): "));
-
-    m_humidity = getFixedPanel("0");
-    dataLayout = new QHBoxLayout();
-    dataLayout->addSpacing(30);
-    dataLayout->addWidget(m_humidity);
     dataLayout->setAlignment(Qt::AlignLeft);
     vLayout->addLayout(dataLayout);
 

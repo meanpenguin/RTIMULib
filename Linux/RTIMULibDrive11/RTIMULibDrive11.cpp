@@ -57,7 +57,8 @@ int main()
     imu->setGyroEnable(true);
     imu->setAccelEnable(true);
     imu->setCompassEnable(true);
-
+    imu->setDebugEnable(false);
+        
     //  set up pressure sensor
 
     if (pressure != NULL)

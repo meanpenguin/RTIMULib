@@ -31,7 +31,7 @@
 
 #define RTIMUCALDEFS_OCTANT_MIN_SAMPLES    200              // must have at least this in each octant
 
-#define RTIMUCALDEFS_ELLIPSOID_MIN_SPACING  0.1f            // min distnace between ellipsoid samples to be recorded
+#define RTIMUCALDEFS_ELLIPSOID_MIN_SPACING  0.1f            // min distance between ellipsoid samples to be recorded
 
 //  Octant defs
 

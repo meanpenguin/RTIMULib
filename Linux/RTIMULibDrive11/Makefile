@@ -25,32 +25,32 @@
 
 RTIMULIBPATH  = ../../RTIMULib
 
-CC    			= gcc
-CXX   			= g++
+CC    		= gcc
+CXX   		= g++
 DEFINES       	=
-CFLAGS			= -pipe -O2 -Wall -W $(DEFINES)
+CFLAGS		= -pipe -O2 -Wall -W $(DEFINES)
 CXXFLAGS      	= -pipe -O2 -Wall -W $(DEFINES)
 INCPATH       	= -I. -I$(RTIMULIBPATH)
-LINK  			= g++
-LFLAGS			= -Wl,-O1
-LIBS  			= -L/usr/lib/arm-linux-gnueabihf
-COPY  			= cp -f
+LINK  		= g++
+LFLAGS		= -Wl,-O1
+LIBS  		= -L/usr/lib/arm-linux-gnueabihf
+COPY  		= cp -f
 COPY_FILE     	= $(COPY)
 COPY_DIR      	= $(COPY) -r
-STRIP 			= strip
+STRIP 		= strip
 INSTALL_FILE  	= install -m 644 -p
 INSTALL_DIR   	= $(COPY_DIR)
 INSTALL_PROGRAM = install -m 755 -p
 DEL_FILE      	= rm -f
 SYMLINK       	= ln -f -s
 DEL_DIR       	= rmdir
-MOVE  			= mv -f
+MOVE  		= mv -f
 CHK_DIR_EXISTS	= test -d
-MKDIR			= mkdir -p
+MKDIR		= mkdir -p
 
 # Output directory
 
-OBJECTS_DIR   = objects/
+OBJECTS_DIR	= objects/
 
 # Files
 
@@ -61,6 +61,7 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/RTFusion.h \
     $(RTIMULIBPATH)/RTFusionKalman4.h \
     $(RTIMULIBPATH)/RTFusionRTQF.h \
+    $(RTIMULIBPATH)/RTFusionAHRS.h \
     $(RTIMULIBPATH)/RTIMUSettings.h \
     $(RTIMULIBPATH)/RTIMUAccelCal.h \
     $(RTIMULIBPATH)/RTIMUMagCal.h \
@@ -82,6 +83,7 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureLPS25H.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5611.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5637.h \
+    $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5803.h \
     $(RTIMULIBPATH)/IMUDrivers/RTHumidity.h \
     $(RTIMULIBPATH)/IMUDrivers/RTHumidityDefs.h \
     $(RTIMULIBPATH)/IMUDrivers/RTHumidityHTS221.h \
@@ -93,6 +95,7 @@ OBJECTS = objects/RTIMULibDrive11.o \
     objects/RTFusion.o \
     objects/RTFusionKalman4.o \
     objects/RTFusionRTQF.o \
+    objects/RTFusionAHRS.o \
     objects/RTIMUSettings.o \
     objects/RTIMUAccelCal.o \
     objects/RTIMUMagCal.o \
@@ -112,6 +115,7 @@ OBJECTS = objects/RTIMULibDrive11.o \
     objects/RTPressureLPS25H.o \
     objects/RTPressureMS5611.o \
     objects/RTPressureMS5637.o \
+    objects/RTPressureMS5803.o \
     objects/RTHumidity.o \
     objects/RTHumidityHTS221.o \
     objects/RTHumidityHTU21D.o \

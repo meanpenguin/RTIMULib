@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="RTIMULib" displayName="RTIMULib" projectFiles="true">
+      <logicalFolder name="IMUDrivers" displayName="IMUDrivers" projectFiles="true">
+        <itemPath>../../RTIMULib/IMUDrivers/RTHumidity.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTHumidity.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTHumidityDefs.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTHumidityHTS221.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTHumidityHTS221.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTHumidityHTU21D.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTHumidityHTU21D.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMU.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMU.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUBMX055.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUBMX055.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUBNO055.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUBNO055.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUDefs.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUGD20HM303D.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUGD20HM303D.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUGD20HM303DLHC.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUGD20HM303DLHC.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUGD20M303DLHC.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUGD20M303DLHC.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMULSM9DS0.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMULSM9DS0.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMULSM9DS1.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMULSM9DS1.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUMPU9150.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUMPU9150.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUMPU9250.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUMPU9250.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUNull.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTIMUNull.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTPressure.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTPressure.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTPressureBMP180.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTPressureBMP180.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTPressureDefs.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTPressureLPS25H.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTPressureLPS25H.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTPressureMS5611.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTPressureMS5611.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTPressureMS5637.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTPressureMS5637.h</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTPressureMS5803.cpp</itemPath>
+        <itemPath>../../RTIMULib/IMUDrivers/RTPressureMS5803.h</itemPath>
+      </logicalFolder>
+      <itemPath>../../RTIMULib/CMakeLists.txt</itemPath>
+      <itemPath>../../RTIMULib/RTFusion.cpp</itemPath>
+      <itemPath>../../RTIMULib/RTFusion.h</itemPath>
+      <itemPath>../../RTIMULib/RTFusionAHRS.cpp</itemPath>
+      <itemPath>../../RTIMULib/RTFusionAHRS.h</itemPath>
+      <itemPath>../../RTIMULib/RTFusionKalman4.cpp</itemPath>
+      <itemPath>../../RTIMULib/RTFusionKalman4.h</itemPath>
+      <itemPath>../../RTIMULib/RTFusionRTQF.cpp</itemPath>
+      <itemPath>../../RTIMULib/RTFusionRTQF.h</itemPath>
+      <itemPath>../../RTIMULib/RTIMUAccelCal.cpp</itemPath>
+      <itemPath>../../RTIMULib/RTIMUAccelCal.h</itemPath>
+      <itemPath>../../RTIMULib/RTIMUCalDefs.h</itemPath>
+      <itemPath>../../RTIMULib/RTIMUHal.cpp</itemPath>
+      <itemPath>../../RTIMULib/RTIMUHal.h</itemPath>
+      <itemPath>../../RTIMULib/RTIMULIB LICENSE</itemPath>
+      <itemPath>../../RTIMULib/RTIMULib.h</itemPath>
+      <itemPath>../../RTIMULib/RTIMULib.pri</itemPath>
+      <itemPath>../../RTIMULib/RTIMULibDefs.h</itemPath>
+      <itemPath>../../RTIMULib/RTIMUMagCal.cpp</itemPath>
+      <itemPath>../../RTIMULib/RTIMUMagCal.h</itemPath>
+      <itemPath>../../RTIMULib/RTIMUSettings.cpp</itemPath>
+      <itemPath>../../RTIMULib/RTIMUSettings.h</itemPath>
+      <itemPath>../../RTIMULib/RTMath.cpp</itemPath>
+      <itemPath>../../RTIMULib/RTMath.h</itemPath>
+    </logicalFolder>
+    <df root="." name="0">
+      <in>RTIMULibDrive11.cpp</in>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>CMakeLists.txt</itemPath>
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+    <Elem>../../RTIMULib</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <codeAssistance>
+        <includeAdditional>true</includeAdditional>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath>CMakeFiles\CMakeDetermineCompilerABI_CXX.bin</executablePath>
+          <ccTool>
+            <incDir>
+              <pElem></pElem>
+            </incDir>
+          </ccTool>
+        </makeTool>
+      </makefileType>
+      <item path="../../RTIMULib/CMakeLists.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTHumidity.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTHumidity.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTHumidityDefs.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTHumidityHTS221.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTHumidityHTS221.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTHumidityHTU21D.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTHumidityHTU21D.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMU.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMU.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUBMX055.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUBMX055.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUBNO055.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUBNO055.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUDefs.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUGD20HM303D.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUGD20HM303D.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUGD20HM303DLHC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUGD20HM303DLHC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUGD20M303DLHC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUGD20M303DLHC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMULSM9DS0.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMULSM9DS0.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMULSM9DS1.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMULSM9DS1.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUMPU9150.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUMPU9150.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUMPU9250.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUMPU9250.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUNull.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTIMUNull.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTPressure.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTPressure.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTPressureBMP180.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTPressureBMP180.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTPressureDefs.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTPressureLPS25H.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTPressureLPS25H.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTPressureMS5611.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTPressureMS5611.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTPressureMS5637.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTPressureMS5637.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTPressureMS5803.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/IMUDrivers/RTPressureMS5803.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTFusion.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTFusion.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTFusionAHRS.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTFusionAHRS.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTFusionKalman4.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTFusionKalman4.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTFusionRTQF.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTFusionRTQF.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTIMUAccelCal.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTIMUAccelCal.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTIMUCalDefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTIMUHal.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTIMUHal.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTIMULIB LICENSE" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTIMULib.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTIMULib.pri" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTIMULibDefs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTIMUMagCal.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTIMUMagCal.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTIMUSettings.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTIMUSettings.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTMath.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../RTIMULib/RTMath.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="RTIMULibDrive11.cpp" ex="false" tool="1" flavor2="4">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

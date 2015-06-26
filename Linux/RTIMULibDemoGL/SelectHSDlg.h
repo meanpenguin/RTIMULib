@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014-2015, richards-tech, LLC
+//  Copyright (c) 2014, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -21,36 +21,39 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#ifndef ADDEDSELECTHDLG_H
+#define ADDEDSELECTHDLG_H
 
-#ifndef _RTIMULIB_H
-#define	_RTIMULIB_H
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QComboBox>
 
-#include "RTIMULibDefs.h"
+class RTIMUSettings;
 
-#include "RTMath.h"
+class SelectHSDlg : public QDialog
+{
+    Q_OBJECT
 
-#include "RTFusion.h"
-#include "RTFusionKalman4.h"
-#include "RTFusionAHRS.h"
-#include "RTFusionRTQF.h"
+public:
+    SelectHSDlg(RTIMUSettings *settings, QWidget *parent = 0);
+    ~SelectHSDlg();
 
-#include "RTIMUHal.h"
-#include "IMUDrivers/RTIMU.h"
-#include "IMUDrivers/RTIMUNull.h"
-#include "IMUDrivers/RTIMUMPU9150.h"
-#include "IMUDrivers/RTIMUGD20HM303D.h"
-#include "IMUDrivers/RTIMUGD20M303DLHC.h"
-#include "IMUDrivers/RTIMULSM9DS0.h"
+public slots:
+    void onOk();
+    void onCancel();
+    void setSelectAddress(int HType);
 
-#include "IMUDrivers/RTPressure.h"
-#include "IMUDrivers/RTPressureBMP180.h"
-#include "IMUDrivers/RTPressureLPS25H.h"
-#include "IMUDrivers/RTPressureMS5611.h"
+private:
+    void layoutWindow();
+    void setSelectAddress(int HType, int slaveAddress);
 
-#include "IMUDrivers/RTHumidity.h"
-#include "IMUDrivers/RTHumidityHTS221.h"
+    RTIMUSettings *m_settings;
 
-#include "RTIMUSettings.h"
+    QDialogButtonBox *m_buttons;
+    QComboBox *m_selectBus;
+    QComboBox *m_selectH;
+    QComboBox *m_selectAddress;
 
+};
 
-#endif // _RTIMULIB_H
+#endif // ADDEDSELECTHDLG_H

@@ -34,7 +34,8 @@
 const char *RTFusion::m_fusionNameMap[] = {
     "NULL",
     "Kalman STATE4",
-    "RTQF"};
+    "RTQF",
+    "AHRS"};
 
 RTFusion::RTFusion()
 {
@@ -113,7 +114,7 @@ void RTFusion::calculatePose(const RTVector3& accel, const RTVector3& mag, float
 RTVector3 RTFusion::getAccelResiduals()
 {
     RTQuaternion rotatedGravity;
-    RTQuaternion fusedConjugate;
+    RTQuaternion fusionQPoseConjugate;
     RTQuaternion qTemp;
     RTVector3 residuals;
 
@@ -121,15 +122,38 @@ RTVector3 RTFusion::getAccelResiduals()
 
     // create the conjugate of the pose
 
-    fusedConjugate = m_fusionQPose.conjugate();
+    fusionQPoseConjugate = m_fusionQPose.conjugate();
 
     // now do the rotation - takes two steps with qTemp as the intermediate variable
 
-    qTemp = m_gravity * m_fusionQPose;
-    rotatedGravity = fusedConjugate * qTemp;
+    // rotatedGravity = fusionQPoseConjugate * m_gravity * m_fusionQPose;;
 
-    // now adjust the measured accel and change the signs to make sense
+    // qTemp = m_gravity * m_fusionQPose; 
+    // Above code is replace with this:
+    qTemp.setScalar(-m_fusionQPose.z());
+    qTemp.setX(-m_fusionQPose.y());
+    qTemp.setY(m_fusionQPose.x());
+    qTemp.setZ(m_fusionQPose.scalar());	
 
+    rotatedGravity = fusionQPoseConjugate * qTemp;
+	
+    /** THIS IS NOT TESTED YET
+    // because gravity is zero except z is 1, we can simplify
+    // Code of quaternion multiplication ( m_data*qb ) is
+    //RTFLOAT w = (m_data[0]); 0 
+    //RTFLOAT x = (m_data[1]); 0
+    //RTFLOAT y = (m_data[2]); 0
+    //RTFLOAT z = (m_data[3]); 1
+    //m_data[0] = w * qb.scalar() - x*qb.x() - y*qb.y()     - z*qb.z();  
+    //m_data[1] = w * qb.x() + x*qb.scalar() + y*qb.z()     - z*qb.y();
+    //m_data[2] = w * qb.y() - x*qb.z()      + y*qb.scalar() + z*qb.x();
+    //m_data[3] = w * qb.z() + x*qb.y()      - y*qb.x()      + z*qb.scalar();
+    qTemp.setScalar(-m_fusionQPose.z());
+    qTemp.setX(-m_fusionQPose.y());
+    qTemp.setY(m_fusionQPose.x());
+    qTemp.setZ(m_fusionQPose.scalar());	
+    **/
+    
     residuals.setX(-(m_accel.x() - rotatedGravity.x()));
     residuals.setY(-(m_accel.y() - rotatedGravity.y()));
     residuals.setZ(-(m_accel.z() - rotatedGravity.z()));

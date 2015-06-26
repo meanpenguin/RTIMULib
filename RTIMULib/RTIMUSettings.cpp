@@ -37,6 +37,7 @@
 
 #include "IMUDrivers/RTPressureBMP180.h"
 #include "IMUDrivers/RTPressureLPS25H.h"
+#include "IMUDrivers/RTPressureMS5803.h"
 
 #include "IMUDrivers/RTHumidityHTS221.h"
 #include "IMUDrivers/RTHumidityHTU21D.h"
@@ -942,6 +943,7 @@ bool RTIMUSettings::saveSettings()
     setComment("  0 - Null. Use if only sensor data required without fusion");
     setComment("  1 - Kalman STATE4");
     setComment("  2 - RTQF");
+    setComment("  3 - AHRS");
     setValue(RTIMULIB_FUSION_TYPE, m_fusionType);
 
     setBlank();
@@ -987,6 +989,7 @@ bool RTIMUSettings::saveSettings()
     setComment("  3 = LPS25H");
     setComment("  4 = MS5611");
     setComment("  5 = MS5637");
+    setComment("  6 = MS5803");
 
     setValue(RTIMULIB_PRESSURE_TYPE, m_pressureType);
 

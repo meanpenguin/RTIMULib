@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="GeneratedFiles">
+        <df name="moc">
+          <in>moc_AccelCalDlg.cpp</in>
+          <in>moc_IMUThread.cpp</in>
+          <in>moc_IMUView.cpp</in>
+          <in>moc_MagCalDlg.cpp</in>
+          <in>moc_RTIMULibDemoGL.cpp</in>
+          <in>moc_SelectFusionDlg.cpp</in>
+          <in>moc_SelectIMUDlg.cpp</in>
+          <in>moc_VRIMUWidget.cpp</in>
+          <in>moc_VRWidget.cpp</in>
+        </df>
+        <in>qrc_VRWidgetLib.cpp</in>
+        <in>ui_RTIMULibDemoGL.h</in>
+      </df>
+      <df name="objects">
+      </df>
+      <df name="Output">
+      </df>
+      <in>AccelCalDlg.cpp</in>
+      <in>AccelCalDlg.h</in>
+      <in>IMUThread.cpp</in>
+      <in>IMUThread.h</in>
+      <in>MagCalDlg.cpp</in>
+      <in>MagCalDlg.h</in>
+      <in>RTIMULibDemoGL.cpp</in>
+      <in>RTIMULibDemoGL.h</in>
+      <in>SelectFusionDlg.cpp</in>
+      <in>SelectFusionDlg.h</in>
+      <in>SelectHSDlg.cpp</in>
+      <in>SelectHSDlg.h</in>
+      <in>SelectIMUDlg.cpp</in>
+      <in>SelectIMUDlg.h</in>
+      <in>SelectPSDlg.cpp</in>
+      <in>SelectPSDlg.h</in>
+      <in>main.cpp</in>
+    </df>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <developmentServer>localhost</developmentServer>
+        <platform>3</platform>
+      </toolsSet>
+      <compile>
+        <compiledirpicklist>
+          <compiledirpicklistitem>.</compiledirpicklistitem>
+          <compiledirpicklistitem>${AUTO_FOLDER}</compiledirpicklistitem>
+        </compiledirpicklist>
+        <compiledir>${AUTO_FOLDER}</compiledir>
+        <compilecommandpicklist>
+          <compilecommandpicklistitem>${MAKE} ${ITEM_NAME}.o</compilecommandpicklistitem>
+          <compilecommandpicklistitem>${AUTO_COMPILE}</compilecommandpicklistitem>
+        </compilecommandpicklist>
+        <compilecommand>${AUTO_COMPILE}</compilecommand>
+      </compile>
+      <dbx_gdbdebugger version="1">
+        <gdb_pathmaps>
+        </gdb_pathmaps>
+        <gdb_interceptlist>
+          <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
+        </gdb_interceptlist>
+        <gdb_options>
+          <DebugOptions>
+          </DebugOptions>
+        </gdb_options>
+        <gdb_buildfirst gdb_buildfirst_overriden="false" gdb_buildfirst_old="false"/>
+      </dbx_gdbdebugger>
+      <nativedebugger version="1">
+        <engine>gdb</engine>
+      </nativedebugger>
+      <runprofile version="9">
+        <runcommandpicklist>
+          <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+        </runcommandpicklist>
+        <runcommand>"${OUTPUT_PATH}"</runcommand>
+        <rundir>.</rundir>
+        <buildfirst>false</buildfirst>
+        <terminal-type>0</terminal-type>
+        <remove-instrumentation>0</remove-instrumentation>
+        <environment>
+        </environment>
+      </runprofile>
+    </conf>
+  </confs>
+</configurationDescriptor>

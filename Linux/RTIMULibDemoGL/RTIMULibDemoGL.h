@@ -2,7 +2,7 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014-2015, richards-tech, LLC
+//  Copyright (c) 2014, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -55,10 +55,12 @@ public slots:
     void onSelectFusionAlgorithm();
     void onCalibrateAccelerometers();
     void onCalibrateMagnetometers();
+    void onCalibratePressureSensor();
     void onSelectIMU();
     void onEnableGyro(int);
     void onEnableAccel(int);
     void onEnableCompass(int);
+    void onEnableTemperature(int);
     void onEnableDebug(int);
     void newIMUData(const RTIMU_DATA&);
 
@@ -117,6 +119,7 @@ private:
     QCheckBox *m_enableGyro;
     QCheckBox *m_enableAccel;
     QCheckBox *m_enableCompass;
+    QCheckBox *m_enableTemperature;
     QCheckBox *m_enableDebug;
 
     QLabel *m_imuType;

@@ -79,11 +79,11 @@ const char *RTMath::display(const char *label, RTMatrix4x4& mat)
 //  where:
 //  h  = height above sea level
 //  T0 = standard temperature at sea level = 288.15
-//  L0 = standard temperatur elapse rate = -0.0065
+//  L0 = standard temperature elapse rate = -0.0065
 //  p  = measured pressure
 //  P0 = static pressure = 1013.25 (but can be overridden)
 //  g0 = gravitational acceleration = 9.80665
-//  M  = mloecular mass of earth's air = 0.0289644
+//  M  = molecular mass of earth's air = 0.0289644
 //  R* = universal gas constant = 8.31432
 //
 //  Given the constants, this works out to:
