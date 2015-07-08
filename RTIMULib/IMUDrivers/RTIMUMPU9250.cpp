@@ -24,6 +24,8 @@
 //  The MPU-9250 and SPI driver code is based on code generously supplied by
 //  staslock@gmail.com (www.clickdrive.io)
 
+// UU: This code does not yet include the modifications made for 9150
+
 #include "RTIMUMPU9250.h"
 #include "RTIMUSettings.h"
 
@@ -189,9 +191,16 @@ bool RTIMUMPU9250::IMUInit()
     m_imuData.gyroValid = true;
     m_imuData.accelValid = true;
     m_imuData.compassValid = true;
-    m_imuData.pressureValid = false;
-    m_imuData.temperatureValid = false;
+    m_imuData.IMUtemperatureValid = false;
+    m_imuData.IMUtemperature = 0.0;
     m_imuData.humidityValid = false;
+    m_imuData.humidity = -1.0;
+    m_imuData.temperatureValid = false;
+    m_imuData.temperature = 0.0;
+    m_imuData.pressureValid = false;
+    m_imuData.pressure = 0.0;
+    m_imuData.PStemperatureValid = false;
+    m_imuData.PStemperature = 0.0;
 
     //  configure IMU
 
@@ -288,9 +297,14 @@ bool RTIMUMPU9250::resetFifo()
     if (!m_settings->HALWrite(m_slaveAddr, MPU9250_INT_ENABLE, 1, "Writing int enable"))
         return false;
 
-    if (!m_settings->HALWrite(m_slaveAddr, MPU9250_FIFO_EN, 0x78, "Failed to set FIFO enables"))
-        return false;
-
+    if (MPU9250_FIFO_CHUNK_SIZE > 12) {
+        if (!m_settings->HALWrite(m_slaveAddr, MPU9250_FIFO_EN, 0xf8, "Failed to set FIFO enables"))
+            return false;
+    } else {
+        if (!m_settings->HALWrite(m_slaveAddr, MPU9250_FIFO_EN, 0x78, "Failed to set FIFO enables"))
+            return false;
+    }
+    
     return true;
 }
 
@@ -509,7 +523,7 @@ bool RTIMUMPU9250::IMURead()
 {
     unsigned char fifoCount[2];
     unsigned int count;
-    unsigned char fifoData[12];
+    unsigned char fifoData[MPU9250_FIFO_CHUNK_SIZE];
     unsigned char compassData[8];
 
     if (!m_settings->HALRead(m_slaveAddr, MPU9250_FIFO_COUNT_H, 2, fifoCount, "Failed to read fifo count"))
@@ -609,7 +623,19 @@ bool RTIMUMPU9250::IMURead()
     RTMath::convertToVector(fifoData, m_imuData.accel, m_accelScale, true);
     RTMath::convertToVector(fifoData + 6, m_imuData.gyro, m_gyroScale, true);
     RTMath::convertToVector(compassData + 1, m_imuData.compass, 0.6f, false);
-
+    
+    if (MPU9250_FIFO_CHUNK_SIZE > 12) {
+        m_imuData.IMUtemperature = ( (RTFLOAT)(((uint16_t)fifoData[12] << 8) | (uint16_t)fifoData[13]) - 521.0 ) / 340.0; // combined registers and convert to temperature
+        m_imuData.IMUtemperatureValid = true;
+    } else {
+        m_imuData.IMUtemperature = 0.0;
+        m_imuData.IMUtemperatureValid = false;
+    }
+	
+    if (m_imuData.IMUtemperatureValid == true) {
+            handleTempBias(); 	// temperature Correction
+    }
+	
     //  sort out gyro axes
 
     m_imuData.gyro.setX(m_imuData.gyro.x());

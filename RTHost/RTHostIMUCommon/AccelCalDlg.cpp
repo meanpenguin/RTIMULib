@@ -34,10 +34,10 @@
 AccelCalDlg::AccelCalDlg(QWidget *parent, RTIMUSettings* settings)
     : QDialog(parent)
 {
-    m_cal = new RTIMUAccelCal(settings);
+    m_calAcc = new RTIMUAccelCal(settings);
     m_newData = false;
 
-    m_cal->accelCalInit();
+    m_calAcc->accelCalInit();
 
     layoutWindow();
 
@@ -65,8 +65,8 @@ void AccelCalDlg::newIMUData(const RTIMU_DATA& data)
     m_currentVal = data.accel;
 
     for (int i = 0; i < 3; i++)
-        m_cal->accelCalEnable(i, m_check[i]->checkState() == Qt::Checked);
-    m_cal->newAccelCalData(data.accel);
+        m_calAcc->accelCalEnable(i, m_check[i]->checkState() == Qt::Checked);
+    m_calAcc->newMinMaxData(data.accel);
 
     m_newData = true;
 }
@@ -74,7 +74,7 @@ void AccelCalDlg::newIMUData(const RTIMU_DATA& data)
 void AccelCalDlg::onOk()
 {
     killTimer(m_timer);
-    m_cal->accelCalSave();
+    m_calAcc->accelCalSave();
     accept();
 }
 
@@ -88,9 +88,9 @@ void AccelCalDlg::onReset()
 {
     QMutexLocker lock(&m_refreshMutex);
     for (int i = 0; i < 3; i++)
-        m_cal->accelCalEnable(i, m_check[i]->checkState() == Qt::Checked);
-    m_cal->accelCalReset();
-    m_okBtn->setEnabled(m_cal->accelCalValid());
+        m_calAcc->accelCalEnable(i, m_check[i]->checkState() == Qt::Checked);
+    m_calAcc->accelCalReset();
+    m_okBtn->setEnabled(m_calAcc->accelCalValid());
 }
 
 
@@ -110,7 +110,7 @@ void AccelCalDlg::timerEvent(QTimerEvent *)
 {
     QMutexLocker lock(&m_refreshMutex);
 
-    m_okBtn->setEnabled(m_cal->accelCalValid());
+    m_okBtn->setEnabled(m_calAcc->accelCalValid());
 
     if (m_newData)
         updateControls();
@@ -121,8 +121,8 @@ void AccelCalDlg::updateControls()
 {
     for (int i = 0; i < 3; i++) {
         setRaw(m_raw[i], m_currentVal.data(i));
-        setRawMinMax(m_rawMin[i], m_cal->m_accelMin.data(i));
-        setRawMinMax(m_rawMax[i], m_cal->m_accelMax.data(i));
+        setRawMinMax(m_rawMin[i], m_calAcc->m_accelMin.data(i));
+        setRawMinMax(m_rawMax[i], m_calAcc->m_accelMax.data(i));
     }
 }
 
@@ -213,8 +213,8 @@ void AccelCalDlg::layoutWindow()
     label = getFixedLabel("Old ", 80, 20, Qt::AlignLeft | Qt::AlignVCenter);
     hLayout->addWidget(label);
 
-    m_oldMin = m_cal->m_accelMin;
-    m_oldMax = m_cal->m_accelMax;
+    m_oldMin = m_calAcc->m_accelMin;
+    m_oldMax = m_calAcc->m_accelMax;
 
     for (int j = 0; j < 3; j++) {
         m_oldRawMin[j] = getFixedLabel(QString::number(m_oldMin.data(j)), 80, 20, Qt::AlignCenter, m_whiteStyleSheet);
@@ -275,7 +275,7 @@ void AccelCalDlg::layoutWindow()
     m_resetBtn = new QPushButton("Reset");
     m_resetBtn->setDefault(true);
     m_okBtn = new QPushButton("OK");
-    m_okBtn->setEnabled(m_cal->accelCalValid());
+    m_okBtn->setEnabled(m_calAcc->accelCalValid());
     m_cancelBtn = new QPushButton("Cancel");
 
     hLayout = new QHBoxLayout();

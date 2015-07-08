@@ -47,11 +47,12 @@ public:
     ~AccelCalDlg();
 
 public slots:
-    void onOk();
     void onCancel();
     void onReset();
+    void onSaveMinMax();
     void onCheckAll();
     void onUncheckAll();
+    void onProcess();
     void newIMUData(const RTIMU_DATA& data);
 
 protected:
@@ -61,6 +62,10 @@ private:
     void updateControls();
     void setRaw(QLabel *label, float val);
     void setRawMinMax(QLabel *label, float val);
+    void setOctantCounts();
+    void setButtonEnables();
+    void findFitDir();
+
     void layoutWindow();
     QLabel* getFixedLabel(QString text, int w, int h,
         Qt::Alignment alignment = Qt::AlignCenter, QString styleSheet = "");
@@ -82,21 +87,26 @@ private:
     QLabel *m_rawMin[3];
     QLabel *m_raw[3];
     QLabel *m_rawMax[3];
+    QLabel *m_octantCount[RTIMUCALDEFS_OCTANT_COUNT];
 
     QLabel *m_oldRawMin[3];
     QLabel *m_oldRawMax[3];
 
     QCheckBox *m_check[3];
-
-    QPushButton *m_okBtn;
     QPushButton *m_cancelBtn;
     QPushButton *m_resetBtn;
     QPushButton *m_checkAllBtn;
     QPushButton *m_uncheckAllBtn;
+    QPushButton *m_saveMinMaxBtn;
+    QPushButton *m_processEllipsoidBtn;
 
     bool m_newData;
 
-    RTIMUAccelCal *m_cal;
+    RTIMUAccelCal *m_calAcc;
+    QString m_fitDir;
+    QStringList m_fitDirOptions;
+    bool m_usingEllipsoidFit;
+
 };
 
 #endif // ACCELCALDLG_H

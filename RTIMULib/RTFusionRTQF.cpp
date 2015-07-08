@@ -155,7 +155,7 @@ void RTFusionRTQF::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
         m_stateQ.toEuler(m_fusionPose);
         m_fusionQPose = m_stateQ;
 
-        if (m_debug) {
+        if (m_debug | settings->m_fusionDebug) {
             HAL_INFO(RTMath::displayRadians("Measured pose", m_measuredPose));
             HAL_INFO(RTMath::displayRadians("RTQF pose", m_fusionPose));
             HAL_INFO(RTMath::displayRadians("Measured quat", m_measuredPose));

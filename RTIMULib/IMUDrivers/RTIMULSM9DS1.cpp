@@ -49,10 +49,17 @@ bool RTIMULSM9DS1::IMUInit()
     m_imuData.gyroValid = true;
     m_imuData.accelValid = true;
     m_imuData.compassValid = true;
-    m_imuData.pressureValid = false;
-    m_imuData.temperatureValid = false;
+    m_imuData.IMUtemperatureValid = false;
+    m_imuData.IMUtemperature = 0.0;
     m_imuData.humidityValid = false;
-
+    m_imuData.humidity = -1.0;
+    m_imuData.temperatureValid = false;
+    m_imuData.temperature = 0.0;
+    m_imuData.pressureValid = false;
+    m_imuData.pressure = 0.0;
+    m_imuData.PStemperatureValid = false;
+    m_imuData.PStemperature = 0.0;
+	
     //  configure IMU
 
     m_accelGyroSlaveAddr = m_settings->m_I2CSlaveAddress;

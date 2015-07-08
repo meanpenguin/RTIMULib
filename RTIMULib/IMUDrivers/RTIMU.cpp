@@ -21,6 +21,10 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+// UU: This code was changed to
+// provide temperature compensation to IMU sensor data
+// update: recomputes to temperature offsets
+// handle: applies to offsets to raw data
 
 #include "RTIMU.h"
 #include "RTFusionKalman4.h"
@@ -127,7 +131,6 @@ RTIMU *RTIMU::createIMU(RTIMUSettings *settings)
     }
 }
 
-
 RTIMU::RTIMU(RTIMUSettings *settings)
 {
     m_settings = settings;
@@ -186,6 +189,12 @@ void RTIMU::setCalibrationData()
         }
     }
 
+    if (m_settings->m_tempCalValid) {
+        HAL_INFO("Using temperature bias calibration\n");
+    } else {
+        HAL_INFO("Temperature bias calibration not in use\n");
+    }
+
     if (m_settings->m_compassCalValid) {
         HAL_INFO("Using min/max compass calibration\n");
     } else {
@@ -203,6 +212,43 @@ void RTIMU::setCalibrationData()
     } else {
         HAL_INFO("Accel calibration not in use\n");
     }
+
+    if (m_settings->m_accelCalEllipsoidValid) {
+        HAL_INFO("Using ellipsoid accelerometer calibration\n");
+    } else {
+        HAL_INFO("Ellipsoid accelerometer calibration not in use\n");
+    }
+}
+
+void RTIMU::updateTempBias(float senTemp)
+{
+    if(m_settings->m_tempCalValid == 1) {
+	if(senTemp < m_settings->m_senTemp_break) {
+            for(int i = 0; i < 9; i++) { 
+                m_settings->m_tempbias[i] = m_settings->m_c3[i]*(senTemp*senTemp*senTemp) + m_settings->m_c2[i]*(senTemp*senTemp) + m_settings->m_c1[i]*senTemp + m_settings->m_c0[i];
+            }		
+	} else {
+            for(int i = 0; i < 9; i++) { 
+                m_settings->m_tempbias[i] = 0.0f;
+            }
+	}
+    }
+}
+
+void RTIMU::handleTempBias()
+{
+    // Accelerometer
+    m_imuData.accel.setX(m_imuData.accel.x() - m_settings->m_tempbias[0]);
+    m_imuData.accel.setY(m_imuData.accel.y() - m_settings->m_tempbias[1]);
+    m_imuData.accel.setZ(m_imuData.accel.z() - m_settings->m_tempbias[2]);
+    // Gyroscope
+    m_imuData.gyro.setX(m_imuData.gyro.x() - m_settings->m_tempbias[3]);
+    m_imuData.gyro.setY(m_imuData.gyro.y() - m_settings->m_tempbias[4]);
+    m_imuData.gyro.setZ(m_imuData.gyro.z() - m_settings->m_tempbias[5]);
+    // Compass
+    m_imuData.compass.setX(m_imuData.compass.x() - m_settings->m_tempbias[6]);
+    m_imuData.compass.setY(m_imuData.compass.y() - m_settings->m_tempbias[7]);
+    m_imuData.compass.setZ(m_imuData.compass.z() - m_settings->m_tempbias[8]);
 }
 
 bool RTIMU::setGyroContinuousLearningAlpha(RTFLOAT alpha)

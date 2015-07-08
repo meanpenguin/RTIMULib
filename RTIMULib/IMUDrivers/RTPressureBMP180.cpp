@@ -68,6 +68,7 @@ bool RTPressureBMP180::pressureInit()
 
     m_state = BMP180_STATE_IDLE;
     m_oss = BMP180_SCO_PRESSURECONV_ULP;
+    
     return true;
 }
 

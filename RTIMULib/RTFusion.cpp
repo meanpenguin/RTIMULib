@@ -110,7 +110,6 @@ void RTFusion::calculatePose(const RTVector3& accel, const RTVector3& mag, float
     }
 }
 
-
 RTVector3 RTFusion::getAccelResiduals()
 {
     RTQuaternion rotatedGravity;

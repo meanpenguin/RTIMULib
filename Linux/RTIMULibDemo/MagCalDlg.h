@@ -94,7 +94,7 @@ private:
 
     bool m_minMaxMode;
 
-    RTIMUMagCal *m_cal;
+    RTIMUMagCal *m_calMag;
     QString m_fitDir;
     QStringList m_fitDirOptions;
     bool m_usingEllipsoidFit;

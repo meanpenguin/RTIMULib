@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 //
 //  This file is part of RTIMULib
 //
@@ -21,82 +21,70 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-//  The MPU-9250 and SPI driver code is based on code generously supplied by
-//  staslock@gmail.com (www.clickdrive.io)
 
-
-#ifndef _RTIMUMPU9250_H
-#define	_RTIMUMPU9250_H
+#ifndef _RTIMUMPU9150_H
+#define	_RTIMUMPU9150_H
 
 #include "RTIMU.h"
 
 //  Define this symbol to use cache mode
 
-#define MPU9250_CACHE_MODE
+#define MPU9150_CACHE_MODE
 
 //  FIFO transfer size
 
-//#define MPU9250_FIFO_CHUNK_SIZE     12                      // gyro and accels take 12 bytes
-#define MPU9250_FIFO_CHUNK_SIZE     14                      // gyro and accels and temp take 14 bytes
+#define MPU9150_FIFO_CHUNK_SIZE     12                      // gyro and accels take 12 bytes
 
-#ifdef MPU9250_CACHE_MODE
+#ifdef MPU9150_CACHE_MODE
 
 //  Cache mode defines
 
-#define MPU9250_CACHE_SIZE          16                      // number of chunks in a block
-#define MPU9250_CACHE_BLOCK_COUNT   16                      // number of cache blocks
+#define MPU9150_CACHE_SIZE          16                      // number of chunks in a block
+#define MPU9150_CACHE_BLOCK_COUNT   16                      // number of cache blocks
 
 typedef struct
 {
-    unsigned char data[MPU9250_FIFO_CHUNK_SIZE * MPU9250_CACHE_SIZE];
+    unsigned char data[MPU9150_FIFO_CHUNK_SIZE * MPU9150_CACHE_SIZE];
     int count;                                              // number of chunks in the cache block
     int index;                                              // current index into the cache
     unsigned char compass[8];                               // the raw compass readings for the block
 
-} MPU9250_CACHE_BLOCK;
+} MPU9150_CACHE_BLOCK;
 
 #endif
 
 
-class RTIMUMPU9250 : public RTIMU
+class RTIMUMPU9150 : public RTIMU
 {
 public:
-    RTIMUMPU9250(RTIMUSettings *settings);
-    ~RTIMUMPU9250();
+    RTIMUMPU9150(RTIMUSettings *settings);
+    ~RTIMUMPU9150();
 
-    bool setGyroLpf(unsigned char lpf);
-    bool setAccelLpf(unsigned char lpf);
+    bool setLpf(unsigned char lpf);
     bool setSampleRate(int rate);
     bool setCompassRate(int rate);
     bool setGyroFsr(unsigned char fsr);
     bool setAccelFsr(unsigned char fsr);
 
-    virtual const char *IMUName() { return "MPU-9250"; }
-    virtual int IMUType() { return RTIMU_TYPE_MPU9250; }
+    virtual const char *IMUName() { return "MPU-9150"; }
+    virtual int IMUType() { return RTIMU_TYPE_MPU9150; }
     virtual bool IMUInit();
     virtual bool IMURead();
     virtual int IMUGetPollInterval();
 
-protected:
-
-    RTFLOAT m_compassAdjust[3];                             // the compass fuse ROM values converted for use
-
 private:
-    bool setGyroConfig();
-    bool setAccelConfig();
+    bool configureCompass();                                // configures the compass
+    bool bypassOn();                                        // talk to compass
+    bool bypassOff();                                       // talk to MPU9150
     bool setSampleRate();
-    bool compassSetup();
     bool setCompassRate();
     bool resetFifo();
-    bool bypassOn();
-    bool bypassOff();
 
     bool m_firstTime;                                       // if first sample
 
     unsigned char m_slaveAddr;                              // I2C address of MPU9150
 
-    unsigned char m_gyroLpf;                                // gyro low pass filter setting
-    unsigned char m_accelLpf;                               // accel low pass filter setting
+    unsigned char m_lpf;                                    // low pass filter setting
     int m_compassRate;                                      // compass sample rate in Hz
     unsigned char m_gyroFsr;
     unsigned char m_accelFsr;
@@ -104,10 +92,13 @@ private:
     RTFLOAT m_gyroScale;
     RTFLOAT m_accelScale;
 
+    bool m_compassIs5883;                                   // if it is an MPU-6050/HMC5883 combo
+    int m_compassDataLength;                                // 8 for MPU-9150, 6 for HMC5883
+    RTFLOAT m_compassAdjust[3];                             // the compass fuse ROM values converted for use
 
-#ifdef MPU9250_CACHE_MODE
+#ifdef MPU9150_CACHE_MODE
 
-    MPU9250_CACHE_BLOCK m_cache[MPU9250_CACHE_BLOCK_COUNT]; // the cache itself
+    MPU9150_CACHE_BLOCK m_cache[MPU9150_CACHE_BLOCK_COUNT]; // the cache itself
     int m_cacheIn;                                          // the in index
     int m_cacheOut;                                         // the out index
     int m_cacheCount;                                       // number of used cache blocks
@@ -116,4 +107,4 @@ private:
 
 };
 
-#endif // _RTIMUMPU9250_H
+#endif // _RTIMUMPU9150_H

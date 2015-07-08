@@ -21,6 +21,9 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+// UU: This code was changed to
+// include raw files for accelerometer ellipsoid compensation
+
 #ifndef RTIMUCALDEFS_H
 #define RTIMUCALDEFS_H
 
@@ -28,6 +31,7 @@
 #define RTIMUCALDEFS_DEFAULT_MAX        -1000               // a small max
 
 #define	RTIMUCALDEFS_MAX_MAG_SAMPLES	   20000            // max saved mag records
+#define	RTIMUCALDEFS_MAX_ACC_SAMPLES	   20000            // max saved acc records
 
 #define RTIMUCALDEFS_OCTANT_MIN_SAMPLES    200              // must have at least this in each octant
 
@@ -50,6 +54,9 @@
 
 #define RTIMUCALDEFS_MAG_RAW_FILE          "magRaw.dta"     // the raw sample file - input to ellispoid fit code
 #define RTIMUCALDEFS_MAG_CORR_FILE         "magCorr.dta"    // the output from the ellipsoid fit code
+
+#define RTIMUCALDEFS_ACCEL_RAW_FILE          "accRaw.dta"     // the raw sample file - input to ellispoid fit code
+#define RTIMUCALDEFS_ACCEL_CORR_FILE         "accCorr.dta"    // the output from the ellipsoid fit code
 
 #define RTIMUCALDEFS_OCTAVE_CODE           "RTEllipsoidFit.m"
 #define RTIMUCALDEFS_OCTAVE_COMMAND        "octave RTEllipsoidFit.m"

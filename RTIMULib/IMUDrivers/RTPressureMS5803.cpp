@@ -21,6 +21,8 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+// UU: This is new driver for RTIMULib
+
 #include "RTPressureMS5803.h"
 
 RTPressureMS5803::RTPressureMS5803(RTIMUSettings *settings) : RTPressure(settings)
@@ -69,14 +71,15 @@ bool RTPressureMS5803::pressureInit()
         cmd += 2;
     }
     m_state = MS5803_STATE_IDLE;
+    
     return true;
 }
-
+    
 bool RTPressureMS5803::pressureRead(RTIMU_DATA& data)
 {
     data.pressureValid = false;
-    data.temperatureValid = false;
-    data.temperature = 0;
+    data.PStemperatureValid = false;
+    data.PStemperature = 0;
     data.pressure = 0;
 
     if (m_state == MS5803_STATE_IDLE) {
@@ -93,9 +96,9 @@ bool RTPressureMS5803::pressureRead(RTIMU_DATA& data)
 
     if (m_validReadings) {
         data.pressureValid = true;
-        data.temperatureValid = true;
-        data.temperature = m_temperature;
         data.pressure = m_pressure;
+        data.PStemperatureValid = true;
+        data.PStemperature = m_temperature;
     }
     return true;
 }

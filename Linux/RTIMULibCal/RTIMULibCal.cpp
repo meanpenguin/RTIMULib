@@ -338,7 +338,7 @@ void doAccelCal()
 
             for (int i = 0; i < 3; i++)
                 accelCal->accelCalEnable(i, accelEnables[i]);
-            accelCal->newAccelCalData(imuData.accel);
+            accelCal->newMinMaxData(imuData.accel);
 
             now = RTMath::currentUSecsSinceEpoch();
 

@@ -28,6 +28,8 @@ RTHumidityHTS221::RTHumidityHTS221(RTIMUSettings *settings) : RTHumidity(setting
 {
     m_humidityValid = false;
     m_temperatureValid = false;
+    m_humidity = -1.0;
+    m_temperature = 0.0;
  }
 
 RTHumidityHTS221::~RTHumidityHTS221()

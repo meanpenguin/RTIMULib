@@ -44,7 +44,7 @@ MagCalDlg::MagCalDlg(QWidget *parent, RTIMUSettings* settings)
 
     findFitDir();
 
-    m_cal->magCalInit();
+    m_calMag->magCalInit();
 
     m_minMaxMode = true;
     layoutWindow();
@@ -71,9 +71,9 @@ void MagCalDlg::newIMUData(const RTIMU_DATA& data)
     m_currentVal = data.compass;
 
     if (m_minMaxMode)
-        m_cal->newMinMaxData(data.compass);
+        m_calMag->newMinMaxData(data.compass);
     else
-        m_cal->newEllipsoidData(data.compass);
+        m_calMag->newEllipsoidData(data.compass);
 
     m_newData = true;
 }
@@ -102,14 +102,14 @@ void MagCalDlg::onCancel()
 
 void MagCalDlg::onReset()
 {
-    m_cal->magCalReset();
+    m_calMag->magCalReset();
     m_minMaxMode = true;
     setButtonEnables();
 }
 
 void MagCalDlg::onSaveMinMax()
 {
-    m_cal->magCalSaveMinMax();
+    m_calMag->magCalSaveMinMax();
 
     if (m_usingEllipsoidFit) {
         m_minMaxMode = false;
@@ -121,7 +121,7 @@ void MagCalDlg::onSaveMinMax()
 
 void MagCalDlg::onProcess()
 {
-    m_cal->magCalSaveRaw(qPrintable(m_fitDir));
+    m_calMag->magCalSaveRaw(qPrintable(m_fitDir));
 
     QProcess proc;
 
@@ -129,7 +129,7 @@ void MagCalDlg::onProcess()
     proc.start(RTIMUCALDEFS_OCTAVE_COMMAND);
     proc.waitForFinished(20000);
     if (proc.exitCode() == 0) {
-        m_cal->magCalSaveCorr(qPrintable(m_fitDir));
+        m_calMag->magCalSaveCorr(qPrintable(m_fitDir));
     } else {
         QMessageBox::warning(this, "Ellipsoid fit error",
             "Failed to execute RTEllipsoidFit.m. Only min/max calibration available",
@@ -151,17 +151,17 @@ void MagCalDlg::updateControls()
 {
     for (int i = 0; i < 3; i++) {
         setRaw(m_raw[i], m_currentVal.data(i));
-        setRawMinMax(m_rawMin[i], m_cal->m_magMin.data(i));
-        setRawMinMax(m_rawMax[i], m_cal->m_magMax.data(i));
+        setRawMinMax(m_rawMin[i], m_calMag->m_magMin.data(i));
+        setRawMinMax(m_rawMax[i], m_calMag->m_magMax.data(i));
     }
     if (m_usingEllipsoidFit)
         setOctantCounts();
 
     if (m_minMaxMode) {
-        if (!m_saveMinMaxBtn->isEnabled() && m_cal->magCalValid())
+        if (!m_saveMinMaxBtn->isEnabled() && m_calMag->magCalValid())
             m_saveMinMaxBtn->setEnabled(true);
     } else {
-        if (!m_processEllipsoidBtn->isEnabled() && m_cal->magCalEllipsoidValid())
+        if (!m_processEllipsoidBtn->isEnabled() && m_calMag->magCalEllipsoidValid())
             m_processEllipsoidBtn->setEnabled(true);
     }
 }
@@ -190,7 +190,7 @@ void MagCalDlg::setOctantCounts()
 {
     int counts[RTIMUCALDEFS_OCTANT_COUNT];
 
-    m_cal->magCalOctantCounts(counts);
+    m_calMag->magCalOctantCounts(counts);
 
     for (int i = 0; i < RTIMUCALDEFS_OCTANT_COUNT; i++) {
         m_octantCount[i]->setText(QString::number(counts[i]));

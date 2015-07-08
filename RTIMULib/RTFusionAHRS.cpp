@@ -1,7 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////
 //
-//  This file is part of RTIMULib
-//  and includes:
+//  This file was added to RTIMULib and includes:
 //=====================================================================================================
 // MadgwickAHRS.c
 //=====================================================================================================
@@ -15,24 +14,6 @@
 // 19/02/2012   SOH Madgwick   Magnetometer measurement is normalised
 //
 //=====================================================================================================
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy of
-//  this software and associated documentation files (the "Software"), to deal in
-//  the Software without restriction, including without limitation the rights to use,
-//  copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
-//  Software, and to permit persons to whom the Software is furnished to do so,
-//  subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in all
-//  copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-//  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-//  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-//  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-//  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-//  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 
 #include "RTFusionAHRS.h"
 #include "RTIMUSettings.h"
@@ -65,6 +46,7 @@ RTFusionAHRS::RTFusionAHRS()
     m_enableAccel = true;
     m_enableCompass = true;
     m_enableGyro = true;
+    
     if (m_debug) {
         HAL_INFO("\n------\n");
         HAL_INFO1("IMU beta %f\n", m_beta);
@@ -96,11 +78,7 @@ void RTFusionAHRS::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
         HAL_INFO1("IMU update delta time: %f\n", m_timeDelta);
     }
 
-    if (m_enableGyro)
-        m_gyro = data.gyro;
-    else
-    m_gyro = RTVector3();
-   
+    m_gyro = data.gyro;
     m_accel = data.accel;
     m_compass = data.compass;
     m_compassValid = data.compassValid;
@@ -257,7 +235,7 @@ void RTFusionAHRS::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
                 s3 = -_2q1 * (2.0f * q2q4 - _2q1q3 - ax) + _2q4 * (2.0f * q1q2 + _2q3q4 - ay) - 4.0f * q3 * (1.0f - 2.0f * q2q2 - 2.0f * q3q3 - az) + (-_4bx * q3 - _2bz * q1) * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (_2bx * q2 + _2bz * q4) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + (_2bx * q1 - _4bz * q3) * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
                 s4 =  _2q2 * (2.0f * q2q4 - _2q1q3 - ax) + _2q3 * (2.0f * q1q2 + _2q3q4 - ay) + (-_4bx * q4 + _2bz * q2) * (_2bx * (0.5f - q3q3 - q4q4) + _2bz * (q2q4 - q1q3) - mx) + (-_2bx * q1 + _2bz * q3) * (_2bx * (q2q3 - q1q4) + _2bz * (q1q2 + q3q4) - my) + _2bx * q2 * (_2bx * (q1q3 + q2q4) + _2bz * (0.5f - q2q2 - q3q3) - mz);
 
-             } // END valid magnetometer
+             } // end valid magnetometer
 
             norm = sqrt(s1 * s1 + s2 * s2 + s3 * s3 + s4 * s4);    // normalise step magnitude
             if (norm == 0.0) return; // handle NaN
@@ -286,7 +264,7 @@ void RTFusionAHRS::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
             qDot3 -= m_beta * s3;
             qDot4 -= m_beta * s4;
 
-        } // END if valid accelerometer
+        } // end if valid accelerometer
 
         // Integrate to yield quaternion
         q1 += qDot1 * m_timeDelta;
@@ -311,21 +289,21 @@ void RTFusionAHRS::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
 
     if (m_enableCompass || m_enableAccel) {
             m_stateQError = m_measuredQPose - m_stateQ;
-        } else {
+    } else {
             m_stateQError = RTQuaternion();
-        }
+    }
     
-        m_stateQ.toEuler(m_fusionPose);
-        m_fusionQPose = m_stateQ;
+    m_stateQ.toEuler(m_fusionPose);
+    m_fusionQPose = m_stateQ;
 
-        if (m_debug) {
-            HAL_INFO(RTMath::displayRadians("Measured pose", m_measuredPose));
-            HAL_INFO(RTMath::displayRadians("AHRS pose", m_fusionPose));
-            HAL_INFO(RTMath::displayRadians("Measured quat", m_measuredPose));
-            HAL_INFO(RTMath::display("AHRS quat", m_stateQ));
-            HAL_INFO(RTMath::display("Error quat", m_stateQError));
-            HAL_INFO3("AHRS Gyro Bias: %f, %f, % f\n", m_gbiasx, m_gbiasy, m_gbiasz);
-         }
+    if (m_debug | settings->m_fusionDebug) {
+        HAL_INFO(RTMath::displayRadians("Measured pose", m_measuredPose));
+        HAL_INFO(RTMath::displayRadians("AHRS pose", m_fusionPose));
+        HAL_INFO(RTMath::displayRadians("Measured quat", m_measuredPose));
+        HAL_INFO(RTMath::display("AHRS quat", m_stateQ));
+        HAL_INFO(RTMath::display("Error quat", m_stateQError));
+        HAL_INFO3("AHRS Gyro Bias: %f, %f, % f\n", m_gbiasx, m_gbiasy, m_gbiasz);
+     }
 
     data.fusionPoseValid = true;
     data.fusionQPoseValid = true;

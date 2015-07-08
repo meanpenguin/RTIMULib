@@ -50,6 +50,7 @@ bool RTPressureMS5611::pressureInit()
     }
 
     m_state = MS5611_STATE_IDLE;
+
     return true;
 }
 

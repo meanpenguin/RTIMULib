@@ -24,6 +24,9 @@
 //  The MPU-9250 and SPI driver code is based on code generously supplied by
 //  staslock@gmail.com (www.clickdrive.io)
 
+// UU: This file was change to include
+// Sections for Accelerometer Ellipsoid Calibration
+// Sections for Temperature Compensation
 
 #include "RTIMUSettings.h"
 #include "IMUDrivers/RTIMUMPU9150.h"
@@ -481,6 +484,16 @@ void RTIMUSettings::setDefaults()
     m_I2CPressureAddress = 0;
     m_humidityType = RTHUMIDITY_TYPE_AUTODISCOVER;
     m_I2CHumidityAddress = 0;
+    
+    m_senTemp_break  = 80.0;                       // within reasonable temp range
+    m_tempCalValid = false;
+    for (int i = 0; i < 9; i++) {
+	  m_c3[i] = 0.0;
+	  m_c2[i] = 0.0;
+	  m_c1[i] = 0.0;
+	  m_c0[i] = 0.0;
+    }
+
     m_compassCalValid = false;
     m_compassCalEllipsoidValid = false;
     for (int i = 0; i < 3; i++) {
@@ -495,6 +508,16 @@ void RTIMUSettings::setDefaults()
     m_compassAdjDeclination = 0;
 
     m_accelCalValid = false;
+    m_accelCalEllipsoidValid = false;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            m_accelCalEllipsoidCorr[i][j] = 0;
+        }
+    }
+    m_accelCalEllipsoidCorr[0][0] = 1;
+    m_accelCalEllipsoidCorr[1][1] = 1;
+    m_accelCalEllipsoidCorr[2][2] = 1;
+
     m_gyroBiasValid = false;
 
     //  MPU9150 defaults
@@ -626,6 +649,8 @@ bool RTIMUSettings::loadSettings()
             m_imuType = atoi(val);
         } else if (strcmp(key, RTIMULIB_FUSION_TYPE) == 0) {
             m_fusionType = atoi(val);
+        } else if (strcmp(key, RTIMULIB_FUSION_DEBUG) == 0) {
+           m_fusionDebug = strcmp(val, "true") == 0;
         } else if (strcmp(key, RTIMULIB_BUS_IS_I2C) == 0) {
             m_busIsI2C = strcmp(val, "true") == 0;
         } else if (strcmp(key, RTIMULIB_I2C_BUS) == 0) {
@@ -649,6 +674,128 @@ bool RTIMUSettings::loadSettings()
         } else if (strcmp(key, RTIMULIB_I2C_HUMIDITYADDRESS) == 0) {
             m_I2CHumidityAddress = atoi(val);
 
+        // temperature bias calibration
+	// c3 temo^3 + c2 temp^2 + c1 temp + c0
+	// for accx,y,z gyrox,y,z compx,y,z
+
+        } else if (strcmp(key, RTIMULIB_TEMP_BREAK ) == 0) {
+            m_senTemp_break = atoi(val) == 0;
+            
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_VALID) == 0) {
+            m_tempCalValid = strcmp(val, "true") == 0;
+
+	} else if (strcmp(key, RTIMULIB_TEMPCAL_C0_0) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c0[0]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C0_1) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c0[1]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C0_2) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c0[2]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C0_3) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c0[3]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C0_4) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c0[4]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C0_5) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c0[5]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C0_6) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c0[6]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C0_7) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c0[7]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C0_8) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c0[8]=ftemp;
+			
+	} else if (strcmp(key, RTIMULIB_TEMPCAL_C1_0) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c1[0]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C1_1) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c1[1]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C1_2) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c1[2]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C1_3) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c1[3]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C1_4) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c1[4]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C1_5) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c1[5]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C1_6) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c1[6]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C1_7) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c1[7]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C1_8) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c1[8]=ftemp;
+			
+	} else if (strcmp(key, RTIMULIB_TEMPCAL_C2_0) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c2[0]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C2_1) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c2[1]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C2_2) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c2[2]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C2_3) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c2[3]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C2_4) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c2[4]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C2_5) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c2[5]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C2_6) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c2[6]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C2_7) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c2[7]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C2_8) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c2[8]=ftemp;
+			
+	} else if (strcmp(key, RTIMULIB_TEMPCAL_C3_0) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c3[0]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C3_1) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c3[1]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C3_2) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c3[2]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C3_3) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c3[3]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C3_4) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c3[4]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C3_5) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c3[5]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C3_6) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c3[6]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C3_7) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c3[7]=ftemp;
+        } else if (strcmp(key, RTIMULIB_TEMPCAL_C3_8) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_c3[8]=ftemp;
+			
         // compass calibration and adjustment
 
         } else if (strcmp(key, RTIMULIB_COMPASSCAL_VALID) == 0) {
@@ -738,8 +885,51 @@ bool RTIMUSettings::loadSettings()
         } else if (strcmp(key, RTIMULIB_ACCELCAL_MAXZ) == 0) {
             sscanf(val, "%f", &ftemp);
             m_accelCalMax.setZ(ftemp);
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_MAXZ) == 0) {
+            sscanf(val, "%f", &ftemp);
 
-            // gyro bias
+        // accel ellipsoid calibration
+           
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_ELLIPSOID_VALID) == 0) {
+             m_accelCalEllipsoidValid = strcmp(val, "true") == 0;
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_OFFSET_X) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_accelCalEllipsoidOffset.setX(ftemp);
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_OFFSET_Y) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_accelCalEllipsoidOffset.setY(ftemp);
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_OFFSET_Z) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_accelCalEllipsoidOffset.setZ(ftemp);
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_CORR11) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_accelCalEllipsoidCorr[0][0] = ftemp;
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_CORR12) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_accelCalEllipsoidCorr[0][1] = ftemp;
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_CORR13) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_accelCalEllipsoidCorr[0][2] = ftemp;
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_CORR21) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_accelCalEllipsoidCorr[1][0] = ftemp;
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_CORR22) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_accelCalEllipsoidCorr[1][1] = ftemp;
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_CORR23) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_accelCalEllipsoidCorr[1][2] = ftemp;
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_CORR31) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_accelCalEllipsoidCorr[2][0] = ftemp;
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_CORR32) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_accelCalEllipsoidCorr[2][1] = ftemp;
+        } else if (strcmp(key, RTIMULIB_ACCELCAL_CORR33) == 0) {
+            sscanf(val, "%f", &ftemp);
+            m_accelCalEllipsoidCorr[2][2] = ftemp;
+
+        // gyro bias
 
         } else if (strcmp(key, RTIMULIB_GYRO_BIAS_VALID) == 0) {
             m_gyroBiasValid = strcmp(val, "true") == 0;
@@ -948,6 +1138,11 @@ bool RTIMUSettings::saveSettings()
 
     setBlank();
     setComment("");
+    setComment("Fusion Debug - ");
+    setValue(RTIMULIB_FUSION_DEBUG, m_fusionDebug);
+    
+    setBlank();
+    setComment("");
     setComment("Is bus I2C: 'true' for I2C, 'false' for SPI");
     setValue(RTIMULIB_BUS_IS_I2C, m_busIsI2C);
 
@@ -1012,6 +1207,60 @@ bool RTIMUSettings::saveSettings()
     setComment("I2C humidity sensor address (filled in automatically by auto discover) ");
     setValue(RTIMULIB_I2C_HUMIDITYADDRESS, m_I2CHumidityAddress);
 
+    //  Temperature bias settings
+
+    setBlank();
+    setComment("#####################################################################");
+    setComment("");
+
+    setBlank();
+    setComment("Max Temperature Allowed for Bias Correction ");
+    setValue(RTIMULIB_TEMP_BREAK, m_senTemp_break);
+
+    setBlank();
+    setComment("Temperature bias calibration settings");
+    setValue(RTIMULIB_TEMPCAL_VALID, m_tempCalValid);
+	
+    setValue(RTIMULIB_TEMPCAL_C0_0, m_c0[0]);
+    setValue(RTIMULIB_TEMPCAL_C0_1, m_c0[1]);
+    setValue(RTIMULIB_TEMPCAL_C0_2, m_c0[2]);
+    setValue(RTIMULIB_TEMPCAL_C0_3, m_c0[3]);
+    setValue(RTIMULIB_TEMPCAL_C0_4, m_c0[4]);
+    setValue(RTIMULIB_TEMPCAL_C0_5, m_c0[5]);
+    setValue(RTIMULIB_TEMPCAL_C0_6, m_c0[6]);
+    setValue(RTIMULIB_TEMPCAL_C0_7, m_c0[7]);
+    setValue(RTIMULIB_TEMPCAL_C0_8, m_c0[8]);
+
+    setValue(RTIMULIB_TEMPCAL_C1_0, m_c1[0]);
+    setValue(RTIMULIB_TEMPCAL_C1_1, m_c1[1]);
+    setValue(RTIMULIB_TEMPCAL_C1_2, m_c1[2]);
+    setValue(RTIMULIB_TEMPCAL_C1_3, m_c1[3]);
+    setValue(RTIMULIB_TEMPCAL_C1_4, m_c1[4]);
+    setValue(RTIMULIB_TEMPCAL_C1_5, m_c1[5]);
+    setValue(RTIMULIB_TEMPCAL_C1_6, m_c1[6]);
+    setValue(RTIMULIB_TEMPCAL_C1_7, m_c1[7]);
+    setValue(RTIMULIB_TEMPCAL_C1_8, m_c1[8]);
+
+    setValue(RTIMULIB_TEMPCAL_C2_0, m_c2[0]);
+    setValue(RTIMULIB_TEMPCAL_C2_1, m_c2[1]);
+    setValue(RTIMULIB_TEMPCAL_C2_2, m_c2[2]);
+    setValue(RTIMULIB_TEMPCAL_C2_3, m_c2[3]);
+    setValue(RTIMULIB_TEMPCAL_C2_4, m_c2[4]);
+    setValue(RTIMULIB_TEMPCAL_C2_5, m_c2[5]);
+    setValue(RTIMULIB_TEMPCAL_C2_6, m_c2[6]);
+    setValue(RTIMULIB_TEMPCAL_C2_7, m_c2[7]);
+    setValue(RTIMULIB_TEMPCAL_C2_8, m_c2[8]);
+
+    setValue(RTIMULIB_TEMPCAL_C3_0, m_c3[0]);
+    setValue(RTIMULIB_TEMPCAL_C3_1, m_c3[1]);
+    setValue(RTIMULIB_TEMPCAL_C3_2, m_c3[2]);
+    setValue(RTIMULIB_TEMPCAL_C3_3, m_c3[3]);
+    setValue(RTIMULIB_TEMPCAL_C3_4, m_c3[4]);
+    setValue(RTIMULIB_TEMPCAL_C3_5, m_c3[5]);
+    setValue(RTIMULIB_TEMPCAL_C3_6, m_c3[6]);
+    setValue(RTIMULIB_TEMPCAL_C3_7, m_c3[7]);
+    setValue(RTIMULIB_TEMPCAL_C3_8, m_c3[8]);
+
     //  Compass settings
 
     setBlank();
@@ -1074,6 +1323,28 @@ bool RTIMUSettings::saveSettings()
     setValue(RTIMULIB_ACCELCAL_MAXX, m_accelCalMax.x());
     setValue(RTIMULIB_ACCELCAL_MAXY, m_accelCalMax.y());
     setValue(RTIMULIB_ACCELCAL_MAXZ, m_accelCalMax.z());
+
+    //  Accel ellipsoid calibration settings
+
+    setBlank();
+    setComment("#####################################################################");
+    setComment("");
+
+    setBlank();
+    setComment("Accelerometer ellipsoid calibration");
+    setValue(RTIMULIB_ACCELCAL_ELLIPSOID_VALID, m_accelCalEllipsoidValid);
+    setValue(RTIMULIB_ACCELCAL_OFFSET_X, m_accelCalEllipsoidOffset.x());
+    setValue(RTIMULIB_ACCELCAL_OFFSET_Y, m_accelCalEllipsoidOffset.y());
+    setValue(RTIMULIB_ACCELCAL_OFFSET_Z, m_accelCalEllipsoidOffset.z());
+    setValue(RTIMULIB_ACCELCAL_CORR11, m_accelCalEllipsoidCorr[0][0]);
+    setValue(RTIMULIB_ACCELCAL_CORR12, m_accelCalEllipsoidCorr[0][1]);
+    setValue(RTIMULIB_ACCELCAL_CORR13, m_accelCalEllipsoidCorr[0][2]);
+    setValue(RTIMULIB_ACCELCAL_CORR21, m_accelCalEllipsoidCorr[1][0]);
+    setValue(RTIMULIB_ACCELCAL_CORR22, m_accelCalEllipsoidCorr[1][1]);
+    setValue(RTIMULIB_ACCELCAL_CORR23, m_accelCalEllipsoidCorr[1][2]);
+    setValue(RTIMULIB_ACCELCAL_CORR31, m_accelCalEllipsoidCorr[2][0]);
+    setValue(RTIMULIB_ACCELCAL_CORR32, m_accelCalEllipsoidCorr[2][1]);
+    setValue(RTIMULIB_ACCELCAL_CORR33, m_accelCalEllipsoidCorr[2][2]);
 
     //  Gyro bias settings
 

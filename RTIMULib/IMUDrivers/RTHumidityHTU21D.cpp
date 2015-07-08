@@ -35,8 +35,9 @@ RTHumidityHTU21D::RTHumidityHTU21D(RTIMUSettings *settings) : RTHumidity(setting
 {
     m_humidityValid = false;
     m_temperatureValid = false;
-    m_humidity = 0;
-    m_temperature = 0;
+    m_humidity = -1.0;
+    m_temperature = 0.0;
+
  }
 
 RTHumidityHTU21D::~RTHumidityHTU21D()
@@ -52,6 +53,7 @@ bool RTHumidityHTU21D::humidityInit()
 
     m_state = HTU21D_STATE_IN_RESET;
     m_startTime = RTMath::currentUSecsSinceEpoch();
+
     return true;
 }
 

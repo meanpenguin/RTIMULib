@@ -153,6 +153,8 @@ public:
     const RTVector3& getGyro() { return m_imuData.gyro; }   // gets gyro rates in radians/sec
     const RTVector3& getAccel() { return m_imuData.accel; } // get accel data in gs
     const RTVector3& getCompass() { return m_imuData.compass; } // gets compass data in uT
+    const RTFLOAT& getIMUTemp() { return m_imuData.IMUtemperature; } // gets temperature data in C
+    const RTFLOAT& getTemp() { return m_imuData.temperature; } // gets temperature data in C
 
     RTVector3 getAccelResiduals() { return m_fusion->getAccelResiduals(); }
 
@@ -167,6 +169,9 @@ protected:
     bool m_accelCalibrationMode;                            // true if cal mode so don't use cal data!
 
     RTIMU_DATA m_imuData;                                   // the data from the IMU
+
+    void updateTempBias(RTFLOAT senTemp);                   // Computes bias for raw data
+    void handleTempBias();                                  // Applies bias to raw data
 
     RTIMUSettings *m_settings;                              // the settings object pointer
 

@@ -24,6 +24,9 @@
 //  The MPU-9250 and SPI driver code is based on code generously supplied by
 //  staslock@gmail.com (www.clickdrive.io)
 
+// UU: This file was changed to
+// include temperature from pressure, humidity and IMU in data structure
+
 #ifndef _RTIMULIBDEFS_H
 #define	_RTIMULIBDEFS_H
 
@@ -59,6 +62,10 @@ typedef struct
     RTFLOAT temperature;
     bool humidityValid;
     RTFLOAT humidity;
+    bool PStemperatureValid;
+    RTFLOAT PStemperature;
+    bool IMUtemperatureValid;
+    RTFLOAT IMUtemperature;
 } RTIMU_DATA;
 
 #endif // _RTIMULIBDEFS_H

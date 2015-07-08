@@ -33,7 +33,7 @@
      <x>0</x>
      <y>0</y>
      <width>658</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuActions">
@@ -78,32 +78,32 @@
   </widget>
   <action name="actionSelectIMU">
    <property name="text">
-    <string>Select IMU</string>
+    <string>IMU</string>
    </property>
   </action>
   <action name="actionSelectPS">
    <property name="text">
-    <string>Select Pressure</string>
+    <string>Pressure</string>
    </property>
   </action>
   <action name="actionSelectHS">
    <property name="text">
-    <string>Select Humidity</string>
+    <string>Humidity</string>
    </property>
   </action>
   <action name="actionSelectFusionAlgorithm">
    <property name="text">
-    <string>Select fusion algorithm</string>
+    <string>Fusion Algorithm</string>
    </property>
   </action>
   <action name="actionCalibrateMagnetometers">
    <property name="text">
-    <string>Calibrate magnetometers</string>
+    <string>Calibrate Mag</string>
    </property>
   </action>
   <action name="actionCalibrateAccelerometers">
    <property name="text">
-    <string>Calibrate accelerometers</string>
+    <string>Calibrate Accel</string>
    </property>
   </action>
   <action name="actionExit">

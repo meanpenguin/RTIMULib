@@ -50,6 +50,7 @@ bool RTPressureMS5637::pressureInit()
     }
 
     m_state = MS5637_STATE_IDLE;
+
     return true;
 }
 

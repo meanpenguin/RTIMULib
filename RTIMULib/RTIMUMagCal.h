@@ -51,7 +51,7 @@ public:
     bool magCalEllipsoidValid();
 
     // magCalSaveMinMax() saves the current min/max values to settings
-    void magCalSaveMinMax();
+    bool magCalSaveMinMax();
 
     // magCalSaveRaw saves the ellipsoid fit data and then
     // saves data to the .ini file.

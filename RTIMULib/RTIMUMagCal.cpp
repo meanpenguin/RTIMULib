@@ -83,8 +83,12 @@ bool RTIMUMagCal::magCalValid()
 
 }
 
-void RTIMUMagCal::magCalSaveMinMax()
+bool RTIMUMagCal::magCalSaveMinMax()
 {
+
+    if (!magCalValid())
+        return false;
+
     m_settings->m_compassCalValid = true;
     m_settings->m_compassCalMin = m_magMin;
     m_settings->m_compassCalMax = m_magMax;
@@ -101,6 +105,8 @@ void RTIMUMagCal::magCalSaveMinMax()
     // and set up for min/max calibration
 
     setMinMaxCal();
+    
+    return true;
 }
 
 void RTIMUMagCal::newEllipsoidData(const RTVector3& data)

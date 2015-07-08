@@ -71,6 +71,7 @@ public:
 
     void setDebugEnable(bool enable) { m_debug = enable; }
 
+
 protected:
     void calculatePose(const RTVector3& accel, const RTVector3& mag, float magDeclination); // generates pose from accels and mag
 

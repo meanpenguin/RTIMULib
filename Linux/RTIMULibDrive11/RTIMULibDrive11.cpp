@@ -69,6 +69,25 @@ int main()
     if (humidity != NULL)
         humidity->humidityInit();
 
+    /**
+    printf("c0\n");
+    for (int i = 0; i < 9; i++) { printf("%f,", RTIMUSettings.m_c0[i]); }
+    printf("\n");
+    printf("c1\n");
+    for (int i = 0; i < 9; i++) { printf("%f,", RTIMUSettings.m_c1[i]); }
+    printf("\n");
+    printf("c2\n");
+    for (int i = 0; i < 9; i++) { printf("%f,", RTIMUSettings.m_c2[i]); }
+    printf("\n");
+    printf("c3\n");
+    for (int i = 0; i < 9; i++) { printf("%f,", RTIMUSettings.m_c3[i]); }
+    printf("\n");
+    printf("Temperature Bias\n");
+    for (int i = 0; i < 9; i++) { printf("%f,", RTIMUSettings.m_tempbias[i]); }
+    printf("\n");
+    fflush(stdout);
+    **/
+    
     //  set up for rate timer
 
     rateTimer = displayTimer = RTMath::currentUSecsSinceEpoch();
@@ -102,16 +121,22 @@ int main()
             if ((now - displayTimer) > 200000) {
                 printf("Sample rate %d: %s\n", sampleRate, RTMath::displayDegrees("", imuData.fusionPose));
 
+                printf("%s", RTMath::displayRadians("Accel", imuData.accel));
+                printf("%s", RTMath::displayRadians("Gyro ", imuData.gyro));
+                printf("%s", RTMath::displayRadians("Mag  ", imuData.compass));
+
                 if (pressure != NULL) {
-                    printf("Pressure: %4.1f, height above sea level: %4.1f, temperature: %4.1f",
-                           imuData.pressure, RTMath::convertPressureToHeight(imuData.pressure), imuData.temperature);
+                    printf("Pressure: %4.1f, height above sea level: %4.1f\n",
+                           imuData.pressure, RTMath::convertPressureToHeight(imuData.pressure));
                 }
                 if (humidity != NULL) {
-                    printf(", humidity: %4.1f",
+                    printf("Humidity: %4.1f%%\n",
                            imuData.humidity);
                 }
+		printf("IMU Temperature: %4.1f, PS Temperature: %4.1f, HS Temperature: %4f\n", imuData.IMUtemperature, imuData.PStemperature, imuData.temperature);
+                
                 printf("\n");
-
+                
                 fflush(stdout);
                 displayTimer = now;
             }

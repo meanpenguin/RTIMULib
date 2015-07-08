@@ -54,14 +54,34 @@
 #define MPU9150_ADDRESS1            0x69
 #define MPU9150_ID                  0x68
 
-//  thes magnetometers are on aux bus
+//  these magnetometers are on aux bus
 
 #define AK8975_ADDRESS              0x0c
 #define HMC5883_ADDRESS             0x1e
 
 //  Register map
-
-#define MPU9150_YG_OFFS_TC          0x01
+#define MPU9150_XG_OFFS_TC          0x00 // Bit 7 PWR_MODE, bits 6:1 XG_OFFS_TC, bit 0 OTP_BNK_VLD
+#define MPU9150_YG_OFFS_TC          0x01 // Power Mode, read or change auxiliary I2C Voltage Level
+#define MPU9150_ZG_OFFS_TC          0x02 
+#define MPU9150_X_FINE_GAIN         0x03 // [7:0] fine gain
+#define MPU9150_Y_FINE_GAIN         0x04
+#define MPU9150_Z_FINE_GAIN         0x05
+#define MPU9150_XA_OFFSET_H         0x06 // User-defined trim values for accelerometer
+#define MPU9150_XA_OFFSET_L_TC      0x07
+#define YMPU9150_A_OFFSET_H         0x08
+#define MPU9150_YA_OFFSET_L_TC      0x09
+#define MPU9150_ZA_OFFSET_H         0x0A
+#define MPU9150_ZA_OFFSET_L_TC      0x0B
+#define MPU9150_SELF_TEST_X         0x0D
+#define MPU9150_SELF_TEST_Y         0x0E    
+#define MPU9150_SELF_TEST_Z         0x0F
+#define MPU9150_SELF_TEST_A         0x10
+#define MPU9150_XG_OFFS_USRH        0x13  // User-defined trim values for gyroscope, populate with calibration routine
+#define MPU9150_XG_OFFS_USRL        0x14
+#define MPU9150_YG_OFFS_USRH        0x15
+#define MPU9150_YG_OFFS_USRL        0x16
+#define MPU9150_ZG_OFFS_USRH        0x17
+#define MPU9150_ZG_OFFS_USRL        0x18
 #define MPU9150_SMPRT_DIV           0x19
 #define MPU9150_LPF_CONFIG          0x1a
 #define MPU9150_GYRO_CONFIG         0x1b
@@ -79,14 +99,33 @@
 #define MPU9150_INT_ENABLE          0x38
 #define MPU9150_INT_STATUS          0x3a
 #define MPU9150_ACCEL_XOUT_H        0x3b
+#define MPU9150_ACCEL_XOUT_L        0x3c
+#define MPU9150_ACCEL_YOUT_H        0x3d
+#define MPU9150_ACCEL_YOUT_L        0x3e
+#define MPU9150_ACCEL_ZOUT_H        0x3f
+#define MPU9150_ACCEL_ZOUT_L        0x40
+#define MPU9150_TEMP_OUT_H          0x41
+#define MPU9150_TEMP_OUT_L          0x42
 #define MPU9150_GYRO_XOUT_H         0x43
+#define MPU9150_GYRO_XOUT_L         0x44
+#define MPU9150_GYRO_YOUT_H         0x45
+#define MPU9150_GYRO_YOUT_L         0x46
+#define MPU9150_GYRO_ZOUT_H         0x47
+#define MPU9150_GYRO_ZOUT_L         0x48
 #define MPU9150_EXT_SENS_DATA_00    0x49
+#define MPU9150_MOT_DETECT_STATUS   0x61
+#define MPU9150_I2C_SLV0_DO         0x63
 #define MPU9150_I2C_SLV1_DO         0x64
+#define MPU9150_I2C_SLV2_DO         0x65
+#define MPU9150_I2C_SLV3_DO         0x66
 #define MPU9150_I2C_MST_DELAY_CTRL  0x67
+#define MPU9150_SIGNAL_PATH_RESET   0x68
+#define MPU9150_MOTION_DETECT_CTRL  0x69
 #define MPU9150_USER_CTRL           0x6a
 #define MPU9150_PWR_MGMT_1          0x6b
 #define MPU9150_PWR_MGMT_2          0x6c
 #define MPU9150_FIFO_COUNT_H        0x72
+#define MPU9150_FIFO_COUNT_L        0x73
 #define MPU9150_FIFO_R_W            0x74
 #define MPU9150_WHO_AM_I            0x75
 
