@@ -245,6 +245,8 @@ bool RTIMUMPU9150::IMUInit()
     //  configure IMU configuration variables
 
     m_slaveAddr = m_settings->m_I2CSlaveAddress;
+    
+    m_IMUtemperature_previous = 0.0;
 
     setSampleRate(m_settings->m_MPU9150GyroAccelSampleRate);
     setCompassRate(m_settings->m_MPU9150CompassSampleRate);
@@ -597,7 +599,7 @@ bool RTIMUMPU9150::IMURead()
     unsigned char temperatureData[2]; // if temperature data is not coming in through FIFO
     #endif
 
-    if (!m_settings->HALRead(m_slaveAddr, MPU9150_FIFO_COUNT_H, 2, fifoCount, "Failed to read fifo count"))
+    if (!m_settings->HALRead(m_slaveAddr, MPU9150_FIFO_COUNT_H, 2, fifoCount, "Failed to read fifo count")) 
          return false;
 
     count = ((unsigned int)fifoCount[0] << 8) + fifoCount[1];
@@ -606,15 +608,19 @@ bool RTIMUMPU9150::IMURead()
     // printf("FIFO Count: %d, Cache Count: %d, FIFO Chunk Length: %d, Max Cache Size: %d\n",count, m_cacheCount, m_fifoChunkLength, MPU9150_CACHE_SIZE);
     // printf("Compass Data Length: %d \n", m_compassDataLength);  
 	
-	if (count == 1024) {
+    if (count == 1024) {
         HAL_INFO("MPU9150 fifo has overflowed");
         resetFifo();
         m_imuData.timestamp += m_sampleInterval * (1024 / m_fifoChunkLength + 1); // try to fix timestamp
         return false;
     }
-    
+
 #ifdef MPU9150_CACHE_MODE
-    if ((m_cacheCount == 0) && (count  >= m_fifoChunkLength) && (count < (MPU9150_CACHE_SIZE * m_fifoChunkLength))) {
+    if ( (m_cacheCount == 0) && (count  < m_fifoChunkLength) ) 
+        return false; // no new set of data available
+    
+    if ( (m_cacheCount == 0) && (count >= m_fifoChunkLength)  && (count < (MPU9150_CACHE_SIZE * m_fifoChunkLength)) )  {
+
         // special case of a small fifo and nothing cached - just handle as simple read
         if (!m_settings->HALRead(m_slaveAddr, MPU9150_FIFO_R_W, m_fifoChunkLength, fifoData, "Failed to read fifo data"))
             return false;
@@ -631,8 +637,7 @@ bool RTIMUMPU9150::IMURead()
         #endif
 
     } else {
-        // if (count >= (MPU9150_CACHE_SIZE * m_fifoChunkLength)) { // ORIGINAL CODE, but this condition should never happen
-        // if (count <= (MPU9150_CACHE_SIZE * m_fifoChunkLength)) { // suggested CODE
+        if (count >= (MPU9150_CACHE_SIZE * m_fifoChunkLength)) {
             if (m_cacheCount == MPU9150_CACHE_BLOCK_COUNT) {
                 // all cache blocks are full - discard oldest and update timestamp to account for lost samples
                 m_imuData.timestamp += m_sampleInterval * m_cache[m_cacheOut].count;
@@ -667,7 +672,7 @@ bool RTIMUMPU9150::IMURead()
             m_cacheCount++;
             if (++m_cacheIn == MPU9150_CACHE_BLOCK_COUNT)
                 m_cacheIn = 0;
-        //}
+        }
 
         //  now fifo has been read if necessary, get something to process
 
@@ -675,12 +680,12 @@ bool RTIMUMPU9150::IMURead()
             printf("No data in Cache\n");
             return false; }
 
-            memcpy(fifoData, m_cache[m_cacheOut].data + m_cache[m_cacheOut].index, m_fifoChunkLength);
+        memcpy(fifoData, m_cache[m_cacheOut].data + m_cache[m_cacheOut].index, m_fifoChunkLength);
         #if MPU9150_FIFO_WITH_COMPASS == 0
-            memcpy(compassData, m_cache[m_cacheOut].compass, m_compassDataLength);
+        memcpy(compassData, m_cache[m_cacheOut].compass, m_compassDataLength);
         #endif
         #if MPU9150_FIFO_WITH_TEMP == 0
-            memcpy(temperatureData, m_cache[m_cacheOut].temperature, 2);            
+        memcpy(temperatureData, m_cache[m_cacheOut].temperature, 2);            
         #endif
 
         m_cache[m_cacheOut].index += m_fifoChunkLength;
@@ -787,10 +792,6 @@ bool RTIMUMPU9150::IMURead()
         #endif
     #endif
 
-    if (m_imuData.IMUtemperatureValid == true) {
-            handleTempBias(); 	// temperature Correction
-    }
-
     //  sort out gyro axes
 
     m_imuData.gyro.setX(m_imuData.gyro.x());
@@ -828,12 +829,6 @@ bool RTIMUMPU9150::IMURead()
         m_imuData.compass.setY(-temp);
     }
     
-    //  now do standard processing
-
-    handleGyroBias();
-    calibrateAverageCompass();
-    calibrateAccel();
-
     if (m_firstTime)
         m_imuData.timestamp = RTMath::currentUSecsSinceEpoch();
     else
@@ -841,8 +836,22 @@ bool RTIMUMPU9150::IMURead()
 
     m_firstTime = false;
 
-    //  now update the filter
+    //  now do standard processing
+    if (m_imuData.IMUtemperatureValid == true) {
+        // Check if temperature changed
+        if (fabs(m_imuData.IMUtemperature - m_IMUtemperature_previous) >= TEMPERATURE_DELTA) {
+            // If yes, update bias
+            updateTempBias(m_imuData.IMUtemperature);
+            m_IMUtemperature_previous = m_imuData.IMUtemperature;
+        }
+        // Then do
+        handleTempBias(); 	// temperature Correction
+    }
+    handleGyroBias();
+    calibrateAverageCompass();
+    calibrateAccel();
 
+    //  now update the filter
     updateFusion();
 
     return true;

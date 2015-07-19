@@ -88,7 +88,7 @@ protected:
 
     RTFLOAT m_slerpPower;                                   // a value 0 to 1 that controls measured state influence
     RTQuaternion m_rotationDelta;                           // amount by which measured state differs from predicted
-    RTQuaternion m_rotationPower;                           // delta raised to the appopriate power
+    RTQuaternion m_rotationPower;                           // delta raised to the appropriate power
     RTVector3 m_rotationUnitVector;                         // the vector part of the rotation delta
 
     bool m_debug;

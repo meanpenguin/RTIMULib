@@ -121,29 +121,36 @@ bool RTIMUAccelCal::accelCalSaveMinMax()
         m_octantCounts[i] = 0;
     m_accelCalInIndex = m_accelCalOutIndex = 0;
 
-    // and set up for min/max calibration
-
-    setMinMaxCal();
-
     return true;
 }
 
-void RTIMUAccelCal::newEllipsoidData(const RTVector3& data)
+bool RTIMUAccelCal::newEllipsoidData(const RTVector3& data)
 {
     RTVector3 calData;
 
     //  do min/max calibration first
+    if (data.x() >= 0.0)
+        calData.setX(data.x() / m_accelMax.x());
+    else
+        calData.setX(data.x() / -m_accelMin.x());
 
-    for (int i = 0; i < 3; i++)
-        calData.setData(i, (data.data(i) - m_minMaxOffset.data(i)) * m_minMaxScale.data(i));
+    if (data.y() >= 0.0)
+        calData.setY(data.y() / m_accelMax.y());
+    else
+        calData.setY(data.y() / -m_accelMin.y());
 
+    if (data.z() >= 0.0)
+        calData.setZ(data.z() / m_accelMax.z());
+    else
+        calData.setZ(data.z() / -m_accelMin.z());
+    
     //  now see if it's already there - we want them all unique and slightly separate (using a fuzzy compare)
 
     for (int index = m_accelCalOutIndex, i = 0; i < m_accelCalCount; i++) {
-        if ((abs(calData.x() - m_accelCalSamples[index].x()) < RTIMUCALDEFS_ELLIPSOID_MIN_SPACING) &&
-            (abs(calData.y() - m_accelCalSamples[index].y()) < RTIMUCALDEFS_ELLIPSOID_MIN_SPACING) &&
-            (abs(calData.z() - m_accelCalSamples[index].z()) < RTIMUCALDEFS_ELLIPSOID_MIN_SPACING)) {
-                return;                                         // too close to another sample
+        if ((fabs(calData.x() - m_accelCalSamples[index].x()) < RTIMUCALDEFS_ACCEL_ELLIPSOID_MIN_SPACING) &&
+            (fabs(calData.y() - m_accelCalSamples[index].y()) < RTIMUCALDEFS_ACCEL_ELLIPSOID_MIN_SPACING) &&
+            (fabs(calData.z() - m_accelCalSamples[index].z()) < RTIMUCALDEFS_ACCEL_ELLIPSOID_MIN_SPACING)) {
+                return false;                   // too close to another sample
         }
         if (++index == RTIMUCALDEFS_MAX_ACC_SAMPLES)
             index = 0;
@@ -160,9 +167,11 @@ void RTIMUAccelCal::newEllipsoidData(const RTVector3& data)
         // buffer is full - pull oldest
         removeAccelCalData();
     }
+	
+	return true;
 }
 
-bool RTIMUAccelCal::accCalEllipsoidValid()
+bool RTIMUAccelCal::accelCalEllipsoidValid()
 {
     bool valid = true;
 
@@ -258,28 +267,4 @@ int RTIMUAccelCal::findOctant(const RTVector3& data)
         val |= 4;
 
     return val;
-}
-
-void RTIMUAccelCal::setMinMaxCal()
-{
-    float maxDelta = -1;
-    float delta;
-
-    //  find biggest range
-
-    for (int i = 0; i < 3; i++) {
-        if ((m_accelMax.data(i) - m_accelMin.data(i)) > maxDelta)
-            maxDelta = m_accelMax.data(i) - m_accelMin.data(i);
-    }
-    if (maxDelta < 0) {
-        HAL_ERROR("Error in min/max calibration data\n");
-        return;
-    }
-    maxDelta /= 2.0f;                                       // this is the max +/- range
-
-    for (int i = 0; i < 3; i++) {
-        delta = (m_accelMax.data(i) -m_accelMin.data(i)) / 2.0f;
-        m_minMaxScale.setData(i, maxDelta / delta);            // makes everything the same range
-        m_minMaxOffset.setData(i, (m_accelMax.data(i) + m_accelMin.data(i)) / 2.0f);
-    }
 }

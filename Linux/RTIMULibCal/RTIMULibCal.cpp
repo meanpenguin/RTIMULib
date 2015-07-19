@@ -22,9 +22,39 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+// RT Calibration Procedure
+// read ini file into settings structure
+// create IMU element
+// set IMU Calibration Mode for ACCEL and COMPASS
+// create mag calibration element
+//  initialize this element (reset min/max, reset occtant counts)
+// create accel calibration element
+//  enable axis for calibration
+//  if max min valid, set those to max min found, otherwise create empty data fro max min
+//  initialize this element
+// create temperature calibration element
+//
+//  depending on keyboard input
+//   mag min/max calibration
+//      reset min max
+//      new minmax data
+//      depending on keyboard ...
+//  ...
+//  Raw Data Mode is enabled through following mechanism:
+//    in RTIMU there is Acceleration, Gyro and Compass Calibration and Bias Computations
+//    the calibration routines check for valid calibration with
+//         getAccelCalibrationValid() { return !m_accelCalibrationMode && m_settings->m_accelCalValid; }
+//    if accelCalibrationMode or magCalibrationMode is true it will not apply max/min and Ellipsoid Calibration
+//    When recording ellipsoid data, MagCal and AccelCal will conduct the max/min calibration the same was as 
+//    RTIMU without using RTIMU routines. max min for accel and offset/scale for mag.
+//    Setting CalibrationMode will disable application of calibration
+//    However it will conduct axis rotations as defined for x/y/z for the individual IMUs
+//
+
 #include "RTIMULib.h"
 #include "RTIMUMagCal.h"
 #include "RTIMUAccelCal.h"
+#include "RTIMUTemperatureCal.h"
 
 #include <termios.h>
 #include <unistd.h>
@@ -38,10 +68,6 @@
 
 //  function prototypes
 
-void doMagMinMaxCal();
-void doMagEllipsoidCal();
-void processEllipsoid();
-void doAccelCal();
 void newIMU();
 bool pollIMU();
 char getUserChar();
@@ -49,6 +75,17 @@ void displayMenu();
 void displayMagMinMax();
 void displayMagEllipsoid();
 void displayAccelMinMax();
+void displayAccelEllipsoid();
+void displayTemperature();
+
+void doMagMinMaxCal();
+void doMagEllipsoidCal();
+void doAccelMinMaxCal();
+void doAccelEllipsoidCal();
+void doTemperatureCal();
+void processEllipsoid();
+void processAccelEllipsoid();
+void processTemperature();
 
 //  global variables
 
@@ -57,8 +94,13 @@ static RTIMU_DATA imuData;
 static RTIMU *imu;
 static RTIMUMagCal *magCal;
 static RTIMUAccelCal *accelCal;
+static RTIMUTemperatureCal *temperatureCal;
 static bool magMinMaxDone;
+static bool accelMinMaxDone;
+static bool temperatureDone;
+
 static bool accelEnables[3];
+static bool accelEllipsoidEnable;
 static int accelCurrentAxis;
 
 int main(int argc, char **argv)
@@ -82,25 +124,30 @@ int main(int argc, char **argv)
 
     imu->setCompassCalibrationMode(true);
     imu->setAccelCalibrationMode(true);
+    imu->setGyroCalibrationMode(true);
+    imu->setTemperatureCalibrationMode(false);
+    
     magCal = new RTIMUMagCal(settings);
     magCal->magCalInit();
-    magMinMaxDone = false;
     accelCal = new RTIMUAccelCal(settings);
     accelCal->accelCalInit();
+    temperatureCal = new RTIMUTemperatureCal(settings);
+    temperatureCal->temperatureCalInit();
 
+    magMinMaxDone = false;
+    accelMinMaxDone = false;
+    temperatureDone = false;
+    
     //  set up console io
-
     struct termios	ctty;
-
     tcgetattr(fileno(stdout), &ctty);
     ctty.c_lflag &= ~(ICANON);
     tcsetattr(fileno(stdout), TCSANOW, &ctty);
 
     //  the main loop
-
     while (!mustExit) {
         displayMenu();
-        switch (tolower(getchar())) {
+        switch (getchar()) {
         case 'x' :
             mustExit = true;
             break;
@@ -109,12 +156,20 @@ int main(int argc, char **argv)
             doMagMinMaxCal();
             break;
 
-        case 'e' :
+        case 'M' :
             doMagEllipsoidCal();
             break;
 
         case 'a' :
-            doAccelCal();
+            doAccelMinMaxCal();
+            break;
+
+        case 'A' :
+            doAccelEllipsoidCal();
+            break;
+
+        case 'T' :
+            doTemperatureCal();
             break;
         }
     }
@@ -140,6 +195,114 @@ void newIMU()
     imu->IMUInit();
 }
 
+void doTemperatureCal()
+{
+    uint64_t now;
+    char input;
+
+    /*
+    if ( (magMinMaxDone == true) || (accelMinMaxDone == true)) {
+        printf("\nYou cannot collect temperature data once min/max was done\n");
+        printf("You might need to change CompassCalValid or AccelCalValid in the ini file.\n");
+        printf("Compass: %d Accel %d\n", magMinMaxDone, accelMinMaxDone);
+        return;
+    }
+    */
+    
+    temperatureCal->temperatureCalInit();
+    imu->setTemperatureCalibrationMode(true);
+    temperatureDone = false;
+
+    //  now collect data
+
+    printf("\nTemperature calibration\n");
+    printf("-----------------------\n");
+    printf("Blow hot and cold air onto the IMU chip.\n");
+    printf("Keep temperature within reasonable limits.\n");
+    printf("When enough data is recorded, enter 's' to save, 'r' to reset\n");
+    printf("or 'x' to abort and discard the data.\n");
+    printf("\nPress any key to start...");
+    getchar();
+
+    now = RTMath::currentUSecsSinceEpoch();
+
+    while (1) {
+
+        while (pollIMU()) {
+            now = RTMath::currentUSecsSinceEpoch();
+            if ( temperatureCal->newData(imuData.accel,imuData.gyro,imuData.compass,imuData.IMUtemperature) )
+               displayTemperature();
+        }
+
+        if ((input = getUserChar()) != 0) {
+            switch (input) {
+            case 's' :
+                printf("\nSaving temperature data.\n");
+                
+                if (temperatureCal->temperatureCalValid()) {
+                    temperatureCal->temperatureCalSaveRaw(ELLIPSOID_FIT_DIR);
+                    processTemperature();
+                    temperatureDone = true;
+                    imu->setTemperatureCalibrationMode(false);
+                }
+                return;
+
+            case 'x' :
+                printf("\nAborting.\n");
+                return;
+
+            case 'r' :
+                printf("\nResetting temperature data.\n");
+                temperatureCal->temperatureCalReset(); 
+                imu->setTemperatureCalibrationMode(true);
+                break;
+            }
+        }
+        
+        //  poll at the rate recommended by the IMU
+        uint64_t time_elapsed = RTMath::currentUSecsSinceEpoch() - now;
+        if ( (int)time_elapsed < (imu->IMUGetPollInterval()*1000) ) {
+            usleep(imu->IMUGetPollInterval() * 1000 - time_elapsed);
+        }
+    }
+}
+
+void processTemperature()
+{
+    pid_t pid;
+    int status;
+
+    printf("\nProcessing temperature fit data ...\n");
+
+    pid = fork();
+    if (pid == 0) {
+        //  child process
+        chdir(ELLIPSOID_FIT_DIR);
+        execl("/bin/sh", "/bin/sh", "-c", RTIMUCALDEFS_OCTAVE_COMMAND_TEMPERATURE, NULL);
+        printf("here");
+        _exit(EXIT_FAILURE);
+    } else if (pid < 0) {
+        printf("\nFailed to start temperature fitting code.\n");
+        return;
+    } else {
+        //  parent process - wait for child
+        if (waitpid(pid, &status, 0) != pid) {
+            printf("\nTemperature fit failed, %d\n", status);
+        } else {
+            if (status == 0) {
+                printf("\nTemperature fit completed - saving data to file.");
+                if (temperatureCal->temperatureCalSaveCorr(ELLIPSOID_FIT_DIR) == false) {
+                    printf("\nUnable to save temperature coefficients.\n");}
+                else {
+                    printf("\nTemperature coefficients saved.\n");
+                };
+            } else {
+                printf("\nTemperature fit returned %d - aborting.\n", status);
+            }
+        }
+    }
+}
+
 void doMagMinMaxCal()
 {
     uint64_t displayTimer;
@@ -151,7 +314,7 @@ void doMagMinMaxCal()
 
     //  now collect data
 
-    printf("\n\nMagnetometer min/max calibration\n");
+    printf("\nMagnetometer min/max calibration\n");
     printf("--------------------------------\n");
     printf("Waggle the IMU chip around, ensuring that all six axes\n");
     printf("(+x, -x, +y, -y and +z, -z) go through their extrema.\n");
@@ -160,16 +323,16 @@ void doMagMinMaxCal()
     printf("\nPress any key to start...");
     getchar();
 
-    displayTimer = RTMath::currentUSecsSinceEpoch();
+    now = RTMath::currentUSecsSinceEpoch();
+    displayTimer = now;
 
     while (1) {
-        //  poll at the rate recommended by the IMU
-
-        usleep(imu->IMUGetPollInterval() * 1000);
 
         while (pollIMU()) {
-            magCal->newMinMaxData(imuData.compass);
+		
             now = RTMath::currentUSecsSinceEpoch();
+			
+            magCal->newMinMaxData(imuData.compass);
 
             //  display 10 times per second
 
@@ -182,7 +345,7 @@ void doMagMinMaxCal()
         if ((input = getUserChar()) != 0) {
             switch (input) {
             case 's' :
-                printf("\nSaving min/max data.\n\n");
+                printf("\nSaving min/max data.\n");
                 magCal->magCalSaveMinMax();
                 magMinMaxDone = true;
                 return;
@@ -197,13 +360,18 @@ void doMagMinMaxCal()
                 break;
             }
         }
+        
+        //  poll at the rate recommended by the IMU
+        uint64_t time_elapsed = RTMath::currentUSecsSinceEpoch() - now;
+        if ( (int)time_elapsed < imu->IMUGetPollInterval()*1000) {
+            usleep(imu->IMUGetPollInterval() * 1000 - time_elapsed);
+        }
     }
 }
 
 
 void doMagEllipsoidCal()
 {
-    uint64_t displayTimer;
     uint64_t now;
     char input;
 
@@ -213,8 +381,8 @@ void doMagEllipsoidCal()
         return;
     }
 
-    printf("\n\nMagnetometer ellipsoid calibration\n");
-    printf("\n\n----------------------------------\n");
+    printf("\nMagnetometer ellipsoid calibration\n");
+    printf("\n----------------------------------\n");
     printf("Move the magnetometer around in as many poses as possible.\n");
     printf("The counts for each of the 8 pose quadrants will be displayed.\n");
     printf("When enough data (%d samples per octant) has been collected,\n", RTIMUCALDEFS_OCTANT_MIN_SAMPLES);
@@ -223,28 +391,22 @@ void doMagEllipsoidCal()
     printf("\nPress any key to start...");
     getchar();
 
-    displayTimer = RTMath::currentUSecsSinceEpoch();
+    now = RTMath::currentUSecsSinceEpoch();
 
     while (1) {
-        //  poll at the rate recommended by the IMU
-
-        usleep(imu->IMUGetPollInterval() * 1000);
 
         while (pollIMU()) {
-            magCal->newEllipsoidData(imuData.compass);
+		
+            now = RTMath::currentUSecsSinceEpoch();
+			
+            if (magCal->newEllipsoidData(imuData.compass) == true) {
+                displayMagEllipsoid();
+            }
 
             if (magCal->magCalEllipsoidValid()) {
                 magCal->magCalSaveRaw(ELLIPSOID_FIT_DIR);
                 processEllipsoid();
                 return;
-            }
-            now = RTMath::currentUSecsSinceEpoch();
-
-            //  display 10 times per second
-
-            if ((now - displayTimer) > 100000) {
-                displayMagEllipsoid();
-                displayTimer = now;
             }
         }
 
@@ -255,6 +417,13 @@ void doMagEllipsoidCal()
                 return;
             }
         }
+        
+        //  poll at the rate recommended by the IMU
+        uint64_t time_elapsed = RTMath::currentUSecsSinceEpoch() - now;
+        if ( (int)time_elapsed < imu->IMUGetPollInterval()*1000) {
+            usleep(imu->IMUGetPollInterval() * 1000 - time_elapsed);
+        }
+
     }
 }
 
@@ -263,7 +432,7 @@ void processEllipsoid()
     pid_t pid;
     int status;
 
-    printf("\n\nProcessing ellipsoid fit data...\n");
+    printf("\nProcessing ellipsoid fit data for magnetometer ...\n");
 
     pid = fork();
     if (pid == 0) {
@@ -278,7 +447,7 @@ void processEllipsoid()
     } else {
         //  parent process - wait for child
         if (waitpid(pid, &status, 0) != pid) {
-            printf("\n\nEllipsoid fit failed, %d\n", status);
+            printf("\nEllipsoid fit failed, %d\n", status);
         } else {
             if (status == 0) {
                 printf("\nEllipsoid fit completed - saving data to file.");
@@ -290,13 +459,13 @@ void processEllipsoid()
     }
 }
 
-void doAccelCal()
+void doAccelMinMaxCal()
 {
     uint64_t displayTimer;
     uint64_t now;
     char input;
 
-    printf("\n\nAccelerometer Calibration\n");
+    printf("\nAccelerometer Calibration\n");
     printf("-------------------------\n");
     printf("The code normally ignores readings until an axis has been enabled.\n");
     printf("The idea is to orient the IMU near the current extrema (+x, -x, +y, -y, +z, -z)\n");
@@ -327,20 +496,19 @@ void doAccelCal()
     for (int i = 0; i < 3; i++)
         accelEnables[i] = false;
 
-    displayTimer = RTMath::currentUSecsSinceEpoch();
+    now = RTMath::currentUSecsSinceEpoch();
+    displayTimer = now;
 
     while (1) {
-        //  poll at the rate recommended by the IMU
-
-        usleep(imu->IMUGetPollInterval() * 1000);
 
         while (pollIMU()) {
 
+            now = RTMath::currentUSecsSinceEpoch();
+            
             for (int i = 0; i < 3; i++)
                 accelCal->accelCalEnable(i, accelEnables[i]);
+            
             accelCal->newMinMaxData(imuData.accel);
-
-            now = RTMath::currentUSecsSinceEpoch();
 
             //  display 10 times per second
 
@@ -370,18 +538,130 @@ void doAccelCal()
                 break;
 
             case 's' :
-                accelCal->accelCalSave();
+                accelCal->accelCalSaveMinMax();
+                accelMinMaxDone = true;
                 printf("\nAccelerometer calibration data saved to file.\n");
                 return;
-
+                
             case 'x' :
                 printf("\nAborting.\n");
                 return;
             }
         }
+        
+        //  poll at the rate recommended by the IMU
+        uint64_t time_elapsed = RTMath::currentUSecsSinceEpoch() - now;
+        if ( (int)time_elapsed < imu->IMUGetPollInterval()*1000) {
+            usleep(imu->IMUGetPollInterval() * 1000 - time_elapsed);
+        }
     }
 }
 
+void doAccelEllipsoidCal()
+{ 
+    uint64_t now;
+    char input;
+
+    if (!accelMinMaxDone) {
+        printf("\nYou cannot collect ellipsoid data until accelerometer min/max\n");
+        printf("calibration has been performed.\n");
+        return;
+    }
+
+    printf("\nAccelerometer ellipsoid calibration\n");
+    printf("\n----------------------------------\n");
+    printf("Move the accelerometer carefully around.\n");
+    printf("Any rapid movements will falsely increase accelerometer readings.\n");
+    printf("Please refer to supplementary instructions.\n");
+    printf("The counts for each of the 8 pose quadrants will be displayed.\n");
+    printf("When enough data (%d samples per octant) has been collected,\n", RTIMUCALDEFS_OCTANT_MIN_SAMPLES);
+    printf("ellipsoid processing will begin.\n");
+    printf("Enter 'x' at any time to abort and discard the data.\n");
+    printf("Enter 'e' to enable data acquisition.\n");
+    printf("Enter 'd' to disable/pause data acquisition.\n");
+    printf("\nPress any key to start...");
+    getchar();
+
+    now = RTMath::currentUSecsSinceEpoch();
+
+    accelEllipsoidEnable = true;
+    
+    while (1) {
+
+        while (pollIMU()) {
+
+            now = RTMath::currentUSecsSinceEpoch();
+
+            if (accelEllipsoidEnable == true) {
+                if (accelCal->newEllipsoidData(imuData.accel) == true) {
+                    displayAccelEllipsoid();
+                }
+            }
+            
+            if (accelCal->accelCalEllipsoidValid()) {
+                accelCal->accelCalSaveRaw(ELLIPSOID_FIT_DIR);
+                processAccelEllipsoid(); 
+                return;
+            }
+        }
+
+        if ((input = getUserChar()) != 0) {
+            switch (input) {
+            case 'x' :
+                printf("\nAborting.\n");
+                return;
+                
+            case 'e' :
+                accelEllipsoidEnable = true;
+                break;
+
+            case 'd' :
+                accelEllipsoidEnable = false;
+                break;
+
+            }
+        }
+
+        //  poll at the rate recommended by the IMU
+        uint64_t time_elapsed = RTMath::currentUSecsSinceEpoch() - now;
+        if ( (int)time_elapsed < imu->IMUGetPollInterval()*1000) {
+            usleep(imu->IMUGetPollInterval() * 1000 - time_elapsed);
+        }
+
+    }
+}
+
+void processAccelEllipsoid()
+{
+    pid_t pid;
+    int status;
+
+    printf("\nProcessing ellipsoid fit data for accelerometer ...\n");
+
+    pid = fork();
+    if (pid == 0) {
+        //  child process
+        chdir(ELLIPSOID_FIT_DIR);
+        execl("/bin/sh", "/bin/sh", "-c", RTIMUCALDEFS_OCTAVE_COMMAND_ACCEL, NULL);
+        printf("here");
+        _exit(EXIT_FAILURE);
+    } else if (pid < 0) {
+        printf("\nFailed to start ellipsoid fitting code.\n");
+        return;
+    } else {
+        //  parent process - wait for child
+        if (waitpid(pid, &status, 0) != pid) {
+            printf("\nEllipsoid fit failed, %d\n", status);
+        } else {
+            if (status == 0) {
+                printf("\nEllipsoid fit completed - saving data to file.");
+                accelCal->accelCalSaveCorr(ELLIPSOID_FIT_DIR);
+            } else {
+                printf("\nEllipsoid fit returned %d - aborting.\n", status);
+            }
+        }
+    }
+}
 
 bool pollIMU()
 {
@@ -406,17 +686,35 @@ char getUserChar()
 void displayMenu()
 {
     printf("\n");
-    printf("Options are: \n\n");
+    printf("Options are: \n");
+    printf("  T - temperature calibration\n");
     printf("  m - calibrate magnetometer with min/max\n");
-    printf("  e - calibrate magnetometer with ellipsoid (do min/max first)\n");
-    printf("  a - calibrate accelerometers\n");
-    printf("  x - exit\n\n");
+    printf("  M - calibrate magnetometer with ellipsoid (do min/max first)\n");
+    printf("  a - calibrate accelerometers with min/max\n");
+    printf("  A - calibrate accelerometers with ellipsoid (do min/max first)\n");
+    printf("  x - exit\n");
     printf("Enter option: ");
+}
+
+void displayTemperature()
+{
+    int index = temperatureCal->m_temperatureCalInIndex - 1;
+    if (index < 0) { index=0; }
+
+    TEMPERATURE_CAL_DATA data = temperatureCal->m_temperatureCalSamples[index];
+    
+    printf("\n");
+    printf("IMU Temperature: %6.2f Max: %6.2f Min: %6.2f \n",  data.temperature, temperatureCal->m_temperatureMax, temperatureCal->m_temperatureMin);
+    printf("Accel x: %6.2f  y: %6.2f  z: %6.2f\n", data.accel.x(), data.accel.y(), data.accel.z());
+    printf("Gyro x: %6.2f  y: %6.2f  z: %6.2f\n", data.gyro.x(), data.gyro.y(), data.gyro.z());
+    printf("Mag x: %6.2f  y: %6.2f  z: %6.2f\n", data.mag.x(), data.mag.y(), data.mag.z());
+    printf("Count: %d\n", temperatureCal->m_temperatureCalCount);
+    fflush(stdout);
 }
 
 void displayMagMinMax()
 {
-    printf("\n\n");
+    printf("\n");
     printf("Min x: %6.2f  min y: %6.2f  min z: %6.2f\n", magCal->m_magMin.data(0),
            magCal->m_magMin.data(1), magCal->m_magMin.data(2));
     printf("Max x: %6.2f  max y: %6.2f  max z: %6.2f\n", magCal->m_magMax.data(0),
@@ -428,7 +726,7 @@ void displayMagEllipsoid()
 {
     int counts[RTIMUCALDEFS_OCTANT_COUNT];
 
-    printf("\n\n");
+    printf("\n");
 
     magCal->magCalOctantCounts(counts);
 
@@ -439,7 +737,7 @@ void displayMagEllipsoid()
 
 void displayAccelMinMax()
 {
-    printf("\n\n");
+    printf("\n");
 
     printf("Current axis: ");
     if (accelCurrentAxis == 0) {
@@ -454,5 +752,18 @@ void displayAccelMinMax()
            accelCal->m_accelMin.data(1), accelCal->m_accelMin.data(2));
     printf("Max x: %6.2f  max y: %6.2f  max z: %6.2f\n", accelCal->m_accelMax.data(0),
            accelCal->m_accelMax.data(1), accelCal->m_accelMax.data(2));
+    fflush(stdout);
+}
+
+void displayAccelEllipsoid()
+{
+    int counts[RTIMUCALDEFS_OCTANT_COUNT];
+
+    printf("\n");
+
+    accelCal->accelCalOctantCounts(counts);
+
+    printf("---: %d  +--: %d  -+-: %d  ++-: %d\n", counts[0], counts[1], counts[2], counts[3]);
+    printf("--+: %d  +-+: %d  -++: %d  +++: %d\n", counts[4], counts[5], counts[6], counts[7]);
     fflush(stdout);
 }

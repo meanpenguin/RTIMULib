@@ -120,35 +120,46 @@ public:
         RTFLOAT mx, RTFLOAT my, RTFLOAT mz, uint64_t timestamp);
 
     //  the following two functions get access to the measured pose (accel and compass)
-
     const RTVector3& getMeasuredPose() { return m_fusion->getMeasuredPose(); }
     const RTQuaternion& getMeasuredQPose() { return m_fusion->getMeasuredQPose(); }
 
     //  setCompassCalibrationMode() turns off use of cal data so that raw data can be accumulated
     //  to derive calibration data
-
     void setCompassCalibrationMode(bool enable) { m_compassCalibrationMode = enable; }
 
     //  setAccelCalibrationMode() turns off use of cal data so that raw data can be accumulated
     //  to derive calibration data
-
     void setAccelCalibrationMode(bool enable) { m_accelCalibrationMode = enable; }
 
-    //  setCalibrationData configures the cal data from settings and also enables use if valid
+    //  setTemperatureCalibrationMode() turns off use of cal data so that raw data can be accumulated
+    //  to derive calibration data
+    void setTemperatureCalibrationMode(bool enable) { m_temperatureCalibrationMode = enable; }
 
+    //  setGyroCalibrationMode() turns off use of cal data so that raw data can be accumulated
+    //  to derive calibration data
+    void setGyroCalibrationMode(bool enable) { m_gyroCalibrationMode = enable; }
+    
+    
+    //  setCalibrationData configures the cal data from settings and also enables use if valid
     void setCalibrationData();
 
     //  getCompassCalibrationValid() returns true if the compass min/max calibration data is being used
-
     bool getCompassCalibrationValid() { return !m_compassCalibrationMode && m_settings->m_compassCalValid; }
 
     //  getCompassCalibrationEllipsoidValid() returns true if the compass ellipsoid calibration data is being used
-
     bool getCompassCalibrationEllipsoidValid() { return !m_compassCalibrationMode && m_settings->m_compassCalEllipsoidValid; }
 
     //  getAccelCalibrationValid() returns true if the accel calibration data is being used
-
     bool getAccelCalibrationValid() { return !m_accelCalibrationMode && m_settings->m_accelCalValid; }
+
+    //  getAccelCalibrationEllipsoidValid() returns true if the compass ellipsoid calibration data is being used
+    bool getAccelCalibrationEllipsoidValid() { return !m_accelCalibrationMode && m_settings->m_accelCalEllipsoidValid; }
+
+    //  getTemperatureCalibrationValid() returns true if temperature calibrated and in calibration mode
+    bool getTemperatureCalibrationValid() { return !m_temperatureCalibrationMode && m_settings->m_temperatureCalValid; }
+
+    //  getGyroCalibrationValid() returns true if the compass min/max calibration data is being used
+    bool getGyroCalibrationValid() { return !m_gyroCalibrationMode && m_settings->m_gyroBiasValid; }
 
     const RTVector3& getGyro() { return m_imuData.gyro; }   // gets gyro rates in radians/sec
     const RTVector3& getAccel() { return m_imuData.accel; } // get accel data in gs
@@ -167,6 +178,8 @@ protected:
 
     bool m_compassCalibrationMode;                          // true if cal mode so don't use cal data!
     bool m_accelCalibrationMode;                            // true if cal mode so don't use cal data!
+    bool m_temperatureCalibrationMode;                      // true if cal mode so don't use cal data!
+    bool m_gyroCalibrationMode;                             // true if cal mode so don't use cal data!
 
     RTIMU_DATA m_imuData;                                   // the data from the IMU
 

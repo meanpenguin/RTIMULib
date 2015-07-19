@@ -36,7 +36,7 @@ typedef float RTFLOAT;
 
 //  Useful constants
 
-#define	RTMATH_PI					3.1415926535
+#define	RTMATH_PI			3.1415926535
 #define	RTMATH_DEGREE_TO_RAD		(RTMATH_PI / 180.0)
 #define	RTMATH_RAD_TO_DEGREE		(180.0 / RTMATH_PI)
 
@@ -75,7 +75,7 @@ public:
 
     static RTFLOAT convertPressureToHeight(RTFLOAT pressure, RTFLOAT staticPressure = 1013.25);
     static RTFLOAT convertPressureToDepth(RTFLOAT pressure, RTFLOAT staticPressure = 1013.25);
-    static RTFLOAT convertPressureToDepth(RTFLOAT pressure, RTFLOAT staticPressure = 1013.25, RTFLOAT latitude=32.13);
+    static RTFLOAT convertPressureLatitudeToDepth(RTFLOAT pressure, RTFLOAT staticPressure = 1013.25, RTFLOAT latitude=32.13);
 
 private:
     static char m_string[1000];                             // for the display routines

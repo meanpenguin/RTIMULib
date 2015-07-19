@@ -51,17 +51,17 @@ z = magCalDataMat(3, :)';
 [center, radii, evecs, v] = ellipsoid_fit( [x y z ] );
 fprintf('Center: %f %f %f\n', center(1), center(2), center(3));
 fprintf('Radii: %f %f %f\n', radii(1), radii(2), radii(3));
-fprintf('Evecs:\n%f %f %f\n%f %f %f\n%f %f %f\n', 
-	evecs(1, 1), evecs(1, 2), evecs(1, 3),
-	evecs(2, 1), evecs(2, 2), evecs(2, 3),
+fprintf('Evecs:\n%f %f %f\n%f %f %f\n%f %f %f\n', ...
+	evecs(1, 1), evecs(1, 2), evecs(1, 3), ...
+	evecs(2, 1), evecs(2, 2), evecs(2, 3), ...
 	evecs(3, 1), evecs(3, 2), evecs(3, 3));
 
 scaleMat = inv([radii(1) 0 0; 0 radii(2) 0; 0 0 radii(3)]) * min(radii); 
 correctionMat = evecs * scaleMat * evecs';
 
-fprintf('correctionMat:\n%f %f %f\n%f %f %f\n%f %f %f\n', 
-	correctionMat(1, 1), correctionMat(1, 2), correctionMat(1, 3),
-	correctionMat(2, 1), correctionMat(2, 2), correctionMat(2, 3),
+fprintf('correctionMat:\n%f %f %f\n%f %f %f\n%f %f %f\n', ...
+	correctionMat(1, 1), correctionMat(1, 2), correctionMat(1, 3), ...
+	correctionMat(2, 1), correctionMat(2, 2), correctionMat(2, 3), ...
 	correctionMat(3, 1), correctionMat(3, 2), correctionMat(3, 3));
 
 	

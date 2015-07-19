@@ -486,7 +486,7 @@ void RTIMUSettings::setDefaults()
     m_I2CHumidityAddress = 0;
     
     m_senTemp_break  = 80.0;                       // within reasonable temp range
-    m_tempCalValid = false;
+    m_temperatureCalValid = false;
     for (int i = 0; i < 9; i++) {
 	  m_c3[i] = 0.0;
 	  m_c2[i] = 0.0;
@@ -505,7 +505,7 @@ void RTIMUSettings::setDefaults()
     m_compassCalEllipsoidCorr[1][1] = 1;
     m_compassCalEllipsoidCorr[2][2] = 1;
 
-    m_compassAdjDeclination = 0;
+    m_compassAdjDeclination = 10.1;
 
     m_accelCalValid = false;
     m_accelCalEllipsoidValid = false;
@@ -675,16 +675,16 @@ bool RTIMUSettings::loadSettings()
             m_I2CHumidityAddress = atoi(val);
 
         // temperature bias calibration
-	// c3 temo^3 + c2 temp^2 + c1 temp + c0
-	// for accx,y,z gyrox,y,z compx,y,z
+		// c3 temo^3 + c2 temp^2 + c1 temp + c0
+		// for accx,y,z gyrox,y,z compx,y,z
 
         } else if (strcmp(key, RTIMULIB_TEMP_BREAK ) == 0) {
             m_senTemp_break = atoi(val) == 0;
             
         } else if (strcmp(key, RTIMULIB_TEMPCAL_VALID) == 0) {
-            m_tempCalValid = strcmp(val, "true") == 0;
+            m_temperatureCalValid = strcmp(val, "true") == 0;
 
-	} else if (strcmp(key, RTIMULIB_TEMPCAL_C0_0) == 0) {
+		} else if (strcmp(key, RTIMULIB_TEMPCAL_C0_0) == 0) {
             sscanf(val, "%f", &ftemp);
             m_c0[0]=ftemp;
         } else if (strcmp(key, RTIMULIB_TEMPCAL_C0_1) == 0) {
@@ -712,7 +712,7 @@ bool RTIMUSettings::loadSettings()
             sscanf(val, "%f", &ftemp);
             m_c0[8]=ftemp;
 			
-	} else if (strcmp(key, RTIMULIB_TEMPCAL_C1_0) == 0) {
+		} else if (strcmp(key, RTIMULIB_TEMPCAL_C1_0) == 0) {
             sscanf(val, "%f", &ftemp);
             m_c1[0]=ftemp;
         } else if (strcmp(key, RTIMULIB_TEMPCAL_C1_1) == 0) {
@@ -740,7 +740,7 @@ bool RTIMUSettings::loadSettings()
             sscanf(val, "%f", &ftemp);
             m_c1[8]=ftemp;
 			
-	} else if (strcmp(key, RTIMULIB_TEMPCAL_C2_0) == 0) {
+		} else if (strcmp(key, RTIMULIB_TEMPCAL_C2_0) == 0) {
             sscanf(val, "%f", &ftemp);
             m_c2[0]=ftemp;
         } else if (strcmp(key, RTIMULIB_TEMPCAL_C2_1) == 0) {
@@ -768,7 +768,7 @@ bool RTIMUSettings::loadSettings()
             sscanf(val, "%f", &ftemp);
             m_c2[8]=ftemp;
 			
-	} else if (strcmp(key, RTIMULIB_TEMPCAL_C3_0) == 0) {
+		} else if (strcmp(key, RTIMULIB_TEMPCAL_C3_0) == 0) {
             sscanf(val, "%f", &ftemp);
             m_c3[0]=ftemp;
         } else if (strcmp(key, RTIMULIB_TEMPCAL_C3_1) == 0) {
@@ -1219,7 +1219,7 @@ bool RTIMUSettings::saveSettings()
 
     setBlank();
     setComment("Temperature bias calibration settings");
-    setValue(RTIMULIB_TEMPCAL_VALID, m_tempCalValid);
+    setValue(RTIMULIB_TEMPCAL_VALID, m_temperatureCalValid);
 	
     setValue(RTIMULIB_TEMPCAL_C0_0, m_c0[0]);
     setValue(RTIMULIB_TEMPCAL_C0_1, m_c0[1]);

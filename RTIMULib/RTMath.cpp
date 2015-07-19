@@ -56,7 +56,7 @@ const char *RTMath::displayRadians(const char *label, RTVector3& vec)
 
 const char *RTMath::displayDegrees(const char *label, RTVector3& vec)
 {
-    sprintf(m_string, "%s: roll:%f, pitch:%f, yaw:%f", label, vec.x() * RTMATH_RAD_TO_DEGREE,
+    sprintf(m_string, "%s: roll:%f, pitch:%f, yaw:%f\n", label, vec.x() * RTMATH_RAD_TO_DEGREE,
             vec.y() * RTMATH_RAD_TO_DEGREE, vec.z() * RTMATH_RAD_TO_DEGREE);
     return m_string;
 }
@@ -102,18 +102,19 @@ RTFLOAT RTMath::convertPressureToHeight(RTFLOAT pressure, RTFLOAT staticPressure
 
 RTFLOAT RTMath::convertPressureToDepth(RTFLOAT pressure, RTFLOAT staticPressure)
 {
-	return (pressure - staticPressure) * 1.019716 / 10000.0;	
-	//http://www.seabird.com/document/an69-conversion-pressure-depth
-        // pressure is in mbar but formula needs decibar
+    return (pressure - staticPressure) * 0.0001019716;	
+    //http://www.seabird.com/document/an69-conversion-pressure-depth
+    // pressure is in mbar and depth in meters
 }
 
-RTFLOAT RTMath::convertPressureToDepth(RTFLOAT pressure, RTFLOAT staticPressure, RTFLOAT latitude)
+RTFLOAT RTMath::convertPressureLatitudeToDepth(RTFLOAT pressure, RTFLOAT staticPressure, RTFLOAT latitude)
 {
-	RTFLOAT x = sin(latitude / 57.29578) * sin(latitude / 57.29578) ; 
-        RTFLOAT g = 9.780318 * ( 1.0 + ( 5.2788E-3  + 2.36E-5  * x) * x ) + 1.092E-6 * (pressure / 10000.0);
-	RTFLOAT p = pressure - staticPressure;
-	return ((((-1.82E-15  * p + 2.279E-10 ) * p - 2.251E-5 ) * p + 9.72659) * p) / g;
-	// http://www.seabird.com/document/an69-conversion-pressure-depth
+    RTFLOAT temp = sin(latitude / 57.29578);
+    RTFLOAT x = temp * temp ; 
+    RTFLOAT g = 9.780318 * ( 1.0 + ( 5.2788E-3  + 2.36E-5  * x) * x ) + 1.092E-6 * (pressure / 10000.0);
+    RTFLOAT p = pressure - staticPressure;
+    return ((((-1.82E-15  * p + 2.279E-10 ) * p - 2.251E-5 ) * p + 9.72659) * p) / g;
+    // http://www.seabird.com/document/an69-conversion-pressure-depth
 }
 
 RTFLOAT RTMath::clamp2PI(RTFLOAT x) {
@@ -725,6 +726,7 @@ RTFLOAT RTQuaternion::toHeading(const RTVector3& mag, float magDeclination)
   float Head_Y = mag.y()*cos_roll - mag.z()*sin_roll;
   // Magnetic Heading
   heading = -atan2(Head_Y,Head_X) - magDeclination;
+
   if(heading < -9990) { heading = 0; }
   heading = RTMath::clamp2PI(heading);
 

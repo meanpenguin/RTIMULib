@@ -52,7 +52,11 @@ SET(LIBRTIMU_SRCS
     RTIMUAccelCal.cpp
     RTIMUHal.cpp
     RTIMUMagCal.cpp
+    RTIMUAccelCal.cpp
+    RTIMUTemperatureCal.cpp
     RTIMUSettings.cpp
+    RTIMUMotion.cpp
+    RunningAverage.cpp
     IMUDrivers/RTIMU.cpp
     IMUDrivers/RTIMUGD20M303DLHC.cpp
     IMUDrivers/RTIMUGD20HM303DLHC.cpp

@@ -68,7 +68,7 @@
 #define MPU9150_Z_FINE_GAIN         0x05
 #define MPU9150_XA_OFFSET_H         0x06 // User-defined trim values for accelerometer
 #define MPU9150_XA_OFFSET_L_TC      0x07
-#define YMPU9150_A_OFFSET_H         0x08
+#define MPU9150_YA_OFFSET_H         0x08
 #define MPU9150_YA_OFFSET_L_TC      0x09
 #define MPU9150_ZA_OFFSET_H         0x0A
 #define MPU9150_ZA_OFFSET_L_TC      0x0B

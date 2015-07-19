@@ -25,28 +25,28 @@
 
 RTIMULIBPATH  = ../../RTIMULib
 
-CC    			= gcc
-CXX   			= g++
-DEFINES       	=
-CFLAGS			= -pipe -O2 -Wall -W $(DEFINES)
-CXXFLAGS      	= -pipe -O2 -Wall -W $(DEFINES)
-INCPATH       	= -I. -I$(RTIMULIBPATH)
-LINK  			= g++
-LFLAGS			= -Wl,-O1
-LIBS  			= -L/usr/lib/arm-linux-gnueabihf
-COPY  			= cp -f
-COPY_FILE     	= $(COPY)
-COPY_DIR      	= $(COPY) -r
-STRIP 			= strip
-INSTALL_FILE  	= install -m 644 -p
-INSTALL_DIR   	= $(COPY_DIR)
+CC    		 = gcc
+CXX   		 = g++
+DEFINES    	 =
+CFLAGS       = -pipe -O2 -Wall -W $(DEFINES)
+CXXFLAGS     = -pipe -O2 -Wall -W $(DEFINES)
+INCPATH      = -I. -I$(RTIMULIBPATH)
+LINK  		 = g++
+LFLAGS		 = -Wl,-O1
+LIBS  		 = -L/usr/lib/arm-linux-gnueabihf
+COPY  		 = cp -f
+COPY_FILE    = $(COPY)
+COPY_DIR     = $(COPY) -r
+STRIP        = strip
+INSTALL_FILE = install -m 644 -p
+INSTALL_DIR  = $(COPY_DIR)
 INSTALL_PROGRAM = install -m 755 -p
-DEL_FILE      	= rm -f
+DEL_FILE     	= rm -f
 SYMLINK       	= ln -f -s
 DEL_DIR       	= rmdir
-MOVE  			= mv -f
+MOVE  		= mv -f
 CHK_DIR_EXISTS	= test -d
-MKDIR			= mkdir -p
+MKDIR		= mkdir -p
 
 # Output directory
 
@@ -65,7 +65,10 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/RTIMUSettings.h \
     $(RTIMULIBPATH)/RTIMUAccelCal.h \
     $(RTIMULIBPATH)/RTIMUMagCal.h \
+    $(RTIMULIBPATH)/RTIMUTemperatureCal.h \
+    $(RTIMULIBPATH)/RTMotion.h \
     $(RTIMULIBPATH)/RTIMUCalDefs.h \
+    $(RTIMULIBPATH)/RunningAverage.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMU.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUNull.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUMPU9150.h \
@@ -99,6 +102,9 @@ OBJECTS = objects/RTIMULibDrive11.o \
     objects/RTIMUSettings.o \
     objects/RTIMUAccelCal.o \
     objects/RTIMUMagCal.o \
+    objects/RTIMUTemperatureCal.o \
+    objects/RTMotion.o \
+    objects/RunningAverage.o \
     objects/RTIMU.o \
     objects/RTIMUNull.o \
     objects/RTIMUMPU9150.o \

@@ -56,10 +56,11 @@ public:
     //  accelCalSave() should be called at the end of the process to save the cal data
     //  to the settings file. Returns false if invalid data
     bool accelCalSaveMinMax();                                    // saves the accel cal data for specified axes
+
     // newEllipsoidData is used to save data to the ellipsoid sample array
-    void newEllipsoidData(const RTVector3& data);
+    bool newEllipsoidData(const RTVector3& data);
     
-    bool accCalEllipsoidValid();
+    bool accelCalEllipsoidValid();
     
     // accelCalSaveRaw saves the ellipsoid fit data and then
     // saves data to the .ini file.
@@ -91,21 +92,17 @@ public:
     RTIMUSettings *m_settings;
 
 private:
-    RTVector3 removeAccelCalData();                           // takes an entry out of the buffer
+    RTVector3 removeAccelCalData();                         // takes an entry out of the buffer
     int findOctant(const RTVector3& data);                  // works out which octant the data is in
     void setMinMaxCal();                                    // get ready for the ellipsoid mode
 
-    int m_startCount;                                       // need to throw way first few samples
+    int m_startCount;                                         // need to throw way first few samples
     RTVector3 m_accelCalSamples[RTIMUCALDEFS_MAX_MAG_SAMPLES];// the saved samples for ellipsoid fit
     int m_accelCalInIndex;
     int m_accelCalOutIndex;
     int m_accelCalCount;
     
-    RTVector3 m_minMaxOffset;                               // the min/max calibration offset
-    RTVector3 m_minMaxScale;                                // the min/max scale
-
     int m_octantCounts[RTIMUCALDEFS_OCTANT_COUNT];          // counts in each octant
-
 
 };
 

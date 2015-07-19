@@ -57,6 +57,8 @@
 #define MPU9150_CACHE_SIZE          16                      // number of chunks in a block
 #define MPU9150_CACHE_BLOCK_COUNT   16                      // number of cache blocks
 
+#define TEMPERATURE_DELTA 0.05f                             // change in temperature necessary to recompute the biases
+
 typedef struct
 {
     unsigned char data[MPU9150_FIFO_CHUNK_SIZE * MPU9150_CACHE_SIZE];
@@ -101,7 +103,7 @@ private:
     bool resetFifo();
 
     bool m_firstTime;                                       // if first sample
-
+    RTFLOAT m_IMUtemperature_previous;
     unsigned char m_slaveAddr;                              // I2C address of MPU9150
 
     unsigned char m_lpf;                                    // low pass filter setting

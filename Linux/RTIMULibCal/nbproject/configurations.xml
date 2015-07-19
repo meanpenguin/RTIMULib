@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="95">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="RTEllipsoidFit"
+                   displayName="RTEllipsoidFit"
+                   projectFiles="true">
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/COPYING</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/RTEllipsoidFit.m</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/RTEllipsoidFitAccel.m</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/RTEllipsoidFitMag.m</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/RTFitTemperature.m</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/ellipsoid_fit.m</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/ellipsoid_fit_license.txt</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/mag_cal.m</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/mag_fit_display.m</itemPath>
+    </logicalFolder>
     <logicalFolder name="RTIMULib" displayName="RTIMULib" projectFiles="true">
       <logicalFolder name="IMUDrivers" displayName="IMUDrivers" projectFiles="true">
         <logicalFolder name="datasheets" displayName="datasheets" projectFiles="true">
           <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/HTS221.pdf</itemPath>
           <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/HTU21D.pdf</itemPath>
           <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/MS5611-01BA03.pdf</itemPath>
+          <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/PS-MPU-9150A.pdf</itemPath>
+          <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/RM-MPU-9150A-00-v3.0.pdf</itemPath>
           <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/ms5803_14ba.pdf</itemPath>
         </logicalFolder>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTAD.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTAD.h</itemPath>
         <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidity.cpp</itemPath>
         <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidity.h</itemPath>
         <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidityDefs.h</itemPath>
@@ -35,6 +52,8 @@
         <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMULSM9DS1.h</itemPath>
         <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150.cpp</itemPath>
         <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150_old.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150_old.h</itemPath>
         <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9250.cpp</itemPath>
         <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9250.h</itemPath>
         <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUNull.cpp</itemPath>
@@ -86,8 +105,12 @@
       <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUMagCal.h</itemPath>
       <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUSettings.cpp</itemPath>
       <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUSettings.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUTemperatureCal.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUTemperatureCal.h</itemPath>
       <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMath.cpp</itemPath>
       <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMath.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMotion.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMotion.h</itemPath>
       <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RunningAverage.c</itemPath>
       <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RunningAverage.h</itemPath>
     </logicalFolder>
@@ -106,6 +129,7 @@
   <sourceRootList>
     <Elem>.</Elem>
     <Elem>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib</Elem>
+    <Elem>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -130,7 +154,62 @@
           </ccTool>
         </makeTool>
       </makefileType>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/COPYING"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/RTEllipsoidFit.m"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/RTEllipsoidFitAccel.m"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/RTEllipsoidFitMag.m"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/RTFitTemperature.m"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/ellipsoid_fit.m"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/ellipsoid_fit_license.txt"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/mag_cal.m"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTEllipsoidFit/mag_fit_display.m"
+            ex="false"
+            tool="0"
+            flavor2="0">
+      </item>
       <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/CMakeLists.txt"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTAD.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTAD.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -265,6 +344,16 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150_old.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150_old.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9250.cpp"
             ex="false"
             tool="1"
@@ -361,6 +450,16 @@
             flavor2="0">
       </item>
       <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/MS5611-01BA03.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/PS-MPU-9150A.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/RM-MPU-9150A-00-v3.0.pdf"
             ex="false"
             tool="3"
             flavor2="0">
@@ -475,12 +574,32 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUTemperatureCal.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUTemperatureCal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMath.cpp"
             ex="false"
             tool="1"
             flavor2="0">
       </item>
       <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMath.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMotion.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMotion.h"
             ex="false"
             tool="3"
             flavor2="0">

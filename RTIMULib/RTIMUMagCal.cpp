@@ -109,22 +109,25 @@ bool RTIMUMagCal::magCalSaveMinMax()
     return true;
 }
 
-void RTIMUMagCal::newEllipsoidData(const RTVector3& data)
+bool RTIMUMagCal::newEllipsoidData(const RTVector3& data)
 {
     RTVector3 calData;
 
     //  do min/max calibration first
+    calData.setX((data.x() - m_minMaxOffset.x()) * m_minMaxScale.x());
+    calData.setY((data.y() - m_minMaxOffset.y()) * m_minMaxScale.y());
+    calData.setZ((data.z() - m_minMaxOffset.z()) * m_minMaxScale.z());
 
-    for (int i = 0; i < 3; i++)
-        calData.setData(i, (data.data(i) - m_minMaxOffset.data(i)) * m_minMaxScale.data(i));
+    //for (int i = 0; i < 3; i++)
+    //    calData.setData(i, (data.data(i) - m_minMaxOffset.data(i)) * m_minMaxScale.data(i));
 
     //  now see if it's already there - we want them all unique and slightly separate (using a fuzzy compare)
 
     for (int index = m_magCalOutIndex, i = 0; i < m_magCalCount; i++) {
-        if ((abs(calData.x() - m_magCalSamples[index].x()) < RTIMUCALDEFS_ELLIPSOID_MIN_SPACING) &&
-            (abs(calData.y() - m_magCalSamples[index].y()) < RTIMUCALDEFS_ELLIPSOID_MIN_SPACING) &&
-            (abs(calData.z() - m_magCalSamples[index].z()) < RTIMUCALDEFS_ELLIPSOID_MIN_SPACING)) {
-                return;                                         // too close to another sample
+        if ((fabs(calData.x() - m_magCalSamples[index].x()) < RTIMUCALDEFS_ELLIPSOID_MIN_SPACING) &&
+            (fabs(calData.y() - m_magCalSamples[index].y()) < RTIMUCALDEFS_ELLIPSOID_MIN_SPACING) &&
+            (fabs(calData.z() - m_magCalSamples[index].z()) < RTIMUCALDEFS_ELLIPSOID_MIN_SPACING)) {
+                return false;                 // too close to another sample
         }
         if (++index == RTIMUCALDEFS_MAX_MAG_SAMPLES)
             index = 0;
@@ -141,6 +144,8 @@ void RTIMUMagCal::newEllipsoidData(const RTVector3& data)
         // buffer is full - pull oldest
         removeMagCalData();
     }
+	
+	return true;
 }
 
 bool RTIMUMagCal::magCalEllipsoidValid()
@@ -207,7 +212,7 @@ bool RTIMUMagCal::magCalSaveCorr(const char *ellipsoidFitPath)
         }
         if (fscanf(file, "%f %f %f %f %f %f %f %f %f %f %f %f",
             a + 0, a + 1, a + 2, b + 0, b + 1, b + 2, b + 3, b + 4, b + 5, b + 6, b + 7, b + 8) != 12) {
-            HAL_ERROR("Ellipsoid corrcetion file didn't have 12 floats\n");
+            HAL_ERROR("Ellipsoid correction file didn't have 12 floats\n");
             fclose(file);
             return false;
         }
@@ -260,7 +265,7 @@ void RTIMUMagCal::setMinMaxCal()
 
     for (int i = 0; i < 3; i++) {
         delta = (m_magMax.data(i) -m_magMin.data(i)) / 2.0f;
-        m_minMaxScale.setData(i, maxDelta / delta);            // makes everything the same range
+        m_minMaxScale.setData(i, maxDelta / delta);         // makes everything the same range
         m_minMaxOffset.setData(i, (m_magMax.data(i) + m_magMin.data(i)) / 2.0f);
     }
 }

@@ -1,47 +1,44 @@
 #ifndef RunningAverage_h
+
 #define RunningAverage_h
-//
-//    FILE: RunningAverage.h
-//  AUTHOR: Rob dot Tillaart at gmail dot com
-// PURPOSE: RunningAverage library for Arduino
-//     URL: http://arduino.cc/playground/Main/RunningAverage
-// HISTORY: See RunningAverage.cpp
-//
-// Released to the public domain
-//
 
-// backwards compatibility
-// clr() clear()
-// add(x) addValue(x)
-// avg() getAverage()
+#define _stdev(cnt, sum, ssq) sqrt((((double)(cnt))*ssq-pow((double)(sum),2)) / ((double)(cnt)*((double)(cnt)-1)))
 
-#define RUNNINGAVERAGE_LIB_VERSION "0.2.04"
-
-#include "Arduino.h"
-
-class RunningAverage
-{
+class moving_average {
+private:
+    boost::circular_buffer<int> *q;
+    float sum;
+    float ssq;
 public:
-    RunningAverage(void);
-    RunningAverage(int);
-    ~RunningAverage();
+    moving_average(int n)  {
+        sum=0;
+        ssq=0;
+        q = new boost::circular_buffer<int>(n);
+    }
+    ~moving_average() {
+        delete q;
+    }
+    void push(double v) {
+        if (q->size() == q->capacity()) {
+            float t=q->front();
+            sum-=t;
+            ssq-=t*t;
+            q->pop_front();
+        }
+        q->push_back(v);
+        sum+=v;
+        ssq+=v*v;
+    }
+    float size() {
+        return q->size();
+    }
+    float mean() {
+        return sum/size();
+    }
+    float stdev() {
+        return _stdev(size(), sum, ssq);
+    }
 
-    void clear();
-    void addValue(float);
-    void fillValue(float, int);
-
-    float getAverage();
-
-    float getElement(uint8_t idx);
-    uint8_t getSize() { return _size; }
-    uint8_t getCount() { return _cnt; }
-
-protected:
-    uint8_t _size;
-    uint8_t _cnt;
-    uint8_t _idx;
-    float   _sum;
-    float * _ar;
 };
 
 #endif

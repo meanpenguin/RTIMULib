@@ -42,7 +42,7 @@ public:
     void newMinMaxData(const RTVector3& data);
 
     // newEllipsoidData is used to save data to the ellipsoid sample array
-    void newEllipsoidData(const RTVector3& data);
+    bool newEllipsoidData(const RTVector3& data);
 
     // magCalValid() determines if the min/max data is basically valid
     bool magCalValid();

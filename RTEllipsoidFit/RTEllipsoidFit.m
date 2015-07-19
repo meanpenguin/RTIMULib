@@ -66,11 +66,32 @@ xCorr = magVector(1, :);					% get corrected vectors
 yCorr = magVector(2, :);
 zCorr = magVector(3, :);
 
-fprintf(corrFile, '%f %f %f %f %f %f %f %f %f %f %f %f\n', 
-	center(1), center(2), center(3), 
-	correctionMat(1, 1), correctionMat(1, 2), correctionMat(1, 3),
-	correctionMat(2, 1), correctionMat(2, 2), correctionMat(2, 3),
+fprintf(corrFile, '%f %f %f %f %f %f %f %f %f %f %f %f\n', ...
+	center(1), center(2), center(3), ...
+	correctionMat(1, 1), correctionMat(1, 2), correctionMat(1, 3), ...
+	correctionMat(2, 1), correctionMat(2, 2), correctionMat(2, 3), ...
 	correctionMat(3, 1), correctionMat(3, 2), correctionMat(3, 3));
 	
 fclose(corrFile);
 
+% Display the fit
+
+displayRadius = 100;
+
+figure(1);
+hold on;
+
+grid;
+xlabel('x');
+ylabel('y');
+zlabel('z');
+axis ([-displayRadius, displayRadius, -displayRadius, displayRadius, -displayRadius, displayRadius], 'square');
+title('Uncorrected samples (red) and corrected (blue) values');
+plot3( x, y, z, ['.' 'r'] );
+plot3( xCorr, yCorr, zCorr, ['.' 'b'] );
+
+% display immediately
+
+drawnow();
+
+print('-djpeg', 'Ellipsoid.tiff')

@@ -68,4 +68,12 @@ typedef struct
     RTFLOAT IMUtemperature;
 } RTIMU_DATA;
 
+typedef struct
+{
+    RTVector3 worldAcceleration;
+    RTVector3 worldVelocity;
+    RTVector3 worldPosition;
+    bool motion;
+} MOTION_DATA;
+
 #endif // _RTIMULIBDEFS_H

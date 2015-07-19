@@ -137,6 +137,8 @@ RTIMU::RTIMU(RTIMUSettings *settings)
 
     m_compassCalibrationMode = false;
     m_accelCalibrationMode = false;
+    m_gyroCalibrationMode = false;
+    m_temperatureCalibrationMode = false;
 
     switch (m_settings->m_fusionType) {
     case RTFUSION_TYPE_KALMANSTATE4:
@@ -189,7 +191,7 @@ void RTIMU::setCalibrationData()
         }
     }
 
-    if (m_settings->m_tempCalValid) {
+    if (m_settings->m_temperatureCalValid) {
         HAL_INFO("Using temperature bias calibration\n");
     } else {
         HAL_INFO("Temperature bias calibration not in use\n");
@@ -222,14 +224,14 @@ void RTIMU::setCalibrationData()
 
 void RTIMU::updateTempBias(float senTemp)
 {
-    if(m_settings->m_tempCalValid == 1) {
+    if(m_settings->m_temperatureCalValid == true) {
 	if(senTemp < m_settings->m_senTemp_break) {
             for(int i = 0; i < 9; i++) { 
-                m_settings->m_tempbias[i] = m_settings->m_c3[i]*(senTemp*senTemp*senTemp) + m_settings->m_c2[i]*(senTemp*senTemp) + m_settings->m_c1[i]*senTemp + m_settings->m_c0[i];
+                m_settings->m_temperaturebias[i] = m_settings->m_c3[i]*(senTemp*senTemp*senTemp) + m_settings->m_c2[i]*(senTemp*senTemp) + m_settings->m_c1[i]*senTemp + m_settings->m_c0[i];
             }		
 	} else {
             for(int i = 0; i < 9; i++) { 
-                m_settings->m_tempbias[i] = 0.0f;
+                m_settings->m_temperaturebias[i] = 0.0f;
             }
 	}
     }
@@ -237,18 +239,20 @@ void RTIMU::updateTempBias(float senTemp)
 
 void RTIMU::handleTempBias()
 {
-    // Accelerometer
-    m_imuData.accel.setX(m_imuData.accel.x() - m_settings->m_tempbias[0]);
-    m_imuData.accel.setY(m_imuData.accel.y() - m_settings->m_tempbias[1]);
-    m_imuData.accel.setZ(m_imuData.accel.z() - m_settings->m_tempbias[2]);
-    // Gyroscope
-    m_imuData.gyro.setX(m_imuData.gyro.x() - m_settings->m_tempbias[3]);
-    m_imuData.gyro.setY(m_imuData.gyro.y() - m_settings->m_tempbias[4]);
-    m_imuData.gyro.setZ(m_imuData.gyro.z() - m_settings->m_tempbias[5]);
-    // Compass
-    m_imuData.compass.setX(m_imuData.compass.x() - m_settings->m_tempbias[6]);
-    m_imuData.compass.setY(m_imuData.compass.y() - m_settings->m_tempbias[7]);
-    m_imuData.compass.setZ(m_imuData.compass.z() - m_settings->m_tempbias[8]);
+    if(getTemperatureCalibrationValid()) {
+        // Accelerometer
+        m_imuData.accel.setX(m_imuData.accel.x() - m_settings->m_temperaturebias[0]);
+        m_imuData.accel.setY(m_imuData.accel.y() - m_settings->m_temperaturebias[1]);
+        m_imuData.accel.setZ(m_imuData.accel.z() - m_settings->m_temperaturebias[2]);
+        // Gyroscope
+        m_imuData.gyro.setX(m_imuData.gyro.x() - m_settings->m_temperaturebias[3]);
+        m_imuData.gyro.setY(m_imuData.gyro.y() - m_settings->m_temperaturebias[4]);
+        m_imuData.gyro.setZ(m_imuData.gyro.z() - m_settings->m_temperaturebias[5]);
+        // Compass
+        m_imuData.compass.setX(m_imuData.compass.x() - m_settings->m_temperaturebias[6]);
+        m_imuData.compass.setY(m_imuData.compass.y() - m_settings->m_temperaturebias[7]);
+        m_imuData.compass.setZ(m_imuData.compass.z() - m_settings->m_temperaturebias[8]);
+    }
 }
 
 bool RTIMU::setGyroContinuousLearningAlpha(RTFLOAT alpha)
@@ -352,7 +356,10 @@ void RTIMU::handleGyroBias()
         }
     }
 
-    m_imuData.gyro -= m_settings->m_gyroBias;
+    // Gyro Bias Computation
+    if (getGyroCalibrationValid()) {
+        m_imuData.gyro -= m_settings->m_gyroBias;
+    }
 }
 
 void RTIMU::calibrateAverageCompass()
@@ -410,6 +417,26 @@ void RTIMU::calibrateAccel()
         m_imuData.accel.setZ(m_imuData.accel.z() / m_settings->m_accelCalMax.z());
     else
         m_imuData.accel.setZ(m_imuData.accel.z() / -m_settings->m_accelCalMin.z());
+
+
+    if (m_settings->m_accelCalEllipsoidValid) {
+        RTVector3 ev = m_imuData.accel;
+        ev -= m_settings->m_accelCalEllipsoidOffset;
+
+        m_imuData.accel.setX(ev.x() * m_settings->m_accelCalEllipsoidCorr[0][0] +
+            ev.y() * m_settings->m_accelCalEllipsoidCorr[0][1] +
+            ev.z() * m_settings->m_accelCalEllipsoidCorr[0][2]);
+
+        m_imuData.accel.setY(ev.x() * m_settings->m_accelCalEllipsoidCorr[1][0] +
+            ev.y() * m_settings->m_accelCalEllipsoidCorr[1][1] +
+            ev.z() * m_settings->m_accelCalEllipsoidCorr[1][2]);
+
+        m_imuData.accel.setZ(ev.x() * m_settings->m_accelCalEllipsoidCorr[2][0] +
+            ev.y() * m_settings->m_accelCalEllipsoidCorr[2][1] +
+            ev.z() * m_settings->m_accelCalEllipsoidCorr[2][2]);
+    }
+
+
 }
 
 void RTIMU::updateFusion()

@@ -146,7 +146,7 @@
 
 // Temperatur Bias
 #define RTIMULIB_TEMP_BREAK                 "senTemp_break"
-#define RTIMULIB_TEMPCAL_VALID              "TempCalValid"
+#define RTIMULIB_TEMPCAL_VALID              "TemperatureCalValid"
 #define RTIMULIB_TEMPCAL_C3_0               "c3_0"
 #define RTIMULIB_TEMPCAL_C3_1               "c3_1"
 #define RTIMULIB_TEMPCAL_C3_2               "c3_2"
@@ -296,13 +296,13 @@ public:
     int m_humidityType;                                     // type code of humidity sensor in use
     unsigned char m_I2CHumidityAddress;                     // I2C slave address of the humidity sensor
 
-    bool m_tempCalValid;                                    // true if there is valid temperature bias correction data
+    bool  m_temperatureCalValid;                                    // true if there is valid temperature bias correction data
     float m_c3[9];                                          // Temperature Bias:
     float m_c2[9];                                          // c3 * T^3 + c2 * T^2 + c1 * T + c0
     float m_c1[9];                                          // for acc, gyro and mag
     float m_c0[9];                                          //   a total of 9 elements
     float m_senTemp_break;                                  // within reasonable temp range
-    float m_tempbias[9];									// Sensor bias as function of temp
+    float m_temperaturebias[9];                                    // Sensor bias as function of temp
   
     bool m_compassCalValid;                                 // true if there is valid compass calibration data
     RTVector3 m_compassCalMin;                              // the minimum values
