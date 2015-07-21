@@ -1,10 +1,11 @@
 //
 //    FILE: RunningAverage.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.2.04
+// VERSION: 0.2.08
+//    DATE: 2015-apr-10
 // PURPOSE: RunningAverage library for Arduino
 //
-// The library stores the last N individual values in a circular buffer,
+// The library stores N individual values in a circular buffer,
 // to calculate the running average.
 //
 // HISTORY:
@@ -16,6 +17,10 @@
 // 0.2.02 - 2012-12-30 refactored trimValue -> fillValue
 // 0.2.03 - 2013-11-31 getElement
 // 0.2.04 - 2014-07-03 added memory protection
+// 0.2.05 - 2014-12-16 changed float -> float
+// 0.2.06 - 2015-03-07 all size uint8_t
+// 0.2.07 - 2015-03-16 added getMin() and getMax() functions (Eric Mulder)
+// 0.2.08 - 2015-04-10 refactored getMin() and getMax() implementation
 //
 // Released to the public domain
 //
@@ -23,9 +28,9 @@
 #include "RunningAverage.h"
 #include <stdlib.h>
 
-RunningAverage::RunningAverage(int n)
+RunningAverage::RunningAverage(uint8_t size)
 {
-    _size = n;
+    _size = size;
     _ar = (float*) malloc(_size * sizeof(float));
     if (_ar == NULL) _size = 0;
     clear();
@@ -42,18 +47,28 @@ void RunningAverage::clear()
     _cnt = 0;
     _idx = 0;
     _sum = 0.0;
-    for (int i = 0; i< _size; i++) _ar[i] = 0.0;  // needed to keep addValue simple
+    _min = NAN;
+    _max = NAN;
+    for (uint8_t i = 0; i < _size; i++)
+    {
+        _ar[i] = 0.0f; // keeps addValue simple
+    }
 }
 
 // adds a new value to the data-set
-void RunningAverage::addValue(float f)
+void RunningAverage::addValue(float value)
 {
-    if (_ar == NULL) return;
+    if (_ar == NULL) return;  // allocation error
     _sum -= _ar[_idx];
-    _ar[_idx] = f;
+    _ar[_idx] = value;
     _sum += _ar[_idx];
     _idx++;
     if (_idx == _size) _idx = 0;  // faster than %
+    // handle min max
+    if (_cnt == 0) _min = _max = value;
+    else if (value < _min) _min = value;
+    else if (value > _max) _max = value;
+    // update count as last otherwise if( _cnt == 0) above will fail
     if (_cnt < _size) _cnt++;
 }
 
@@ -64,7 +79,7 @@ float RunningAverage::getAverage()
     return _sum / _cnt;
 }
 
-// returns the value of an element if exist, 0 otherwise
+// returns the value of an element if exist, NAN otherwise
 float RunningAverage::getElement(uint8_t idx)
 {
     if (idx >=_cnt ) return NAN;
@@ -74,11 +89,13 @@ float RunningAverage::getElement(uint8_t idx)
 // fill the average with a value
 // the param number determines how often value is added (weight)
 // number should preferably be between 1 and size
-void RunningAverage::fillValue(float value, int number)
+void RunningAverage::fillValue(float value, uint8_t number)
 {
-    clear();
-    for (int i = 0; i < number; i++)
+    clear(); // TODO conditional?  if (clr) clear();
+
+    for (uint8_t i = 0; i < number; i++)
     {
         addValue(value);
     }
 }
+// END OF FILE

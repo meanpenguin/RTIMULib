@@ -146,8 +146,8 @@ int main()
             now = RTMath::currentUSecsSinceEpoch();
 
             //  display 5 times per second
-
-            if ((now - displayTimer) > 100000) {
+            // if ((now - displayTimer) > 100000) {
+            // as often as there is new data    
                 printf("Sample rate %d, Is moving: %d, Heading: %f6.1 Heading Ave: %f6.1\n", sampleRate, ismoving, RTMATH_RAD_TO_DEGREE * heading, RTMATH_RAD_TO_DEGREE * heading_avg);
                 printf("%s", RTMath::display("Quaternion", imuData.fusionQPose));
                 printf("%s", RTMath::displayDegrees("Pose", imuData.fusionPose));
@@ -176,11 +176,12 @@ int main()
                     printf("%s", RTMath::displayRadians("World Position", motionData.worldPosition));
                 }
                 
+                printf("Timestamp: %d \n", imuData.timestamp);
                 printf(" ------ \n");
                 
                 fflush(stdout);
                 displayTimer = now;
-            }
+            // }
 
             //  update rate every second
 
