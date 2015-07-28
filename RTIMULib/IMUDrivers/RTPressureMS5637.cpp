@@ -57,8 +57,8 @@ bool RTPressureMS5637::pressureInit()
 bool RTPressureMS5637::pressureRead(RTIMU_DATA& data)
 {
     data.pressureValid = false;
-    data.temperatureValid = false;
-    data.temperature = 0;
+    data.pressureTemperatureValid = false;
+    data.pressureTemperature = 0;
     data.pressure = 0;
 
     if (m_state == MS5637_STATE_IDLE) {
@@ -75,8 +75,8 @@ bool RTPressureMS5637::pressureRead(RTIMU_DATA& data)
 
     if (m_validReadings) {
         data.pressureValid = true;
-        data.temperatureValid = true;
-        data.temperature = m_temperature;
+        data.pressureTemperatureValid = true;
+        data.pressureTemperature = m_temperature;
         data.pressure = m_pressure;
     }
     return true;

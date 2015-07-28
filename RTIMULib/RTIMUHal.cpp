@@ -388,6 +388,11 @@ bool RTIMUHal::HALRead(unsigned char , unsigned char , unsigned char ,
     return true;
 }
 
+bool RTIMUHal::HALRead(unsigned char slaveAddr, unsigned char length,
+                    unsigned char *data, const char *errorMsg)
+{
+    return true;
+}
 
 bool RTIMUHal::I2CSelectSlave(unsigned char , const char *)
 {

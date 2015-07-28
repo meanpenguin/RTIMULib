@@ -1,6 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //
 //  This file was added to RTIMULib and includes:
+//  This routine does not correct for compass declination
 //=====================================================================================================
 // MadgwickAHRS.c
 //=====================================================================================================
@@ -73,6 +74,13 @@ void RTFusionAHRS::reset()
 
 void RTFusionAHRS::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
 {
+    // Rotation matrix to correct for magnetic declination
+    RTQuaternion q_declination;
+	q_declination.setScalar( cos( settings->m_compassAdjDeclination / -2.0f) );
+	q_declination.setX(0.0f);
+	q_declination.setY(0.0f);
+	q_declination.setZ( sin(settings->m_compassAdjDeclination / -2.0f) );
+	
     if (m_debug) {
         HAL_INFO("\n------\n");
         HAL_INFO1("IMU update delta time: %f\n", m_timeDelta);
@@ -131,10 +139,12 @@ void RTFusionAHRS::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
           mx = m_compass.x();
           my = m_compass.y();
           mz = m_compass.z();
+	  
         } else {
           mx = 0.0f;
           my = 0.0f;
-          mz = 0.0f; }   
+          mz = 0.0f; 
+		}   
 
         if (m_enableAccel) {
           ax = m_accel.x();
@@ -278,13 +288,16 @@ void RTFusionAHRS::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
         q2 /= norm;
         q3 /= norm;
         q4 /= norm;
-
+		
         m_stateQ.setScalar(q1);
         m_stateQ.setX(q2);
         m_stateQ.setY(q3);
         m_stateQ.setZ(q4);
     } // end not first time
 
+	// Rotate Quaternion by Magnetic Declination
+    m_stateQ = q_declination * m_statqQ * q_declination.conjugate(); 
+	
     // =================================================
 
     if (m_enableCompass || m_enableAccel) {

@@ -202,11 +202,12 @@ static PyMethodDef RTIMU_RTIMU_methods[] = {
                  "compass", data.compass.x(), data.compass.y(), data.compass.z(),
                  "pressureValid", PyBool_FromLong(data.pressureValid),
                  "pressure", data.pressure,
-                 "temperatureValid", PyBool_FromLong(data.temperatureValid),
-                 "temperature", data.temperature,
+                 "pressureTemperatureValid", PyBool_FromLong(data.pressureTemperatureValid),
+                 "pressureTemperature", data.pressureTemperature,
                  "humidityValid", PyBool_FromLong(data.humidityValid),
-                 "humidity", data.humidity);
-
+                 "humidity", data.humidity,
+                 "humidityTemperatureValid", PyBool_FromLong(data.humidityTemperatureValid),
+                 "humidityTemperature", data.humidityTemperature);
         }),
     METH_NOARGS,
     "Return true if valid bias" },

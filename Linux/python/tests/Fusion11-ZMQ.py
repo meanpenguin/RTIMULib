@@ -29,8 +29,9 @@ SETTINGS_FILE = "RTIMULib"
 def computeHeight(pressure):
     return 44330.8 * (1 - pow(pressure / 1013.25, 0.190263));
     
-def computeDepth(pressure)
+def computeDepth(pressure):
     return (pressure - 1013.25) * 0.01019716;	
+
 print("Using settings file " + SETTINGS_FILE + ".ini")
 if not os.path.exists(SETTINGS_FILE + ".ini"):
   print("Settings file does not exist, will be created")
@@ -78,8 +79,22 @@ while True:
     (data["pressureValid"], data["pressure"], data["pressureTemperatureValid"], data["pressureTemperature"]) = pressure.pressureRead()
     (data["humidityValid"], data["humidity"], data["humidityTemperatureValid"], data["humidityTemperature"]) = humidity.humidityRead()
     fusionPose = data["fusionPose"]
+    fusionQPose = data["fusionQPose"]
+    accel = data["accel"]
+    gyro = data["gyro"]
+    mag = data["compass"]
+	
     print("r: %f p: %f y: %f" % (math.degrees(fusionPose[0]), 
         math.degrees(fusionPose[1]), math.degrees(fusionPose[2])))
+    print("S: %f x: %f y: %f z: %f" % ((fusionQPose[0]), 
+        (fusionQPose[1]), (fusionQPose[2]), (fusionQPose[3])))
+    print("Accel x: %f y: %f z: %f" % ((accel[0]), 
+        (accel[1]), (accel[2])))
+    print("Gyro  x: %f y: %f z: %f" % ((gyro[0]), 
+        (gyro[1]), (gyro[2])))
+    print("Mag   x: %f y: %f z: %f" % ((mag[0]), 
+        (mag[1]), (mag[2])))
+
     if (data["pressureValid"]):
         print("Pressure: %f, height above sea level: %f, depth below sea level: %f" % (data["pressure"], computeHeight(data["pressure"]), computeDepth(data["pressure"])))
     if (data["pressureTemperatureValid"]):
@@ -89,4 +104,3 @@ while True:
     if (data["humidityTemperatureValid"]):
         print("Humidity temperature: %f" % (data["humidityTemperature"]))
     time.sleep(poll_interval*1.0/1000.0)
-

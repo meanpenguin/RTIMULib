@@ -21,17 +21,18 @@
 
 #include <string.h>
 #include <math.h>
+#include <stdint.h>
 
 class RunningAverage
 {
 public:
     RunningAverage(void);
-    RunningAverage(uint8_t);
+    RunningAverage(uint16_t);
     ~RunningAverage();
 
     void clear();
     void addValue(float);
-    void fillValue(float, uint8_t);
+    void fillValue(float, uint16_t);
 
     float getAverage();
     // returns lowest value added to the data-set since last clear
@@ -39,14 +40,14 @@ public:
     // returns highest value added to the data-set since last clear
     float getMax() { return _max; };
 
-    float getElement(uint8_t idx);
+    float getElement(uint16_t idx);
     uint8_t getSize() { return _size; }
     uint8_t getCount() { return _cnt; }
 
 protected:
-    uint8_t _size;
-    uint8_t _cnt;
-    uint8_t _idx;
+    uint16_t _size;
+    uint16_t _cnt;
+    uint16_t _idx;
     float _sum;
     float * _ar;
     float _min;

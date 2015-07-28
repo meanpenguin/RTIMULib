@@ -31,6 +31,7 @@ RTIMU_sources = [
     "RTFusion.cpp",
     "RTFusionKalman4.cpp",
     "RTFusionRTQF.cpp",
+    "RTFusionAHRS.cpp",
     "RTIMUSettings.cpp",
     "IMUDrivers/RTIMU.cpp",
     "IMUDrivers/RTIMUNull.cpp",
@@ -48,6 +49,7 @@ RTIMU_sources = [
     "IMUDrivers/RTPressureLPS25H.cpp",
     "IMUDrivers/RTPressureMS5611.cpp",
     "IMUDrivers/RTPressureMS5637.cpp",
+    "IMUDrivers/RTPressureMS5803.cpp",
     "IMUDrivers/RTHumidity.cpp",
     "IMUDrivers/RTHumidityHTS221.cpp",
     "IMUDrivers/RTHumidityHTU21D.cpp",
@@ -64,6 +66,6 @@ mod = Extension('RTIMU',
                 )
 
 setup (name = 'RTIMULib',
-       version = '7.2.1',
+       version = '7.3.0',
        description = 'richards-tech IMU Sensor Fusion Library',
        ext_modules = [mod])

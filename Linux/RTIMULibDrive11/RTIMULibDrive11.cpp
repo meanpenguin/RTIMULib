@@ -23,7 +23,9 @@
 
 
 #include "RTIMULib.h"
-#include "RTMotion.h"
+
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 
 #include <termios.h>
 #include <unistd.h>
@@ -166,7 +168,7 @@ int main()
                            imuData.humidity);
                 }
                 
-		printf("IMU Temperature: %4.1f, PS Temperature: %4.1f, HS Temperature: %4f\n", imuData.IMUtemperature, imuData.PStemperature, imuData.temperature);
+                printf("IMU Temperature: %4.1f, PS Temperature: %4.1f, HS Temperature: %4f\n", imuData.IMUtemperature, imuData.PStemperature, imuData.temperature);
 
                 printf("Compass is %s\n", enableCompass ? "On" : "Off" );
 
@@ -176,7 +178,7 @@ int main()
                     printf("%s", RTMath::displayRadians("World Position", motionData.worldPosition));
                 }
                 
-                printf("Timestamp: %d \n", imuData.timestamp);
+                printf("Timestamp: %" PRIu64 "\n", imuData.timestamp);
                 printf(" ------ \n");
                 
                 fflush(stdout);
@@ -196,7 +198,7 @@ int main()
         if ((input = getUserChar()) != 0) {
             switch (input) {
                 case 'p' :
-                    //staticPressure = imuData.pressure;
+                    staticPressure = imuData.pressure;
                     break;
                 case 'z' :
                     // zero motion & position
@@ -216,7 +218,7 @@ int main()
                     // must exit
                     mustExit = true;
                     break;
-                } // end switcc input
+                } // end switch input
         } // end if user pressed key
 
     }

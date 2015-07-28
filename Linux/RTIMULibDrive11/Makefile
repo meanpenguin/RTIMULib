@@ -25,16 +25,16 @@
 
 RTIMULIBPATH  = ../../RTIMULib
 
-CC    		 = gcc
-CXX   		 = g++
-DEFINES    	 =
+CC	     = gcc
+CXX	     = g++
+DEFINES	     =
 CFLAGS       = -pipe -O2 -Wall -W $(DEFINES)
 CXXFLAGS     = -pipe -O2 -Wall -W $(DEFINES)
 INCPATH      = -I. -I$(RTIMULIBPATH)
-LINK  		 = g++
-LFLAGS		 = -Wl,-O1
-LIBS  		 = -L/usr/lib/arm-linux-gnueabihf
-COPY  		 = cp -f
+LINK  	     = g++
+LFLAGS	     = -Wl,-O1
+LIBS	     = -L/usr/lib/arm-linux-gnueabihf
+COPY	     = cp -f
 COPY_FILE    = $(COPY)
 COPY_DIR     = $(COPY) -r
 STRIP        = strip

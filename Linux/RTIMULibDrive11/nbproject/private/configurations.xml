@@ -20,7 +20,7 @@
   <confs>
     <conf name="Default" type="0">
       <toolsSet>
-        <developmentServer>pi@192.168.11.10:22</developmentServer>
+        <developmentServer>pi@192.168.1.31:22</developmentServer>
         <platform>2</platform>
       </toolsSet>
       <compile>

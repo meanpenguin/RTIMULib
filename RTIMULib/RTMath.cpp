@@ -102,7 +102,7 @@ RTFLOAT RTMath::convertPressureToHeight(RTFLOAT pressure, RTFLOAT staticPressure
 
 RTFLOAT RTMath::convertPressureToDepth(RTFLOAT pressure, RTFLOAT staticPressure)
 {
-    return (pressure - staticPressure) * 0.0001019716;	
+    return (pressure - staticPressure) * 0.01019716;	
     //http://www.seabird.com/document/an69-conversion-pressure-depth
     // pressure is in mbar and depth in meters
 }

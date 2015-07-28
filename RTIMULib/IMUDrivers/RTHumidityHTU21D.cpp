@@ -35,8 +35,8 @@ RTHumidityHTU21D::RTHumidityHTU21D(RTIMUSettings *settings) : RTHumidity(setting
 {
     m_humidityValid = false;
     m_temperatureValid = false;
-    m_humidity = -1.0;
-    m_temperature = 0.0;
+    m_humidity = -1.0f;
+    m_temperature = 0.0f;
 
  }
 
@@ -65,8 +65,8 @@ bool RTHumidityHTU21D::humidityRead(RTIMU_DATA& data)
 
     data.humidityValid = m_humidityValid;
     data.humidity = m_humidity;
-    data.temperatureValid = m_temperatureValid;
-    data.temperature = m_temperature;
+    data.humidityTemperatureValid = m_temperatureValid;
+    data.humidityTemperature = m_temperature;
 
     return true;
 }

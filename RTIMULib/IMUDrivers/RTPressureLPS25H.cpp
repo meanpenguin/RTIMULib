@@ -60,8 +60,8 @@ bool RTPressureLPS25H::pressureRead(RTIMU_DATA& data)
     unsigned char status;
 
     data.pressureValid = false;
-    data.temperatureValid = false;
-    data.temperature = 0;
+    data.pressureTemperatureValid = false;
+    data.pressureTemperature = 0;
     data.pressure = 0;
 
     if (!m_settings->HALRead(m_pressureAddr, LPS25H_STATUS_REG, 1, &status, "Failed to read LPS25H status"))
@@ -84,8 +84,8 @@ bool RTPressureLPS25H::pressureRead(RTIMU_DATA& data)
 
     data.pressureValid = m_pressureValid;
     data.pressure = m_pressure;
-    data.temperatureValid = m_temperatureValid;
-    data.temperature = m_temperature;
+    data.pressureTemperatureValid = m_temperatureValid;
+    data.pressureTemperature = m_temperature;
 
     return true;
 }

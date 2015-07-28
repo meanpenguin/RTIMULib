@@ -58,12 +58,12 @@ typedef struct
     RTVector3 compass;
     bool pressureValid;
     RTFLOAT pressure;
-    bool temperatureValid;
-    RTFLOAT temperature;
+    bool pressureTemperatureValid;
+    RTFLOAT pressureTemperature;
     bool humidityValid;
     RTFLOAT humidity;
-    bool PStemperatureValid;
-    RTFLOAT PStemperature;
+    bool humidityTemperatureValid;
+    RTFLOAT humidityTemperature;
     bool IMUtemperatureValid;
     RTFLOAT IMUtemperature;
 } RTIMU_DATA;

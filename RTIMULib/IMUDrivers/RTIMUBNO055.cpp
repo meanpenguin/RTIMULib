@@ -58,8 +58,8 @@ bool RTIMUBNO055::IMUInit()
 
     // set validity flags
 
-    m_imuData.fusionPoseValid = true;
-    m_imuData.fusionQPoseValid = true;
+    m_imuData.fusionPoseValid = false;
+    m_imuData.fusionQPoseValid = false;
     m_imuData.gyroValid = true;
     m_imuData.accelValid = true;
     m_imuData.compassValid = true;
@@ -67,13 +67,12 @@ bool RTIMUBNO055::IMUInit()
     m_imuData.IMUtemperature = 0.0;
     m_imuData.humidityValid = false;
     m_imuData.humidity = -1.0;
-    m_imuData.temperatureValid = false;
-    m_imuData.temperature = 0.0;
+    m_imuData.humidityTemperatureValid = false;
+    m_imuData.humidityTemperature = 0.0;
     m_imuData.pressureValid = false;
     m_imuData.pressure = 0.0;
-    m_imuData.PStemperatureValid = false;
-    m_imuData.PStemperature = 0.0;
-
+    m_imuData.pressureTemperatureValid = false;
+    m_imuData.pressureTemperature = 0.0;
 
     if (!m_settings->HALRead(m_slaveAddr, BNO055_WHO_AM_I, 1, &result, "Failed to read BNO055 id"))
         return false;

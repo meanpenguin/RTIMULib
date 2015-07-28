@@ -34,6 +34,8 @@
 #include "RTFusionAHRS.h"
 #include "RTFusionRTQF.h"
 
+#include "RTMotion.h"
+
 #include "RTIMUHal.h"
 #include "IMUDrivers/RTIMU.h"
 #include "IMUDrivers/RTIMUNull.h"

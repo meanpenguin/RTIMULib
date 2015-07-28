@@ -35,7 +35,10 @@ HEADERS += $$PWD/RTIMULib.h \
     $$PWD/RTIMUSettings.h \
     $$PWD/RTIMUMagCal.h \
     $$PWD/RTIMUAccelCal.h \
+    $$PWD/RTIMUTemperatureCal.h \
     $$PWD/RTIMUCalDefs.h \
+    $$PWD/RTMotion.h \
+    $$PWD/RunningAverage.h \
     $$PWD/IMUDrivers/RTIMU.h \
     $$PWD/IMUDrivers/RTIMUDefs.h \
     $$PWD/IMUDrivers/RTIMUMPU9150.h \
@@ -69,6 +72,9 @@ SOURCES += $$PWD/RTMath.cpp \
     $$PWD/RTIMUSettings.cpp \
     $$PWD/RTIMUMagCal.cpp \
     $$PWD/RTIMUAccelCal.cpp \
+    $$PWD/RTIMUTemperatureCal.cpp \
+    $$PWD/RTMotion.cpp \
+    $$PWD/RunningAverage.cpp \
     $$PWD/IMUDrivers/RTIMU.cpp \
     $$PWD/IMUDrivers/RTIMUMPU9150.cpp \
     $$PWD/IMUDrivers/RTIMUMPU9250.cpp \

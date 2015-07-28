@@ -111,7 +111,7 @@
       <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMath.h</itemPath>
       <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMotion.cpp</itemPath>
       <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMotion.h</itemPath>
-      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RunningAverage.c</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RunningAverage.cpp</itemPath>
       <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RunningAverage.h</itemPath>
     </logicalFolder>
     <df root="." name="0">
@@ -604,9 +604,9 @@
             tool="3"
             flavor2="0">
       </item>
-      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RunningAverage.c"
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RunningAverage.cpp"
             ex="false"
-            tool="0"
+            tool="1"
             flavor2="0">
       </item>
       <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RunningAverage.h"

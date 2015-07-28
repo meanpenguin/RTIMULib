@@ -505,7 +505,7 @@ void RTIMUSettings::setDefaults()
     m_compassCalEllipsoidCorr[1][1] = 1;
     m_compassCalEllipsoidCorr[2][2] = 1;
 
-    m_compassAdjDeclination = 10.1;
+    m_compassAdjDeclination = 0.0;
 
     m_accelCalValid = false;
     m_accelCalEllipsoidValid = false;
@@ -885,8 +885,6 @@ bool RTIMUSettings::loadSettings()
         } else if (strcmp(key, RTIMULIB_ACCELCAL_MAXZ) == 0) {
             sscanf(val, "%f", &ftemp);
             m_accelCalMax.setZ(ftemp);
-        } else if (strcmp(key, RTIMULIB_ACCELCAL_MAXZ) == 0) {
-            sscanf(val, "%f", &ftemp);
 
         // accel ellipsoid calibration
            

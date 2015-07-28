@@ -1,10 +1,10 @@
 # RTIMULib - a versatile C++ and Python 9-dof, 10-dof and 11-dof IMU library
 
-RTIMULib is the simplest way to connect a 9-dof, 10-dof or 11-dof IMU to an embedded Linux system and obtain Kalman-filtered quaternion or Euler angle pose data. Basically, two simple funtion calls (IMUInit() and IMURead()) are pretty much all that's needed to integrate RTIMULib.
+RTIMULib is the simplest way to connect a 9-dof, 10-dof or 11-dof IMU to an embedded Linux system and obtain quaternion or Euler angle pose data. Basically, two simple function calls (IMUInit() and IMURead()) are pretty much all that's needed to integrate RTIMULib.
 
-## Have questions, need help or want to comment?
+## Please note that this library is no longer supported by Richards-Tech.
 
-Please use the richards-tech user forum at https://groups.google.com/forum/#!forum/richards-tech-user-forum.
+Additions to this distro are indicated below after version 7.2.1 
 
 ## Features
 
@@ -44,6 +44,7 @@ Pressure/temperature sensing is supported for the following pressure sensors:
 * LPS25H
 * MS5611
 * MS5637
+* MS5803
 
 Humidity/temperature sensing is supported for the following humidity sensors:
 
@@ -92,15 +93,15 @@ It is essential to calibrate the magnetometer or else very poor fusion results w
 
 Also, if using a non-standard axis rotation (see http://wp.me/p4qcHg-cO), magnetometer calibration (and accelerometer calibration if that has been performed) MUST be run AFTER changing the axis rotation.
 
-## Next Steps
-
-SyntroPiNav (an app for the Raspberry Pi) and SyntroNavView can be used as a convenient system to experiment with IMU chips, drivers and filters. SyntroPiNav runs on the Pi and transmits IMU data along with filter outputs over a LAN to SyntroNavView running on an Ubuntu PC. SyntroNavView also displays the data and provides a 3D graphics view of the calculated pose.
-
-Since all IMU data is sent to SyntroNavView, SyntroNavView can run its own local filter. This makes it a very convenient testbed for new filter development as the speed of the desktop can be used to accelerate implementation and testing. When ready, the updated RTIMULib can be compiled into SyntroPiNav and should work exactly the same as on the desktop.
-
-SyntroPiNav is available as part of the richards-tech SyntroPiApps repo (https://github.com/richards-tech/SyntroPiApps) while SyntroNavView is available as part of the richards-tech SyntroApps repo (https://github.com/richards-tech/SyntroApps).
 
 ## Release history
+
+### July 2015 - 7.3.0
+
+Inclusion of MS5803 Pressure Sensor
+Inclusion of Temperature Bias Calibration
+Inclusion of Accelerometer Ellipsoid Fit
+Addition are propagated to RTIMULibCal, RTIMUDrive11, python/test/Fusion11.py 
 
 ### June 22 2015 - 7.2.1
 

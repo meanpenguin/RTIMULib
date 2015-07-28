@@ -111,9 +111,9 @@ bool RTHumidityHTS221::humidityRead(RTIMU_DATA& data)
     unsigned char status;
 
     data.humidityValid = false;
-    data.temperatureValid = false;
-    data.temperature = 0;
-    data.humidity = 0;
+    data.humidityTemperatureValid = false;
+    data.humidityTemperature = 0.0f;
+    data.humidity = -1.0f;
 
     if (!m_settings->HALRead(m_humidityAddr, HTS221_STATUS, 1, &status, "Failed to read HTS221 status"))
         return false;
@@ -137,8 +137,8 @@ bool RTHumidityHTS221::humidityRead(RTIMU_DATA& data)
 
     data.humidityValid = m_humidityValid;
     data.humidity = m_humidity;
-    data.temperatureValid = m_temperatureValid;
-    data.temperature = m_temperature;
+    data.humidityTemperatureValid = m_temperatureValid;
+    data.humidityTemperature = m_temperature;
 
     return true;
 }

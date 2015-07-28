@@ -78,8 +78,8 @@ bool RTPressureMS5803::pressureInit()
 bool RTPressureMS5803::pressureRead(RTIMU_DATA& data)
 {
     data.pressureValid = false;
-    data.PStemperatureValid = false;
-    data.PStemperature = 0;
+    data.pressureTemperatureValid = false;
+    data.pressureTemperature = 0;
     data.pressure = 0;
 
     if (m_state == MS5803_STATE_IDLE) {
@@ -97,8 +97,8 @@ bool RTPressureMS5803::pressureRead(RTIMU_DATA& data)
     if (m_validReadings) {
         data.pressureValid = true;
         data.pressure = m_pressure;
-        data.PStemperatureValid = true;
-        data.PStemperature = m_temperature;
+        data.pressureTemperatureValid = true;
+        data.pressureTemperature = m_temperature;
     }
     return true;
 }

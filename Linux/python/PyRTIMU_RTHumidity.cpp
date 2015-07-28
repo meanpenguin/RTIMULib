@@ -88,14 +88,14 @@ static PyMethodDef RTIMU_RTHumidity_methods[] = {
     {"humidityRead", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
         RTIMU_DATA data;
         if (((RTIMU_RTHumidity*)self)->val == NULL) {
-            data.temperatureValid = data.humidityValid = false;
-            data.temperature = 0;
+            data.humidityTemperatureValid = data.humidityValid = false;
+            data.humidityTemperature = 0;
             data.humidity = 0;
         } else {
             ((RTIMU_RTHumidity*)self)->val->humidityRead(data);
         }
 
-        return Py_BuildValue("idid", data.humidityValid, data.humidity, data.temperatureValid, data.temperature);
+        return Py_BuildValue("idid", data.humidityValid, data.humidity, data.humidityTemperatureValid, data.humidityTemperature);
         }),
     METH_NOARGS,
     "Get current values" },

@@ -88,14 +88,14 @@ static PyMethodDef RTIMU_RTPressure_methods[] = {
     {"pressureRead", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
         RTIMU_DATA data;
         if (((RTIMU_RTPressure*)self)->val == NULL) {
-            data.temperatureValid = data.pressureValid = false;
-            data.temperature = 0;
+            data.pressureTemperatureValid = data.pressureValid = false;
+            data.pressureTemperature = 0;
             data.pressure = 0;
         } else {
             ((RTIMU_RTPressure*)self)->val->pressureRead(data);
         }
 
-        return Py_BuildValue("idid", data.pressureValid, data.pressure, data.temperatureValid, data.temperature);
+        return Py_BuildValue("idid", data.pressureValid, data.pressure, data.pressureTemperatureValid, data.pressureTemperature);
         }),
     METH_NOARGS,
     "Get current values" },
