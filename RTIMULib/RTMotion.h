@@ -46,11 +46,13 @@ public:
     RTIMUSettings *m_settings;
     MOTION_DATA m_MotionData;                                   // the data from the Motion Processor
     
-    const MOTION_DATA& getMotionData() { return m_MotionData; }
-	
+    MOTION_DATA& getMotionData() { return m_MotionData; }
+    const RTVector3& getResidualsBias() { return m_residualsBias; }
+
 protected:
     
     uint64_t  m_timestamp_previous;
+    RTVector3 m_residualsBias;
     RTVector3 m_worldVelocity;
     RTVector3 m_worldVelocity_drift;
     RTVector3 m_worldVelocity_previous;

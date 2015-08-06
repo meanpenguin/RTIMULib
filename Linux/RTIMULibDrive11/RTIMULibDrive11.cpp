@@ -154,13 +154,15 @@ int main()
             //  display 5 times per second
             // if ((now - displayTimer) > 100000) {
             // as often as there is new data    
-                printf("Sample rate %d, Is moving: %d, Heading: %6.1f Heading Ave: %6.1f\n", sampleRate, ismoving, RTMATH_RAD_TO_DEGREE * heading, RTMATH_RAD_TO_DEGREE * heading_avg);
+                printf("Sample rate %d, %s, Heading: %6.1f Heading Ave: %6.1f\n", sampleRate, ismoving ? "IMU is moving" : "IMU is still ", RTMATH_RAD_TO_DEGREE * heading, RTMATH_RAD_TO_DEGREE * heading_avg);
                 printf("%s", RTMath::display("Quaternion", imuData.fusionQPose));
                 printf("%s", RTMath::displayDegrees("Pose", imuData.fusionPose));
                 printf("%s", RTMath::displayRadians("Accel", imuData.accel));
                 printf("%s", RTMath::displayRadians("Gyro ", imuData.gyro));
                 printf("%s", RTMath::displayRadians("Mag  ", imuData.compass));
                 printf("%s", RTMath::displayRadians("Residuals", residuals));
+                RTVector3 residualsCorr = residuals - motion->getResidualsBias();
+                printf("%s", RTMath::displayRadians("Residuals-Bias", residualsCorr));
 
                 if (pressure != NULL) {
                     printf("Pressure: %4.1f, height above sea level: %4.1f, depth below sea level: %4.1f\n",
@@ -172,7 +174,10 @@ int main()
                            imuData.humidity, humidity_avg);
                 }
                 
-                printf("Temperature IMU: %4.1f, Pressure: %4.1f, Humidity: %4f\n", imuData.IMUtemperature, imuData.pressureTemperature, imuData.humidityTemperature);
+                printf("Temperature IMU: %4.1f", imuData.IMUtemperature);
+                if (pressure != NULL) { printf(", Pressure Sensor: %4.1f", imuData.pressureTemperature); }
+                if (humidity != NULL) { printf(", Humidity Sensor: %4.1f", imuData.humidityTemperature); }
+                printf("\n");
 
                 printf("Compass is %s\n", enableCompass ? "On" : "Off" );
 

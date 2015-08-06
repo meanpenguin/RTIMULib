@@ -50,20 +50,20 @@ uint64_t RTMath::currentUSecsSinceEpoch()
 
 const char *RTMath::displayRadians(const char *label, RTVector3& vec)
 {
-    sprintf(m_string, "%s: x:%+f, y:%+f, z:%+f, s:%+f\n", label, vec.x(), vec.y(), vec.z(), vec.length());
+    sprintf(m_string, "%s: x:%+4.2f, y:%+4.2f, z:%+4.2f, s:%+4.2f\n", label, vec.x(), vec.y(), vec.z(), vec.length());
     return m_string;
 }
 
 const char *RTMath::displayDegrees(const char *label, RTVector3& vec)
 {
-    sprintf(m_string, "%s: roll:%+f, pitch:%+f, yaw:%+f\n", label, vec.x() * RTMATH_RAD_TO_DEGREE,
+    sprintf(m_string, "%s: roll:%+3.1f, pitch:%+3.1f, yaw:%+3.1f\n", label, vec.x() * RTMATH_RAD_TO_DEGREE,
             vec.y() * RTMATH_RAD_TO_DEGREE, vec.z() * RTMATH_RAD_TO_DEGREE);
     return m_string;
 }
 
 const char *RTMath::display(const char *label, RTQuaternion& quat)
 {
-    sprintf(m_string, "%s: scalar: %f, x:%f, y:%f, z:%f\n", label, quat.scalar(), quat.x(), quat.y(), quat.z());
+    sprintf(m_string, "%s: scalar: %+3.2f, x:%+3.2f, y:%+3.2f, z:%+3.2f\n", label, quat.scalar(), quat.x(), quat.y(), quat.z());
     return m_string;
 }
 

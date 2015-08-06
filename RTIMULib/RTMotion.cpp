@@ -25,7 +25,8 @@ RTMotion::~RTMotion()
 
 void RTMotion::motionInit()
 {
-    m_timestamp_previous = RTMath::currentUSecsSinceEpoch();;
+    m_timestamp_previous = RTMath::currentUSecsSinceEpoch();
+    m_residualsBias.zero();
     m_worldResiduals.zero();
     m_worldResiduals_previous.zero();
     m_worldResiduals.zero();
@@ -47,6 +48,7 @@ void RTMotion::motionInit()
 
 void RTMotion::motionReset()
 {
+    m_residualsBias.zero();
     m_worldVelocity.zero();
     m_worldPosition.zero();
     m_worldVelocity_previous.zero();
@@ -152,7 +154,7 @@ void RTMotion::updateVelocityPosition(RTVector3& residuals, RTQuaternion& q, flo
     // integrate acceleration and velocity only of motion occurs
 
         // operate in the world coordinate system and spatial units
-        residuals_cal = residuals * accScale; // scale from g to real spatial units
+        residuals_cal = (residuals-m_residualsBias) * accScale; // scale from g to real spatial units
         m_worldResiduals = RTMath::toWorld(residuals_cal, q); // rotate residuals to world coordinate system
 
         // integrate acceleration and add to velocity (uses trapezoidal integration technique
@@ -184,6 +186,8 @@ void RTMotion::updateVelocityPosition(RTVector3& residuals, RTQuaternion& q, flo
 
     } else {
         m_worldVelocity.zero();    // minimize error propagation
+        m_residualsBias = ( (m_residualsBias * (1.0f - velocityDriftLearningAlpha)) + (residuals * velocityDriftLearningAlpha ) );
+        // printf("%s", RTMath::displayRadians("Residuals Bias", m_residualsBias));
     }
 
     m_MotionData.worldPosition = m_worldPosition;

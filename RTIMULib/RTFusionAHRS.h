@@ -51,6 +51,7 @@ private:
     RTFLOAT m_timeDelta;                                    // time between predictions
 
     RTQuaternion m_stateQ;                                  // quaternion state vector
+    RTQuaternion m_stateQdec;                               // quaternion state vector, adjusted for magnetic declination
     RTQuaternion m_stateQError;                             // difference between stateQ and measuredQ
 
     RTFLOAT m_beta;                                         // Q Change feedback term
