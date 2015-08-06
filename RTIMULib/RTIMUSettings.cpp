@@ -479,6 +479,7 @@ void RTIMUSettings::setDefaults()
     m_SPISelect = 0;
     m_SPISpeed = 500000;
     m_fusionType = RTFUSION_TYPE_RTQF;
+    m_fusionDebug = false;
     m_axisRotation = RTIMU_XNORTH_YEAST;
     m_pressureType = RTPRESSURE_TYPE_AUTODISCOVER;
     m_I2CPressureAddress = 0;
@@ -679,8 +680,8 @@ bool RTIMUSettings::loadSettings()
 		// for accx,y,z gyrox,y,z compx,y,z
 
         } else if (strcmp(key, RTIMULIB_TEMP_BREAK ) == 0) {
-            m_senTemp_break = atoi(val) == 0;
-            
+		    sscanf(val, "%f", &ftemp);
+            m_senTemp_break = ftemp;
         } else if (strcmp(key, RTIMULIB_TEMPCAL_VALID) == 0) {
             m_temperatureCalValid = strcmp(val, "true") == 0;
 
@@ -1171,7 +1172,32 @@ bool RTIMUSettings::saveSettings()
 
     setBlank();
     setComment("");
-    setComment("IMU axis rotation - see RTIMU.h for details");
+    setComment("IMU axis rotation - CHANING THIS WILL REQUIRE RECALIBRATION");
+	setComment("XNORTH_YEAST              0 // this is the default identity matrix");                
+	setComment("XEAST_YSOUTH              1");
+	setComment("XSOUTH_YWEST              2");
+	setComment("XWEST_YNORTH              3");
+	setComment("XNORTH_YWEST              4");
+	setComment("XEAST_YNORTH              5");
+	setComment("XSOUTH_YEAST              6");
+	setComment("XWEST_YSOUTH              7");
+	setComment("XUP_YNORTH                8");
+	setComment("XUP_YEAST                 9");
+	setComment("XUP_YSOUTH                10");
+	setComment("XUP_YWEST                 11");
+	setComment("XDOWN_YNORTH              12");
+	setComment("XDOWN_YEAST               13");
+	setComment("XDOWN_YSOUTH              14");
+	setComment("XDOWN_YWEST               15");
+	setComment("XNORTH_YUP                16");
+	setComment("XEAST_YUP                 17");
+	setComment("XSOUTH_YUP                18");
+	setComment("XWEST_YUP                 19");
+	setComment("XNORTH_YDOWN              20");
+	setComment("XEAST_YDOWN               21");
+	setComment("XSOUTH_YDOWN              22");
+	setComment("XWEST_YDOWN               23");
+
     setValue(RTIMULIB_AXIS_ROTATION, m_axisRotation);
 
     setBlank();
@@ -1389,10 +1415,10 @@ bool RTIMUSettings::saveSettings()
     setBlank();
     setComment("");
     setComment("Gyro full scale range - ");
-    setComment("  0  - +/- 250 degress per second");
-    setComment("  8  - +/- 500 degress per second");
-    setComment("  16 - +/- 1000 degress per second");
-    setComment("  24 - +/- 2000 degress per second");
+    setComment("  0  - +/- 250 degrees per second");
+    setComment("  8  - +/- 500 degrees per second");
+    setComment("  16 - +/- 1000 degrees per second");
+    setComment("  24 - +/- 2000 degrees per second");
     setValue(RTIMULIB_MPU9150_GYRO_FSR, m_MPU9150GyroFsr);
 
     setBlank();

@@ -17,9 +17,15 @@ Add the following two lines to /etc/modules:
 	i2c-bcm2708
 	i2c-dev
 
-Then, comment out the following line in /etc/modprobe.d/raspi-blacklist.conf:
+If present, comment out the following line in /etc/modprobe.d/raspi-blacklist.conf:
 
 	# blacklist i2c-bcm2708
+
+Also start
+
+    # sudo raspi-config
+	
+Then Advanced Options, enable Device Tree, Enable SPI, Enable I2C. If you use Serial interface for any application you want to disable Serial (shell and kernel messages over serial)
 
 Restart the Raspberry Pi and /dev/i2c-0 and /dev/i2c-1 should appear. It’s also useful to install the I2C tools:
 
@@ -100,6 +106,9 @@ If magnetometer ellipsoid fit isn't required, RTIMULibCal can be run anywhere. I
 The normal process is to run the magnetometer min/max option followed by the magnetometer ellipsoid fit option followed finally by the accelerometer min/max option. The program is self-documenting in that the instructions for every option will be displayed when the option is selected.
 
 The resulting RTIMULib.ini can then be used by any other RTIMULib application.
+
+Please consult https://github.com/mjs513/FreeIMU-Updates/wiki/images/Rotations.png for proper rotations that will cover all quadrants. An exam[le approach is shown here: https://youtu.be/sf_8jcDyO0Q
+
 
 ### Run the RTIMULibDrive, RTIMULibDrive10 and RTIMULibDrive11 Demo Apps
 

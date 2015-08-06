@@ -39,9 +39,10 @@ RTFusionAHRS::RTFusionAHRS()
 {
     float beta = sqrt(3.0f / 4.0f) * GyroMeasError;   // compute beta
     float zeta = sqrt(3.0f / 4.0f) * GyroMeasDrift;   // compute zeta, the other free parameter in the Madgwick scheme usually set to a small or zero value
+
     m_beta = beta;
     m_zeta = zeta;
-   
+
     reset();
 
     m_enableAccel = true;
@@ -74,13 +75,7 @@ void RTFusionAHRS::reset()
 
 void RTFusionAHRS::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
 {
-    // Rotation matrix to correct for magnetic declination
-    RTQuaternion q_declination;
-	q_declination.setScalar( cos( settings->m_compassAdjDeclination / -2.0f) );
-	q_declination.setX(0.0f);
-	q_declination.setY(0.0f);
-	q_declination.setZ( sin(settings->m_compassAdjDeclination / -2.0f) );
-	
+
     if (m_debug) {
         HAL_INFO("\n------\n");
         HAL_INFO1("IMU update delta time: %f\n", m_timeDelta);
@@ -92,6 +87,11 @@ void RTFusionAHRS::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
     m_compassValid = data.compassValid;
 
     if (m_firstTime) {
+        
+        // adjust for compass declination, compute the correction data only at beginning
+        m_sin_theta_half = sin(settings->m_compassAdjDeclination/2.0f);
+        m_cos_theta_half = cos(settings->m_compassAdjDeclination/2.0f);
+        
         m_lastFusionTime = data.timestamp;
         calculatePose(m_accel, m_compass, settings->m_compassAdjDeclination);
 
@@ -120,7 +120,7 @@ void RTFusionAHRS::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
         float q4 = m_stateQ.z();   
 
         float ax, ay, az, mx, my, mz, gx, gy, gz;           // accelerometer, magnetometer, gyroscope
-
+        		
         float gerrx, gerry, gerrz; // gyro bias error
 
         float norm;
@@ -282,21 +282,42 @@ void RTFusionAHRS::newIMUData(RTIMU_DATA& data, const RTIMUSettings *settings)
         q3 += qDot3 * m_timeDelta;
         q4 += qDot4 * m_timeDelta;
 
-        norm = sqrt(q1 * q1 + q2 * q2 + q3 * q3 + q4 * q4);    // normalise quaternion
-        if (norm == 0.0) return; // handle NaN
-        q1 /= norm;
-        q2 /= norm;
-        q3 /= norm;
-        q4 /= norm;
+        // Rotate Quaternion by Magnetic Declination
+        // m_stateQ = q_declination * m_statqQ;
 		
-        m_stateQ.setScalar(q1);
-        m_stateQ.setX(q2);
-        m_stateQ.setY(q3);
-        m_stateQ.setZ(q4);
+        /*
+        SAGE
+		N.<c,d,q1,q2,q3,q4,cos_theta_half, sin_theta_half> = QQ[]
+		H.<i,j,k> = QuaternionAlgebra(c,d)
+		q = q1 + q2 * i + q3 * j + q4 * k
+		// here rotation is around gravity vector by theta
+		mag_declination = cos_theta_half + sin_theta_half * (0 * i + 0 * j+ 1*k)
+		q * mag_declination
+  	
+		s : -q4*sin_theta_half + q1*cos_theta_half  
+		x :  q3*sin_theta_half + q2*cos_theta_half 
+		y : -q2*sin_theta_half + q3*cos_theta_half
+		z :  q4*cos_theta_half + q1*sin_theta_half
+		*/
+        float q1_d = -q4*m_sin_theta_half + q1*m_cos_theta_half; 
+        float q2_d =  q3*m_sin_theta_half + q2*m_cos_theta_half;
+        float q3_d = -q2*m_sin_theta_half + q3*m_cos_theta_half;
+        float q4_d =  q4*m_cos_theta_half + q1*m_sin_theta_half;
+
+        // normalise quaternion
+        norm = sqrt(q1_d * q1_d + q2_d * q2_d + q3_d * q3_d + q4_d * q4_d);    
+        if (norm == 0.0) return; // handle NaN
+        q1_d /= norm;
+        q2_d /= norm;
+        q3_d /= norm;
+        q4_d /= norm;
+	
+        m_stateQ.setScalar(q1_d);
+        m_stateQ.setX(q2_d);
+        m_stateQ.setY(q3_d);
+        m_stateQ.setZ(q4_d);
     } // end not first time
 
-	// Rotate Quaternion by Magnetic Declination
-    m_stateQ = q_declination * m_statqQ * q_declination.conjugate(); 
 	
     // =================================================
 

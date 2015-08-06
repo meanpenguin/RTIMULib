@@ -7,7 +7,7 @@
 
 #define ACCEL_AVG_HISTORY     5                      // size of moving average filter
 #define ACCEL_VAR_HISTORY     7                      // size of moving average filter
-#define HEADING_AVG_HISTORY   5                      // size of moving average filter 
+#define HEADING_AVG_HISTORY   25                     // size of moving average filter 
 
 # define velocityDriftLearningAlpha 0.2f
 
@@ -62,10 +62,12 @@ protected:
     uint64_t  m_motionStart_time;
     float     m_dtmotion;
 	
-    static RunningAverage *m_accnorm_avg; // Running average for acceleration (motion detection)
-    static RunningAverage *m_accnorm_var; // Running average for acceleration variance (motion detection)
-    static RunningAverage *m_heading_X_avg; // Running average for heading (noise reduction)
-    static RunningAverage *m_heading_Y_avg; // Running average for heading (noise reduction)
+    RTVector3  m_previousAccel;
+    
+    RunningAverage *m_accnorm_avg;   // Running average for acceleration (motion detection)
+    RunningAverage *m_accnorm_var;   // Running average for acceleration variance (motion detection)
+    RunningAverage *m_heading_X_avg; // Running average for heading (noise reduction)
+    RunningAverage *m_heading_Y_avg; // Running average for heading (noise reduction)
   
 };
 #endif // _Motion_H

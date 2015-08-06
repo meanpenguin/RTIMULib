@@ -2,6 +2,13 @@
 
 #include "RTMotion.h"
 
+// #define RTIMU_FUZZY_GYRO_ZERO      0.20
+#define RTIMU_FUZZY_GYRO_ZERO      0.02
+
+//  this defines the accelerometer noise level
+
+#define RTIMU_FUZZY_ACCEL_ZERO      0.05
+
 RTMotion::RTMotion(RTIMUSettings *settings)
 {
     m_settings = settings;
@@ -29,6 +36,7 @@ void RTMotion::motionInit()
     m_worldPosition.zero();
     m_motion = false;
     m_motion_previous = false;
+    
 
     m_MotionData.worldAcceleration.zero();
     m_MotionData.worldVelocity.zero();
@@ -58,10 +66,11 @@ void RTMotion::motionResetPosition()
 
 RTFLOAT RTMotion::updateAverageHeading(RTFLOAT& heading) 
 {
-    // this needs two steps because of 0 - 360 jump at North 
+    // this needs two component because of 0 - 360 jump at North 
     m_heading_X_avg->addValue(cos(heading));
     m_heading_Y_avg->addValue(sin(heading));
-    return atan2(m_heading_Y_avg->getAverage(),m_heading_X_avg->getAverage());
+    float t = atan2(m_heading_Y_avg->getAverage(),m_heading_X_avg->getAverage());
+    return t > 0 ? t : 2 * RTMATH_PI + t;
 }
 
 bool RTMotion::detectMotion(RTVector3& acc, RTVector3& gyr) {
@@ -69,45 +78,33 @@ bool RTMotion::detectMotion(RTVector3& acc, RTVector3& gyr) {
 // Original Code is from FreeIMU Processing example
 // Some modifications and tuning
 //
-// 1. Strong Acceleration
-// 2. Acceleration Variance
-// 3. Gyro activity
-// Any of the three triggers motion
+// 1. Change in Acceleration Variance
+// 2. Gyro activity
+// Any of the two triggers motion
 //
-// This code works well in detecting motion but has delay in going back to no motion
-// This code is useful for computing velocity and position from acceleration
-// It can be used to trigger accelration integration when motion startes
-// and can reset velocity when transitioning from motion to no motion
   
-  bool omegax, omegay, omegaz;
-  bool accnorm_test, accnorm_var_test, omega_test;
+  bool accnorm_var_test, omega_test;
   
   // ACCELEROMETER
   ////////////////
-  // Test for strong accelerometer signal deviating from gravity (|acc| = 1) 
-  float accnorm = acc.squareLength(); 
-  if((accnorm >=0.85) && (accnorm <= 1.15)){ accnorm_test = false; } else { accnorm_test = true; }
 
-  // Test for sudden accelerometer changes, similar to high pass filter of acceleration
-  m_accnorm_avg->addValue(accnorm); // compute the average acceleration
-  float accnormavg = m_accnorm_avg->getAverage(); // get acceleration average from filter
-  m_accnorm_var->addValue(pow((accnorm-accnormavg),2.0)); // compute deviation from average
-  float accnorm_varavg=m_accnorm_var->getAverage(); // computer average of the deviation
-  // Motion if average deviation from average acceleration exceed threshold 
-  // the threshold depends on the noise of the sensor 
-  if( accnorm_varavg < 0.0005) { accnorm_var_test = false; } else { accnorm_var_test = true; }
+  // Test for sudden accelerometer changes
+  RTVector3 deltaAccel = m_previousAccel;
+  deltaAccel -= acc;   // compute difference
+  m_previousAccel = acc;
+  // printf("Delta Acc: %4.3f ",  deltaAccel.length());
+  if (deltaAccel.length() < RTIMU_FUZZY_ACCEL_ZERO) { accnorm_var_test = false; } else { accnorm_var_test = true; }
 
   // GYRO
   ////////////////
-  //   angular rate analysis 
-  if ((abs(gyr.x()) >=0.02) ) { omegax = true; } else { omegax = false; }
-  if ((abs(gyr.y()) >=0.02) ) { omegay = true; } else { omegay = false; }
-  if ((abs(gyr.z()) >=0.02) ) { omegaz = true; } else { omegaz = false; }
-  if (omegax || omegay || omegaz) { omega_test = true; } else { omega_test = false; }
+  //,printf("Gyration: %4.3f ",  gyr.length());
+  if (gyr.length() < RTIMU_FUZZY_GYRO_ZERO) { omega_test = false; } else { omega_test = true; }
 
+  //printf("Test: %d %d\n",  accnorm_var_test, omega_test );
+  
   // Combine acceleration test, acceleration deviation test and gyro test
   ///////////////////////////////////////////////////////////////////////
-  if (accnorm_test || omega_test || accnorm_var_test) { 
+  if (omega_test || accnorm_var_test) { 
     return true; 
   } else { 
     return false;

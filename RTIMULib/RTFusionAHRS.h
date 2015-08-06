@@ -55,6 +55,10 @@ private:
 
     RTFLOAT m_beta;                                         // Q Change feedback term
     RTFLOAT m_zeta;                                         // Gyroscope Bias feedback term
+
+    RTFLOAT m_cos_theta_half;                               // Correction for magnetic declination
+    RTFLOAT m_sin_theta_half;                                // Correction for magnetic declination
+
     RTFLOAT m_gbiasx, m_gbiasy, m_gbiasz;                   // gyro bias error
     RTVector3 m_AHRSgyroBias;
 };

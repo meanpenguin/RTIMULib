@@ -167,7 +167,7 @@ public:
     const RTFLOAT& getIMUTemp() { return m_imuData.IMUtemperature; } // gets temperature data in C
     const RTFLOAT& getHumidityTemp() { return m_imuData.humidityTemperature; } // gets temperature data in C
     const RTFLOAT& getPressureTemp() { return m_imuData.pressureTemperature; } // gets temperature data in C
-    const RTFLOAT& getTemp() { return m_imuData.temperature; } // gets temperature data in C
+    const RTFLOAT& getTemp() { return m_imuData.IMUtemperature; } // gets temperature data in C
 
     RTVector3 getAccelResiduals() { return m_fusion->getAccelResiduals(); }
 

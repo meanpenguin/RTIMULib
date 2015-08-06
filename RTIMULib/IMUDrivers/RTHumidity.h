@@ -27,6 +27,7 @@
 #include "RTIMUSettings.h"
 #include "RTIMULibDefs.h"
 #include "RTHumidityDefs.h"
+#include "RunningAverage.h"
 
 class RTHumidity
 {
@@ -39,6 +40,7 @@ public:
 
     RTHumidity(RTIMUSettings *settings);
     virtual ~RTHumidity();
+    RTFLOAT updateAverageHumidity(RTFLOAT& humidity);
 
     //  These functions must be provided by sub classes
 
@@ -49,6 +51,8 @@ public:
 
 protected:
     RTIMUSettings *m_settings;                              // the settings object pointer
+    RunningAverage *m_humidity_avg;                         // Running average for humidity sensor
+  
 
 };
 

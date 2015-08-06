@@ -4,6 +4,21 @@
     <df root="." name="0">
       <df name="Output">
       </df>
+      <df name="RTEllipsoidFit">
+        <df name="measurements1">
+        </df>
+        <df name="measurements2">
+        </df>
+        <df name="measurements3">
+        </df>
+        <in>RTEllipsoidFit.m</in>
+        <in>RTEllipsoidFitAccel.m</in>
+        <in>RTEllipsoidFitMag.m</in>
+        <in>RTFitTemperature.m</in>
+        <in>ellipsoid_fit.m</in>
+        <in>mag_cal.m</in>
+        <in>mag_fit_display.m</in>
+      </df>
       <in>RTIMULibCal.cpp</in>
     </df>
   </logicalFolder>
@@ -11,7 +26,7 @@
   <confs>
     <conf name="Default" type="0">
       <toolsSet>
-        <developmentServer>pi@192.168.11.10:22</developmentServer>
+        <developmentServer>pi@192.168.11.11:22</developmentServer>
         <platform>2</platform>
       </toolsSet>
       <compile>

@@ -288,7 +288,7 @@ public:
 
     int m_imuType;                                          // type code of imu in use
     int m_fusionType;                                       // fusion algorithm type code
-    int m_fusionDebug;                                      // fusion debugging enable/disable
+    bool m_fusionDebug;                                     // fusion debugging enable/disable
     unsigned char m_I2CSlaveAddress;                        // I2C slave address of the imu
     int m_axisRotation;                                     // axis rotation code
     int m_pressureType;                                     // type code of pressure sensor in use

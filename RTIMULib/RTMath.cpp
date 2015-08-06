@@ -50,13 +50,13 @@ uint64_t RTMath::currentUSecsSinceEpoch()
 
 const char *RTMath::displayRadians(const char *label, RTVector3& vec)
 {
-    sprintf(m_string, "%s: x:%f, y:%f, z:%f\n", label, vec.x(), vec.y(), vec.z());
+    sprintf(m_string, "%s: x:%+f, y:%+f, z:%+f, s:%+f\n", label, vec.x(), vec.y(), vec.z(), vec.length());
     return m_string;
 }
 
 const char *RTMath::displayDegrees(const char *label, RTVector3& vec)
 {
-    sprintf(m_string, "%s: roll:%f, pitch:%f, yaw:%f\n", label, vec.x() * RTMATH_RAD_TO_DEGREE,
+    sprintf(m_string, "%s: roll:%+f, pitch:%+f, yaw:%+f\n", label, vec.x() * RTMATH_RAD_TO_DEGREE,
             vec.y() * RTMATH_RAD_TO_DEGREE, vec.z() * RTMATH_RAD_TO_DEGREE);
     return m_string;
 }
@@ -425,7 +425,7 @@ RTFLOAT RTVector3::squareLength()
 
 RTFLOAT RTVector3::toHeading(const RTVector3& mag, float magDeclination)
 {
-  // Tilt compensated heading from compass, skips conversion to RPY, as those are proveded as input
+  // Tilt compensated heading from compass, skips conversion to RPY, as those are provided as input
   // Corrected fort magnetic declination
   RTVector3 rpy = *this;
   float heading;
@@ -526,29 +526,20 @@ RTQuaternion& RTQuaternion::operator *=(const RTQuaternion& qb)
     m_data[2] = qa.scalar() * qb.y() - qa.x() * qb.z() + qa.y() * qb.scalar() + qa.z() * qb.x();
     m_data[3] = qa.scalar() * qb.z() + qa.x() * qb.y() - qa.y() * qb.x() + qa.z() * qb.scalar();
     
-    /**
-    RTVector3 va;
-    RTVector3 vb;
-    RTFLOAT dotAB;
-    RTVector3 crossAB;
-
-    va.setX(m_data[1]);
-    va.setY(m_data[2]);
-    va.setZ(m_data[3]);
-
-    vb.setX(qb.x());
-    vb.setY(qb.y());
-    vb.setZ(qb.z());
-
-    dotAB = RTVector3::dotProduct(va, vb);
-    RTVector3::crossProduct(va, vb, crossAB);
-    RTFLOAT myScalar = m_data[0];
-
-    m_data[0] = myScalar * qb.scalar() - dotAB;
-    m_data[1] = myScalar * vb.x() + qb.scalar() * va.x() + crossAB.x();
-    m_data[2] = myScalar * vb.y() + qb.scalar() * va.y() + crossAB.y();
-    m_data[3] = myScalar * vb.z() + qb.scalar() * va.z() + crossAB.z();
-    **/
+	/*
+	SAGE CODE
+	N.<c,d,qas,qax,qay,qaz,qbs,qbx,qby,qbz,s> = QQ[]
+	H.<i,j,k> = QuaternionAlgebra(c,d)
+	a = qas + qax * i + qay * j + qaz * k
+	b = qbs + qbx * i + qby * j + qbz * k
+	a*b
+	
+	-qaz*qbz  - qax*qbx - qay*qby + qas*qbs  
+	(-qaz*qby + qay*qbz + qax*qbs + qas*qbx)*i 
+	(qaz*qbx  - qax*qbz + qay*qbs + qas*qby)*j
+	(qaz*qbs  - qay*qbx + qax*qby + qas*qbz)*k
+    */
+	
     return *this;
 }
 
@@ -704,35 +695,6 @@ void RTQuaternion::fromEuler(RTVector3& vec)
     normalize();
 }
 
-RTFLOAT RTQuaternion::toHeading(const RTVector3& mag, float magDeclination)
-{
-  // Tilt compensated heading from compass
-  // Corrected for local magnetic declination
-  RTVector3 rpy;
-  float heading;
-
-  // Convert pose quaternion to RPY
-  RTQuaternion q = *this;
-  q.toEuler(rpy);
-  
-  float cos_roll = cos(rpy.x());
-  float sin_roll = sin(rpy.x());
-  float cos_pitch = cos(rpy.y());
-  float sin_pitch = sin(rpy.y());
-  
-  // Tilt compensated Magnetic field X component:
-  float Head_X = mag.x()*cos_pitch + mag.y()*sin_roll*sin_pitch + mag.z()*cos_roll*sin_pitch;
-  // Tilt compensated Magnetic field Y component:
-  float Head_Y = mag.y()*cos_roll - mag.z()*sin_roll;
-  // Magnetic Heading
-  heading = -atan2(Head_Y,Head_X) - magDeclination;
-
-  if(heading < -9990) { heading = 0; }
-  heading = RTMath::clamp2PI(heading);
-
-  return (heading);
-}
-
 RTQuaternion RTQuaternion::conjugate() const
 {
     RTQuaternion q;
@@ -789,7 +751,34 @@ void RTQuaternion::fromAngleVector(const RTFLOAT& angle, const RTVector3& vec)
     m_data[3] = vec.z() * sinHalfTheta;
 }
 
+RTFLOAT RTQuaternion::toHeading(const RTVector3& mag, float magDeclination)
+{
+  // Tilt compensated heading from compass
+  // Corrected for local magnetic declination
+  RTVector3 rpy;
+  float heading;
 
+  // Convert pose quaternion to RPY
+  RTQuaternion q = *this;
+  q.toEuler(rpy);
+  
+  float cos_roll = cos(rpy.x());
+  float sin_roll = sin(rpy.x());
+  float cos_pitch = cos(rpy.y());
+  float sin_pitch = sin(rpy.y());
+  
+  // Tilt compensated Magnetic field X component:
+  float Head_X = mag.x()*cos_pitch + mag.y()*sin_roll*sin_pitch + mag.z()*cos_roll*sin_pitch;
+  // Tilt compensated Magnetic field Y component:
+  float Head_Y = mag.y()*cos_roll - mag.z()*sin_roll;
+  // Magnetic Heading
+  heading = -atan2(Head_Y,Head_X) - magDeclination;
+
+  if(heading < -9990) { heading = 0; }
+  heading = RTMath::clamp2PI(heading);
+
+  return (heading);
+}
 
 //----------------------------------------------------------
 //

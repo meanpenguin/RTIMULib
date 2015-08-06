@@ -9,6 +9,15 @@
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMU.cpp</file>
+            <file>file:/C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMotion.cpp</file>
+            <file>file:/C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMotion.h</file>
+            <file>file:/C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUSettings.cpp</file>
+            <file>file:/C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUSettings.h</file>
+            <file>file:/C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMath.cpp</file>
+            <file>file:/C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusion.cpp</file>
+            <file>file:/C:/Users/utzinger/Documents/GitHub/RTIMULib/Linux/RTIMULibCal/RTIMULibCal.cpp</file>
+        </group>
     </open-files>
 </project-private>

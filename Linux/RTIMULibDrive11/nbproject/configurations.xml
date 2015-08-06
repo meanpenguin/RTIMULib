@@ -11,8 +11,6 @@
           <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/RM-MPU-9150A-00-v3.0.pdf</itemPath>
           <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/ms5803_14ba.pdf</itemPath>
         </logicalFolder>
-        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTAD.cpp</itemPath>
-        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTAD.h</itemPath>
         <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidity.cpp</itemPath>
         <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidity.h</itemPath>
         <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidityDefs.h</itemPath>
@@ -145,16 +143,6 @@
         </makeTool>
       </makefileType>
       <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/CMakeLists.txt"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTAD.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTAD.h"
             ex="false"
             tool="3"
             flavor2="0">

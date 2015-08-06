@@ -21,6 +21,8 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#define HUMIDITY_AVG_HISTORY   100                     // size of moving average filter 
+
 
 #include "RTHumidity.h"
 
@@ -55,8 +57,16 @@ RTHumidity *RTHumidity::createHumidity(RTIMUSettings *settings)
 RTHumidity::RTHumidity(RTIMUSettings *settings)
 {
     m_settings = settings;
+    m_humidity_avg = new RunningAverage(HUMIDITY_AVG_HISTORY);
 }
 
 RTHumidity::~RTHumidity()
 {
+}
+
+RTFLOAT RTHumidity::updateAverageHumidity(RTFLOAT& humidity) 
+{
+    // this needs two component because of 0 - 360 jump at North 
+    m_humidity_avg->addValue(humidity);
+    return m_humidity_avg->getAverage();
 }
