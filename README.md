@@ -2,7 +2,7 @@
 
 RTIMULib is the simplest way to connect a 9-dof, 10-dof or 11-dof IMU to an embedded Linux system and obtain quaternion or Euler angle pose data. Basically, two simple function calls (IMUInit() and IMURead()) are pretty much all that's needed to integrate RTIMULib.
 
-## Please note that this library is no longer supported by Richards-Tech.
+## Please note that this library is now under developement as RTIMULib2 supported by Richards-Tech.
 
 Additions to this distro are indicated below after version 7.2.1 
 
@@ -10,13 +10,13 @@ Additions to this distro are indicated below after version 7.2.1
 
 The Linux directory contains the main demo apps for embeeded Linux systems:
 
-* RTIMULibDrive is a simple app that shows to to use the RTIMULib library in a basic way.
-* RTIMULibDrive10 adds support for pressure/temperature sensors.
+* [Disfunct] RTIMULibDrive is a simple app that shows to to use the RTIMULib library in a basic way.
+* [Disfunct] RTIMULibDrive10 adds support for pressure/temperature sensors.
 * RTIMULibDrive11 adds support for pressure/temperature/humidity sensors.
 * RTIMULibCal is a command line calibration tool for the magnetometers and accelerometers.
-* RTIMULibvrpn shows how to use RTIMULib with vrpn.
-* RTIMULibDemo is a simple GUI app that displays the fused IMU data in real-time.
-* RTIMULibDemoGL adds OpenGL visualization to RTIMULibDemo.
+* [Disfunct] RTIMULibvrpn shows how to use RTIMULib with vrpn.
+* [Disfunct] RTIMULibDemo is a simple GUI app that displays the fused IMU data in real-time.
+* [Disfunct] RTIMULibDemoGL adds OpenGL visualization to RTIMULibDemo.
 
 RTIMULib is a C++ library but there are also Python bindings in Linux/python. It's easy to build and install the Python RTIMULib library using the provided setup.py after which any Python script will have access to RTIMULib functionality. See Linux/python.README.md (https://github.com/richards-tech/RTIMULib/blob/master/Linux/python/README.md) for more details. Two demo scripts show how to use the Python interface.
 
@@ -44,7 +44,7 @@ Pressure/temperature sensing is supported for the following pressure sensors:
 * LPS25H
 * MS5611
 * MS5637
-* MS5803
+* MS5803 (10atm underwater?
 
 Humidity/temperature sensing is supported for the following humidity sensors:
 
@@ -95,6 +95,11 @@ Also, if using a non-standard axis rotation (see http://wp.me/p4qcHg-cO), magnet
 
 
 ## Release history
+
+### December 2015 - 7.3.1
+
+Incorporation of RTIMULib2 Mag self calibration
+Incroporation of runtime tuning of Max/Min in runtime mode
 
 ### July 2015 - 7.3.0
 
