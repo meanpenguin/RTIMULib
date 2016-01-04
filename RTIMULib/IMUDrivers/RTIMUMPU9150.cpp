@@ -24,9 +24,9 @@
 // UU: This code was modified to: 
 // read IMU temperature
 // read temperature and compass from FIFO
-// attempted to repair error in chache mode
+// attempted to repair error in cache mode
 // changed FIFO reset to also reset signal path and DMP
-// moved wait 50ms to after reset
+// moved "wait 50ms" to location after reset
 // added humidity, humidity sensor temperature, pressure, pressure sensor temperature
 //  to imuData structure. This was added to imuData structure instead of 
 //  separate structure because other sensor data had already been added there

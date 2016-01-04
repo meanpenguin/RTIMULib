@@ -1,13 +1,4 @@
-#define DEBUGVELOCITYBIAS false
-
 #include "RTMotion.h"
-
-// #define RTIMU_FUZZY_GYRO_ZERO      0.20
-#define RTIMU_FUZZY_GYRO_ZERO      0.02
-
-//  this defines the accelerometer noise level
-
-#define RTIMU_FUZZY_ACCEL_ZERO      0.05
 
 RTMotion::RTMotion(RTIMUSettings *settings)
 {
@@ -99,9 +90,8 @@ bool RTMotion::detectMotion(RTVector3& acc, RTVector3& gyr) {
 
   // GYRO
   ////////////////
-  //,printf("Gyration: %4.3f ",  gyr.length());
+  // printf("Gyration: %4.3f ",  gyr.length());
   if (gyr.length() < RTIMU_FUZZY_GYRO_ZERO) { omega_test = false; } else { omega_test = true; }
-
   //printf("Test: %d %d\n",  accnorm_var_test, omega_test );
   
   // Combine acceleration test, acceleration deviation test and gyro test
@@ -111,7 +101,7 @@ bool RTMotion::detectMotion(RTVector3& acc, RTVector3& gyr) {
   } else { 
     return false;
   }
-  
+ 
 }
 
 void RTMotion::updateVelocityPosition(RTVector3& residuals, RTQuaternion& q, float accScale, uint64_t& timestamp, bool& motion)
@@ -142,7 +132,7 @@ void RTMotion::updateVelocityPosition(RTVector3& residuals, RTQuaternion& q, flo
             m_motionStart_time = timestamp; }
     //  Did it end?
     if (m_motion_previous == true && motion == false) {
-            m_dtmotion = ((float)(timestamp - m_motionStart_time))* 0.000001f; // time is in microseconds
+            m_dtmotion = ((float)(timestamp - m_motionStart_time))* 0.000001f; // motion time is in seconds
             motion_ended = true;
     } else {
             motion_ended = false; 
@@ -150,29 +140,18 @@ void RTMotion::updateVelocityPosition(RTVector3& residuals, RTQuaternion& q, flo
     // Keep track of previous status
     m_motion_previous = motion;
 
+    // printf(" %4.4f, ", m_worldVelocity_drift.x());
+    // printf(" %4.4f, ", m_worldVelocity_drift.y());
+    // printf(" %4.4f, ", m_worldVelocity_drift.z());
+    // printf(" time: %f, %d\n", m_dtmotion, motion_ended); 
+
+    // operate in the world coordinate system and spatial units
+    residuals_cal = (residuals-m_residualsBias) * accScale; // scale from g to real spatial units
+    m_worldResiduals = RTMath::toWorld(residuals_cal, q); // rotate residuals to world coordinate system
+
     if ( motion == true) { 
-    // integrate acceleration and velocity only of motion occurs
-
-        // operate in the world coordinate system and spatial units
-        residuals_cal = (residuals-m_residualsBias) * accScale; // scale from g to real spatial units
-        m_worldResiduals = RTMath::toWorld(residuals_cal, q); // rotate residuals to world coordinate system
-
         // integrate acceleration and add to velocity (uses trapezoidal integration technique
-        m_worldVelocity = m_worldVelocity_previous + ((m_worldResiduals + m_worldResiduals_previous)*0.5f* dt );
-
-        // Update Velocity Bias
-        // When motion ends, velocity should be zero
-        if ((motion_ended == true) && (m_dtmotion > 0.5f)) { // update velocity bias if we had at least half of second motion
-            // m_worldVelocity_bias=m_worldVelocity/m_dtmotion;
-            // could use some learning averaging here with previous values and giving long motions more weight
-            // the velocity bias is a drift
-            m_worldVelocity_drift = ( (m_worldVelocity_drift * (1.0f - velocityDriftLearningAlpha)) + ((m_worldVelocity / m_dtmotion) * velocityDriftLearningAlpha ) );
-        }
-
-         #if DEBUGVELOCITYBIAS
-           RTMath::display("Bias: ", worldVelocity_bias);
-           printf(" time: "); printf("%f",m_dtmotion); 
-         #endif
+        m_worldVelocity = m_worldVelocity_previous + ((m_worldResiduals + m_worldResiduals_previous)*0.5f * dt );
 
         // Update Velocity
         m_worldVelocity = m_worldVelocity - ( m_worldVelocity_drift * dt );
@@ -185,7 +164,18 @@ void RTMotion::updateVelocityPosition(RTVector3& residuals, RTQuaternion& q, flo
         m_worldVelocity_previous  = m_worldVelocity;
 
     } else {
+        // Update Velocity Bias
+        // When motion ends, velocity should be zero
+        if ((motion_ended == true) && (m_dtmotion > 0.5f)) { // update velocity bias if we had at least half of second motion
+            // m_worldVelocity_bias=m_worldVelocity/m_dtmotion;
+            // the velocity bias is a drift
+            m_worldVelocity_drift = ( (m_worldVelocity_drift * (1.0f - velocityDriftLearningAlpha)) + ((m_worldVelocity / m_dtmotion) * velocityDriftLearningAlpha ) );
+        }
+
+        // Reset Velocity
         m_worldVelocity.zero();    // minimize error propagation
+
+        // Update acceleration bias
         m_residualsBias = ( (m_residualsBias * (1.0f - velocityDriftLearningAlpha)) + (residuals * velocityDriftLearningAlpha ) );
         // printf("%s", RTMath::displayRadians("Residuals Bias", m_residualsBias));
     }
@@ -193,6 +183,8 @@ void RTMotion::updateVelocityPosition(RTVector3& residuals, RTQuaternion& q, flo
     m_MotionData.worldPosition = m_worldPosition;
     m_MotionData.worldVelocity = m_worldVelocity;
     m_MotionData.worldAcceleration = m_worldResiduals;
+    m_MotionData.worldVelocityDrift = m_worldVelocity_drift;
+    m_MotionData.residuals          = residuals_cal;
     
 }
 		 

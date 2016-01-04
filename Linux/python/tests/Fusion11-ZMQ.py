@@ -71,6 +71,8 @@ else:
 poll_interval = imu.IMUGetPollInterval()
 print("Recommended Poll Interval: %dmS\n" % poll_interval)
 
+print("Fusion Type: " + s.FusionType)
+
 while True:
   if imu.IMURead():
     # x, y, z = imu.getFusionData()

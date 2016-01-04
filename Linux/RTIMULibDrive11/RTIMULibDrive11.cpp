@@ -41,6 +41,7 @@ static RTPressure    *pressure;
 static RTHumidity    *humidity;
 static RTMotion      *motion;
 
+
 int main()
 {
     int sampleCount = 0;
@@ -50,6 +51,10 @@ int main()
     uint64_t now;
     bool ismoving = false;
     bool enableCompass = true;
+    char keystatus[26] = " ------M-M->----------- \n";
+    char sysstatus1[64] = " -------------------------------------------- \n";
+    char sysstatus2[64] = " -------------------------------------------- \n";
+    
     RTVector3 residuals;
     RTFLOAT heading;
     float heading_avg = 0.0f;
@@ -144,6 +149,7 @@ int main()
             
             // Attempt velocity and position estimation
             motion->updateVelocityPosition(residuals, imuData.fusionQPose, 9.81f, imuData.timestamp, ismoving);
+            // checking rotations: motion->updateVelocityPosition(imuData.accel, imuData.fusionQPose, 9.81f, imuData.timestamp, ismoving);
             MOTION_DATA motionData = motion->getMotionData();
                     
             // 
@@ -151,18 +157,22 @@ int main()
 
             now = RTMath::currentUSecsSinceEpoch();
 
-            //  display 5 times per second
-            // if ((now - displayTimer) > 100000) {
-            // as often as there is new data    
-                printf("Sample rate %d, %s, Heading: %6.1f Heading Ave: %6.1f\n", sampleRate, ismoving ? "IMU is moving" : "IMU is still ", RTMATH_RAD_TO_DEGREE * heading, RTMATH_RAD_TO_DEGREE * heading_avg);
+            //  display 10 times per second
+            if ((now - displayTimer) > 100000) {
+           
+                printf("\e[1;1H\e[2J");  // clear screen and move cursor 1/1
+
+                printf("RTIMU: Fusion %s, Compass is %s ", RTFusion::fusionName(settings->m_fusionType), enableCompass ? "On" : "Off" );
+                printf("Sample Rate: %d\n", sampleRate);
+                printf("%s, Heading: %6.1f Heading Ave: %6.1f\n", ismoving ? "IMU is moving" : "IMU is still ", RTMATH_RAD_TO_DEGREE * heading, RTMATH_RAD_TO_DEGREE * heading_avg);
                 printf("%s", RTMath::display("Quaternion", imuData.fusionQPose));
-                printf("%s", RTMath::displayDegrees("Pose", imuData.fusionPose));
+                printf("%s", RTMath::displayDegrees("Pose ", imuData.fusionPose));
                 printf("%s", RTMath::displayRadians("Accel", imuData.accel));
                 printf("%s", RTMath::displayRadians("Gyro ", imuData.gyro));
                 printf("%s", RTMath::displayRadians("Mag  ", imuData.compass));
-                printf("%s", RTMath::displayRadians("Residuals", residuals));
-                RTVector3 residualsCorr = residuals - motion->getResidualsBias();
-                printf("%s", RTMath::displayRadians("Residuals-Bias", residualsCorr));
+                printf("%s", RTMath::displayRadians("Residuals     ", residuals));
+                RTVector3 residualsBias = motion->getResidualsBias();
+                printf("%s", RTMath::displayRadians("Residuals Bias", residualsBias));
 
                 if (pressure != NULL) {
                     printf("Pressure: %4.1f, height above sea level: %4.1f, depth below sea level: %4.1f\n",
@@ -173,26 +183,27 @@ int main()
                     printf("Humidity: %4.1f%% avg: %4.1f%%\n",
                            imuData.humidity, humidity_avg);
                 }
-                
-                printf("Temperature IMU: %4.1f", imuData.IMUtemperature);
-                if (pressure != NULL) { printf(", Pressure Sensor: %4.1f", imuData.pressureTemperature); }
-                if (humidity != NULL) { printf(", Humidity Sensor: %4.1f", imuData.humidityTemperature); }
+
+                printf("Temperature: IMU %4.1f", imuData.IMUtemperature);
+                if (pressure != NULL) { printf(", Pressure Sensor %4.1f", imuData.pressureTemperature); }
+                if (humidity != NULL) { printf(", Humidity Sensor %4.1f", imuData.humidityTemperature); }
                 printf("\n");
 
-                printf("Compass is %s\n", enableCompass ? "On" : "Off" );
+                printf("%s", RTMath::displayRadians("World Accel   ", motionData.worldAcceleration));
+                printf("%s", RTMath::displayRadians("World Velocity", motionData.worldVelocity));
+                printf("%s", RTMath::displayRadians("World Velocity Drift", motionData.worldVelocityDrift));
+                printf("%s", RTMath::displayRadians("World Position", motionData.worldPosition));
+                printf("%s", RTMath::displayRadians("Local Residuals", motionData.residuals));
 
-                if (motion != NULL) {
-                    printf("%s", RTMath::displayRadians("World Accel   ", motionData.worldAcceleration));
-                    printf("%s", RTMath::displayRadians("World Velocity", motionData.worldVelocity));
-                    printf("%s", RTMath::displayRadians("World Position", motionData.worldPosition));
-                }
-                
                 printf("Timestamp: %" PRIu64 "\n", imuData.timestamp);
-                printf(" -p-z-m-M-x----------- \n");
-                
+                printf(" a-p-z-m-M-x----------- \n");
+                printf("%s", keystatus);
+                printf("%s", sysstatus1);
+                printf("%s", sysstatus2);
+
                 fflush(stdout);
                 displayTimer = now;
-            // }
+            }
 
             //  update rate every second
 
@@ -206,25 +217,49 @@ int main()
         
         if ((input = getUserChar()) != 0) {
             switch (input) {
+                case 'a' :
+                    // conduct Accelerometer Max/Min calibration
+                    keystatus[1] ='.';
+                    keystatus[3] ='-';
+                    keystatus[5] ='-';
+                    imu->runtimeAdjustAccelCal();
+                    break;
+                case 'A' :
+                    keystatus[1] ='A';
+                    sprintf(sysstatus1, "%s", RTMath::displayRadians("Acc Cal Max ", settings->m_accelCalMax));
+                    sprintf(sysstatus2, "%s", RTMath::displayRadians("Acc Cal Min ", settings->m_accelCalMin));
+                    break;
                 case 'p' :
+                    keystatus[1] ='-';
+                    keystatus[3] ='.';
+                    keystatus[5] ='-';
                     staticPressure = imuData.pressure;
                     break;
                 case 'z' :
                     // zero motion & position
+                    keystatus[1] ='-';
+                    keystatus[3] ='-';
+                    keystatus[5] ='.';
+                    strcpy(keystatus, " ----.----------------- \n");
                     motion->motionReset();
                     break;
                 case 'm' :
                     // magnetometer OFF
+                    keystatus[7] ='m';
+                    keystatus[9] ='m';
                     enableCompass = false;
                     imu->setCompassEnable(enableCompass);
                     break;
                 case 'M' :
                     // magnetometer ON
+                    keystatus[7] ='M';
+                    keystatus[9] ='M';
                     enableCompass = true;
                     imu->setCompassEnable(enableCompass);
                     break;
                 case 'x' :
                     // must exit
+                    keystatus[11] ='X';
                     mustExit = true;
                     break;
                 } // end switch input
@@ -232,6 +267,7 @@ int main()
 
     }
     printf("\nRTIMULibDrive11 exiting\n");
+    settings->saveSettings(); // should update gyro bias
     return 0;
 }
 

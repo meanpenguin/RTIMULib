@@ -111,8 +111,8 @@ static PyTypeObject RTIMU_RTPressure_type = {
     PyObject_HEAD_INIT(NULL)
     0,                          /*ob_size*/
 #endif
-     "RTIMU.RTPressure",           /*tp_name*/
-    sizeof(RTIMU_RTPressure),     /*tp_basicsize*/
+     "RTIMU.RTPressure",        /*tp_name*/
+    sizeof(RTIMU_RTPressure),   /*tp_basicsize*/
     0,                          /*tp_itemsize*/
     (destructor)RTIMU_RTPressure_dealloc,  /*tp_dealloc*/
     0,                          /*tp_print*/

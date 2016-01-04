@@ -146,6 +146,9 @@ public:
     //  getCompassCalibrationValid() returns true if the compass min/max calibration data is being used
     bool getCompassCalibrationValid() { return !m_compassCalibrationMode && m_settings->m_compassCalValid; }
 
+    //  getRuntimeCompassCalibrationValid() returns true if the runtime compass min/max calibration data is being used
+
+    bool getRuntimeCompassCalibrationValid() { return !m_compassCalibrationMode && m_runtimeMagCalValid; }
     //  getCompassCalibrationEllipsoidValid() returns true if the compass ellipsoid calibration data is being used
     bool getCompassCalibrationEllipsoidValid() { return !m_compassCalibrationMode && m_settings->m_compassCalEllipsoidValid; }
 
@@ -170,6 +173,9 @@ public:
     const RTFLOAT& getTemp() { return m_imuData.IMUtemperature; } // gets temperature data in C
 
     RTVector3 getAccelResiduals() { return m_fusion->getAccelResiduals(); }
+
+    bool m_motion;                                          // motion detected
+    void runtimeAdjustAccelCal();                           // adjusts accelerometer Max/Min so that scaler becomes 1
 
 protected:
     void gyroBiasInit();                                    // sets up gyro bias calculation
@@ -198,13 +204,16 @@ protected:
     RTFLOAT m_gyroLearningAlpha;                            // gyro bias rapid learning rate
     RTFLOAT m_gyroContinuousAlpha;                          // gyro bias continuous (slow) learning rate
     int m_gyroSampleCount;                                  // number of gyro samples used
-
-    RTVector3 m_previousAccel;                              // previous step accel for gyro learning
+    
+    RTVector3 m_previousAccel;                              // previous step accel for gyro learningboo
 
     float m_compassCalOffset[3];
     float m_compassCalScale[3];
     RTVector3 m_compassAverage;                             // a running average to smooth the mag outputs
 
+    bool m_runtimeMagCalValid;                              // true if the runtime mag calibration has valid data
+    float m_runtimeMagCalMax[3];                            // runtime max mag values seen
+    float m_runtimeMagCalMin[3];                            // runtime min mag values seen
     static float m_axisRotation[RTIMU_AXIS_ROTATION_COUNT][9];    // array of rotation matrices
 
  };

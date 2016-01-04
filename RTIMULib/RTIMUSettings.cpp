@@ -676,8 +676,8 @@ bool RTIMUSettings::loadSettings()
             m_I2CHumidityAddress = atoi(val);
 
         // temperature bias calibration
-		// c3 temo^3 + c2 temp^2 + c1 temp + c0
-		// for accx,y,z gyrox,y,z compx,y,z
+		// c3 temp^3 + c2 temp^2 + c1 temp + c0
+		// for acc_x,y,z gyro_x,y,z comp_x,y,z
 
         } else if (strcmp(key, RTIMULIB_TEMP_BREAK ) == 0) {
 		    sscanf(val, "%f", &ftemp);

@@ -51,6 +51,7 @@ uint64_t RTMath::currentUSecsSinceEpoch()
 const char *RTMath::displayRadians(const char *label, RTVector3& vec)
 {
     sprintf(m_string, "%s: x:%+4.2f, y:%+4.2f, z:%+4.2f, s:%+4.2f\n", label, vec.x(), vec.y(), vec.z(), vec.length());
+    //sprintf(m_string, "%s: x:%f, y:%f, z:%f, s:%f s2:%f\n", label, vec.x(), vec.y(), vec.z(), vec.length(), vec.squareLength());
     return m_string;
 }
 
@@ -125,6 +126,7 @@ RTFLOAT RTMath::clamp2PI(RTFLOAT x) {
 
 RTVector3 RTMath::toWorld(const RTVector3& vec, const RTQuaternion& q)
 {
+    // Vector rotation by quaternion
     // P_out = q * P_in * conj(q)
     // - P_out is the output vector
     // - q is the orientation quaternion
@@ -132,13 +134,16 @@ RTVector3 RTMath::toWorld(const RTVector3& vec, const RTQuaternion& q)
     // - conj(q) is the conjugate of the orientation quaternion (q=[w,x,y,z], q*=[w,-x,-y,-z])
 	
     RTQuaternion q_tmp;
+    RTQuaternion q_con;
+    
     RTVector3 world_vec;
 	
     q_tmp.setScalar(0.0f);
     q_tmp.setX(vec.x());
     q_tmp.setY(vec.y());
     q_tmp.setZ(vec.z());
-	
+    
+    // Backwards
     q_tmp = q * q_tmp * q.conjugate();
     
     world_vec.setX(q_tmp.x());

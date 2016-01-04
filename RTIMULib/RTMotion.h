@@ -11,6 +11,16 @@
 
 # define velocityDriftLearningAlpha 0.2f
 
+//  this defines the gyroscope noise level
+
+//#define RTIMU_FUZZY_GYRO_ZERO      0.20
+#define RTIMU_FUZZY_GYRO_ZERO      0.20
+
+//  this defines the accelerometer noise level
+
+//#define RTIMU_FUZZY_ACCEL_ZERO      0.05
+#define RTIMU_FUZZY_ACCEL_ZERO      0.05
+
 class RTMotion
 {
 public:

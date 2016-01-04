@@ -1,11 +1,11 @@
-#Tue Aug 04 15:12:56 MST 2015
+#Fri Aug 07 14:43:30 MST 2015
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtpressurelps25h.cpp=c1438114248550
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimumpu9150_old.h=c1436295714815
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtimusettings.h=c1438714189598
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtpressure.h=c1435277921292
-c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtfusionahrs.cpp=c1438689504098
+c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtfusionahrs.cpp=c1438839518617
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtimutemperaturecal.cpp=c1437139867344
-c\:\\users\\utzinger\\documents\\github\\rtimulib\\linux\\rtimulibdrive11\\output\\rtimulib.ini=c1438696025282
+c\:\\users\\utzinger\\documents\\github\\rtimulib\\linux\\rtimulibdrive11\\output\\rtimulib.ini=c1438786742882
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\datasheets\\hts221.pdf=c1434669209734
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimugd20hm303d.cpp=c1438113888968
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtpressurebmp180.cpp=c1438114200047
@@ -15,14 +15,14 @@ c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtpress
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimumpu9150.h=c1437000632043
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\datasheets\\ps-mpu-9150a.pdf=c1435356617700
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimu.h=c1438665479518
-c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rthumidity.h=c1435277921103
+c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rthumidity.h=c1438814719448
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtfusionkalman4.cpp=c1435671246770
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtimulib.pri=c1437511139557
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtimumagcal.h=c1437219345478
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtpressurelps25h.cpp.bak=c1435411523656
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\datasheets\\htu21d.pdf=c1434751018699
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtpressurems5637.cpp=c1438114322844
-c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtmotion.h=c1438726270426
+c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtmotion.h=c1438871804880
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimubmx055.h=c1435277921150
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rthumidityhts221.cpp.bak=c1438113568844
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtpressurems5637.h=c1435277921356
@@ -48,9 +48,9 @@ c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\datashe
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimunull.h=c1435277921277
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimulsm9ds1.h=c1435277921221
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtimutemperaturecal.h=c1437139821749
-c\:\\users\\utzinger\\documents\\github\\rtimulib\\linux\\rtimulibdrive11\\output\\rtimulibdrive11=c1437100492925
+c\:\\users\\utzinger\\documents\\github\\rtimulib\\linux\\rtimulibdrive11\\output\\rtimulibdrive11=c1438818046967
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtimuhal.cpp=c1437544686969
-c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rthumidity.cpp=c1435618399073
+c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rthumidity.cpp=c1438817999262
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rthumidityhtu21d.h=c1435277921129
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimubmx055.cpp.bak=c1435618096432
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\linux\\rtimulibdrive11\\rtimulibdrive11.cpp.bak=c1438116230811
@@ -73,7 +73,7 @@ c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimugd
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimugd20hm303dlhc.h=c1435277921188
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimumpu9150.cpp=c1438114040563
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimudefs.h=c1436540612799
-c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtmotion.cpp=c1438725954773
+c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtmotion.cpp=c1438980482210
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rthumidityhts221.cpp=c1438113576243
 VERSION=1.3
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtfusionrtqf.h=c1435277921400
@@ -93,7 +93,7 @@ c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\publications\\mad_u
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rthumidityhts221.h=c1435277921118
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimugd20m303dlhc.cpp.bak=c1435618085353
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\publications\\sensors-12-05791.pdf=c1419034842000
-c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtmath.cpp=c1438724808181
+c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtmath.cpp=c1438836459567
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimunull.cpp=c1438114136158
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\publications\\madgwick_internal_report.pdf=c1419034842000
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtfusionkalman4.h=c1435277921390
@@ -116,9 +116,9 @@ c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtimugd
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtimuaccelcal.h=c1437219297799
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\linux\\rtimulibdrive11\\cmakelists.txt=c1434980836000
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rthumidityhtu21d.cpp.bak=c1435411458588
-c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtfusionahrs.h=c1438665479540
+c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtfusionahrs.h=c1438834534539
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\rtimulibdefs.h=c1438112889161
-c\:\\users\\utzinger\\documents\\github\\rtimulib\\linux\\rtimulibdrive11\\rtimulibdrive11.cpp=c1438724979211
+c\:\\users\\utzinger\\documents\\github\\rtimulib\\linux\\rtimulibdrive11\\rtimulibdrive11.cpp=c1438888677310
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\linux\\rtimulibdrive11\\nbproject\\project.xml=c1437511237794
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtpressurems5611.cpp=c1438114287927
 c\:\\users\\utzinger\\documents\\github\\rtimulib\\rtimulib\\imudrivers\\rtpressure.cpp=c1435169018361

@@ -156,6 +156,8 @@ RTVector3 RTFusion::getAccelResiduals()
 	rotatedGravity.setY(2.0f*m_fusionQPose.y() * m_fusionQPose.z() + 2.0f*m_fusionQPose.scalar() * m_fusionQPose.x());
 	rotatedGravity.setZ(m_fusionQPose.z() * m_fusionQPose.z() - m_fusionQPose.x() * m_fusionQPose.x() - m_fusionQPose.y() * m_fusionQPose.y() + m_fusionQPose.scalar() * m_fusionQPose.scalar());
 	
+        rotatedGravity.normalize();
+        
     residuals.setX( m_accel.x() - rotatedGravity.x() );
     residuals.setY( m_accel.y() - rotatedGravity.y() );
     residuals.setZ( m_accel.z() - rotatedGravity.z() );

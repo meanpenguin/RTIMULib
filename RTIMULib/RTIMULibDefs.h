@@ -73,6 +73,8 @@ typedef struct
     RTVector3 worldAcceleration;
     RTVector3 worldVelocity;
     RTVector3 worldPosition;
+    RTVector3 worldVelocityDrift;
+    RTVector3 residuals;
     bool motion;
 } MOTION_DATA;
 

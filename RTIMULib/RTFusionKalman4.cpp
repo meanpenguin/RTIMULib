@@ -111,7 +111,7 @@ void RTFusionKalman4::predict()
     tQuat *= m_timeDelta;
     m_stateQ += tQuat;
 
-//    m_stateQ.normalize();
+    //    m_stateQ.normalize();
 
     // Compute PDot = Fk * Pk_1k_1 + Pk_1k_1 * FkTranspose (note Pkk == Pk_1k_1 at this stage)
 

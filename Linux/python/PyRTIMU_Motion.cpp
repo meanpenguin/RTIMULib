@@ -35,16 +35,16 @@ static void RTIMU_Motion_dealloc(RTIMU_Motion* self);
 static PyObject* RTIMU_Motion_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
 static int RTIMU_Motion_init(RTIMU_Motion *self, PyObject *args, PyObject *kwds);
 
-static PyObject* RTIMU_Motion_lmn(RTIMU_Motion* self);
-static PyObject* RTIMU_Motion_abc(RTIMU_Motion* self);
+static PyObject* RTIMU_Motion_detectMotion(RTIMU_Motion* self);
+static PyObject* RTIMU_Motion_updateMotion(RTIMU_Motion* self);
 static PyObject* RTIMU_Motion_xyz(RTIMU_Motion* self, PyObject *args, PyObject *keywds);
 
 // The RTIMU_Motion struct
 ////////////////////////////
 static PyMethodDef RTIMU_Motion_methods[] = {
-    {"save", (PyCFunction)RTIMU_Motion_lmn, METH_NOARGS, "Save settings to a file"},
-    {"load", (PyCFunction)RTIMU_Motion_abc, METH_NOARGS, "Load settings from a file"},
-    {"getMotionData", (PyCFunction)RTIMU_Motion_xyz, METH_VARARGS|METH_KEYWORDS,
+    {"detectMotion", (PyCFunction)RTIMU_Motion_lmn, METH_NOARGS, "Save settings to a file"},
+    {"updateMotion", (PyCFunction)RTIMU_Motion_abc, METH_NOARGS, "Load settings from a file"},
+    {"zeroMotion", (PyCFunction)RTIMU_Motion_xyz, METH_VARARGS|METH_KEYWORDS,
     "Try do discover and auto-set a connected IMU"},
     { NULL }
 };
