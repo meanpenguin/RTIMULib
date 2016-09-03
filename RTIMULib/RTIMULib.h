@@ -40,6 +40,8 @@
 #include "IMUDrivers/RTIMU.h"
 #include "IMUDrivers/RTIMUNull.h"
 #include "IMUDrivers/RTIMUMPU9150.h"
+#include "IMUDrivers/RTIMUMPU9250.h"
+#include "IMUDrivers/RTIMUMPU9255.h"
 #include "IMUDrivers/RTIMUGD20HM303D.h"
 #include "IMUDrivers/RTIMUGD20M303DLHC.h"
 #include "IMUDrivers/RTIMULSM9DS0.h"
@@ -49,6 +51,7 @@
 #include "IMUDrivers/RTPressureLPS25H.h"
 #include "IMUDrivers/RTPressureMS5611.h"
 #include "IMUDrivers/RTPressureMS5803.h"
+#include "IMUDrivers/RTPressureMS5837.h"
 
 #include "IMUDrivers/RTHumidity.h"
 #include "IMUDrivers/RTHumidityHTS221.h"

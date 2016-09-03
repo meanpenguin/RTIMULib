@@ -21,54 +21,34 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "RTIMUNull.h"
-#include "RTIMUSettings.h"
 
-RTIMUNull::RTIMUNull(RTIMUSettings *settings) : RTIMU(settings)
+#include "RTIMUGyroCal.h"
+
+RTIMUGyroCal::RTIMUGyroCal(RTIMUSettings *settings)
+{
+    m_settings = settings;
+}
+
+RTIMUGyroCal::~RTIMUGyroCal()
 {
 }
 
-RTIMUNull::~RTIMUNull()
+void RTIMUGyroCal::gyroCalInit()
+{
+    gyroCalReset();
+}
+
+void RTIMUGyroCal::gyroCalReset()
 {
 }
 
-bool RTIMUNull::IMUInit()
+bool RTIMUGyroCal::gyroCalValid()
 {
-
-    m_imuData.fusionPoseValid = false;
-    m_imuData.fusionQPoseValid = false;
-    m_imuData.gyroValid = true;
-    m_imuData.accelValid = true;
-    m_imuData.compassValid = true;
-    m_imuData.motion = true;
-    m_imuData.IMUtemperatureValid = false;
-    m_imuData.IMUtemperature = 0.0;
-    m_imuData.humidityValid = false;
-    m_imuData.humidity = -1.0;
-    m_imuData.humidityTemperatureValid = false;
-    m_imuData.humidityTemperature = 0.0;
-    m_imuData.pressureValid = false;
-    m_imuData.pressure = 0.0;
-    m_imuData.pressureTemperatureValid = false;
-    m_imuData.pressureTemperature = 0.0;
-    m_imuData.tTemperatureValid = false;
-    m_imuData.tTemperature = 0.0;
-
-    return true;
+    bool valid = true;
+    return valid;
 }
 
-int RTIMUNull::IMUGetPollInterval()
+void RTIMUGyroCal::gyroCalSaveBias()
 {
-    return (100);                                           // just a dummy value really
-}
-
-bool RTIMUNull::IMURead()
-{
-    updateFusion();
-    return true;
-}
-
-void RTIMUNull::setIMUData(const RTIMU_DATA& data)
-{
-    m_imuData = data;
+    m_settings->saveSettings();
 }

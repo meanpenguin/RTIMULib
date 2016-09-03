@@ -1,0 +1,17 @@
+g++ -c -o objects/RTIMUSettings.o ../../RTIMULib/RTIMUSettings.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTIMUMPU9255.o ../../RTIMULib/IMUDrivers/RTIMUMPU9255.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTIMUGD20M303DLHC.o ../../RTIMULib/IMUDrivers/RTIMUGD20M303DLHC.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTIMUGD20HM303DLHC.o ../../RTIMULib/IMUDrivers/RTIMUGD20HM303DLHC.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTIMULSM9DS0.o ../../RTIMULib/IMUDrivers/RTIMULSM9DS0.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTIMULSM9DS1.o ../../RTIMULib/IMUDrivers/RTIMULSM9DS1.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTIMUBMX055.o ../../RTIMULib/IMUDrivers/RTIMUBMX055.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTIMUBNO055.o ../../RTIMULib/IMUDrivers/RTIMUBNO055.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTPressure.o ../../RTIMULib/IMUDrivers/RTPressure.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTPressureBMP180.o ../../RTIMULib/IMUDrivers/RTPressureBMP180.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTPressureLPS25H.o ../../RTIMULib/IMUDrivers/RTPressureLPS25H.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTPressureMS5611.o ../../RTIMULib/IMUDrivers/RTPressureMS5611.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTPressureMS5803.o ../../RTIMULib/IMUDrivers/RTPressureMS5803.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTPressureMS5637.o ../../RTIMULib/IMUDrivers/RTPressureMS5637.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -c -o objects/RTPressureMS5837.o ../../RTIMULib/IMUDrivers/RTPressureMS5837.cpp -pipe -O2 -Wall -W  -I. -I../../RTIMULib
+g++ -Wl,-O1 -o Output/RTIMULibCal objects/RTIMULibCal.o objects/RTMath.o objects/RTIMUHal.o objects/RTFusion.o objects/RTFusionKalman4.o objects/RTFusionRTQF.o objects/RTFusionAHRS.o objects/RTIMUSettings.o objects/RTIMUAccelCal.o objects/RTIMUMagCal.o objects/RTIMUTemperatureCal.o objects/RTIMU.o objects/RTIMUNull.o objects/RTIMUMPU9150.o objects/RTIMUMPU9250.o objects/RTIMUMPU9255.o objects/RTIMUGD20HM303D.o objects/RTIMUGD20M303DLHC.o objects/RTIMUGD20HM303DLHC.o objects/RTIMULSM9DS0.o objects/RTIMULSM9DS1.o objects/RTIMUBMX055.o objects/RTIMUBNO055.o objects/RTPressure.o objects/RTPressureBMP180.o objects/RTPressureLPS25H.o objects/RTPressureMS5611.o objects/RTPressureMS5803.o objects/RTPressureMS5637.o objects/RTPressureMS5837.o -L/usr/lib/arm-linux-gnueabihf
+Makefile:128: recipe for target 'Output/RTIMULibCal' failed

@@ -2,7 +2,8 @@
 //
 //  This file is part of RTIMULib
 //
-//  Copyright (c) 2014-2015, richards-tech, LLC
+//  Copyright (c) 2014, avishorp
+//  Copyright (c) 2014, richards-tech
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of
 //  this software and associated documentation files (the "Software"), to deal in
@@ -21,54 +22,18 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "RTIMUNull.h"
-#include "RTIMUSettings.h"
+// Python binding for RTIMULib
 
-RTIMUNull::RTIMUNull(RTIMUSettings *settings) : RTIMU(settings)
-{
-}
+#include <Python.h>
+#include "structmember.h"
+#include "RTIMULib.h"
 
-RTIMUNull::~RTIMUNull()
-{
-}
+// RTHumidity Type
+struct RTIMU_RTMotion {
+  PyObject_HEAD
+  RTMotion* val;
+};
 
-bool RTIMUNull::IMUInit()
-{
+// Create the RTMotion type
+int RTIMU_RTMotion_create(PyObject* module);
 
-    m_imuData.fusionPoseValid = false;
-    m_imuData.fusionQPoseValid = false;
-    m_imuData.gyroValid = true;
-    m_imuData.accelValid = true;
-    m_imuData.compassValid = true;
-    m_imuData.motion = true;
-    m_imuData.IMUtemperatureValid = false;
-    m_imuData.IMUtemperature = 0.0;
-    m_imuData.humidityValid = false;
-    m_imuData.humidity = -1.0;
-    m_imuData.humidityTemperatureValid = false;
-    m_imuData.humidityTemperature = 0.0;
-    m_imuData.pressureValid = false;
-    m_imuData.pressure = 0.0;
-    m_imuData.pressureTemperatureValid = false;
-    m_imuData.pressureTemperature = 0.0;
-    m_imuData.tTemperatureValid = false;
-    m_imuData.tTemperature = 0.0;
-
-    return true;
-}
-
-int RTIMUNull::IMUGetPollInterval()
-{
-    return (100);                                           // just a dummy value really
-}
-
-bool RTIMUNull::IMURead()
-{
-    updateFusion();
-    return true;
-}
-
-void RTIMUNull::setIMUData(const RTIMU_DATA& data)
-{
-    m_imuData = data;
-}

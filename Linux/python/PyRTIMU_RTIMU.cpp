@@ -188,7 +188,8 @@ static PyMethodDef RTIMU_RTIMU_methods[] = {
     //////// getIMUData
     {"getIMUData", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
         const RTIMU_DATA& data = ((RTIMU_RTIMU*)self)->val->getIMUData();
-        return Py_BuildValue("{s:K,s:O,s:(d,d,d),s:O,s:(d,d,d,d),s:O,s:(d,d,d),s:O,s:(d,d,d),s:O,s:(d,d,d),s:O,s:d,s:O,s:d,s:O,s:d}",
+        ////                   ts  pV  Pose      qpV QPose       gV  gyro      aV  accel     cV  compass   m   ITV IT  tTV tT  pV  p   pTV pT  hV  h   hTV hT
+        return Py_BuildValue("{s:K,s:O,s:(d,d,d),s:O,s:(d,d,d,d),s:O,s:(d,d,d),s:O,s:(d,d,d),s:O,s:(d,d,d),s:O,s:O,s:d,s:O,s:d,s:O,s:d,s:O,s:d,s:O,s:d,s:O,s:d}",
                  "timestamp", data.timestamp,
                  "fusionPoseValid", PyBool_FromLong(data.fusionPoseValid),
                  "fusionPose", data.fusionPose.x(), data.fusionPose.y(), data.fusionPose.z(),
@@ -200,6 +201,11 @@ static PyMethodDef RTIMU_RTIMU_methods[] = {
                  "accel", data.accel.x(), data.accel.y(), data.accel.z(),
                  "compassValid", PyBool_FromLong(data.compassValid),
                  "compass", data.compass.x(), data.compass.y(), data.compass.z(),
+                 "motion", PyBool_FromLong(data.motion),
+                 "IMUtemperatureValid", PyBool_FromLong(data.IMUtemperatureValid),
+                 "IMUtemperature", data.IMUtemperature,
+                 "tTemperatureValid", PyBool_FromLong(data.tTemperatureValid),
+                 "tTemperature", data.tTemperature,
                  "pressureValid", PyBool_FromLong(data.pressureValid),
                  "pressure", data.pressure,
                  "pressureTemperatureValid", PyBool_FromLong(data.pressureTemperatureValid),
@@ -208,6 +214,7 @@ static PyMethodDef RTIMU_RTIMU_methods[] = {
                  "humidity", data.humidity,
                  "humidityTemperatureValid", PyBool_FromLong(data.humidityTemperatureValid),
                  "humidityTemperature", data.humidityTemperature);
+
         }),
     METH_NOARGS,
     "Return true if valid bias" },

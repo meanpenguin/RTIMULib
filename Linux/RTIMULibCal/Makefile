@@ -65,12 +65,20 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/RTIMUSettings.h \
     $(RTIMULIBPATH)/RTIMUAccelCal.h \
     $(RTIMULIBPATH)/RTIMUMagCal.h \
+    $(RTIMULIBPATH)/RTIMUGyroCal.h \
     $(RTIMULIBPATH)/RTIMUTemperatureCal.h \
     $(RTIMULIBPATH)/RTIMUCalDefs.h \
+    $(RTIMULIBPATH)/RunningAverage.h \
+    $(RTIMULIBPATH)/RTMotion.h \
+    $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMU.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUNull.h \
+    $(RTIMULIBPATH)/IMUDrivers/RTHumidity.h \
+    $(RTIMULIBPATH)/IMUDrivers/RTHumidityHTS221.h \
+    $(RTIMULIBPATH)/IMUDrivers/RTHumidityHTU21D.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUMPU9150.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUMPU9250.h \
+    $(RTIMULIBPATH)/IMUDrivers/RTIMUMPU9255.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUGD20HM303D.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUGD20M303DLHC.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUGD20HM303DLHC.h \
@@ -83,7 +91,8 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureLPS25H.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5611.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5803.h \
-    $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5637.h 
+    $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5637.h \
+    $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5837.h 
 
 OBJECTS = objects/RTIMULibCal.o \
     objects/RTMath.o \
@@ -95,11 +104,15 @@ OBJECTS = objects/RTIMULibCal.o \
     objects/RTIMUSettings.o \
     objects/RTIMUAccelCal.o \
     objects/RTIMUMagCal.o \
+    objects/RTIMUGyroCal.o \
     objects/RTIMUTemperatureCal.o \
+    objects/RunningAverage.o \
+    objects/RTMotion.o \
     objects/RTIMU.o \
     objects/RTIMUNull.o \
     objects/RTIMUMPU9150.o \
     objects/RTIMUMPU9250.o \
+    objects/RTIMUMPU9255.o \
     objects/RTIMUGD20HM303D.o \
     objects/RTIMUGD20M303DLHC.o \
     objects/RTIMUGD20HM303DLHC.o \
@@ -112,7 +125,8 @@ OBJECTS = objects/RTIMULibCal.o \
     objects/RTPressureLPS25H.o \
     objects/RTPressureMS5611.o \
     objects/RTPressureMS5803.o \
-    objects/RTPressureMS5637.o 
+    objects/RTPressureMS5637.o \
+    objects/RTPressureMS5837.o
 
 MAKE_TARGET	= RTIMULibCal
 DESTDIR		= Output/
@@ -133,7 +147,7 @@ clean:
 $(OBJECTS_DIR)%.o : $(RTIMULIBPATH)/%.cpp $(DEPS)
 	@$(CHK_DIR_EXISTS) objects/ || $(MKDIR) objects/
 	$(CXX) -c -o $@ $< $(CFLAGS) $(INCPATH)
-	
+
 $(OBJECTS_DIR)%.o : $(RTIMULIBPATH)/IMUDrivers/%.cpp $(DEPS)
 	@$(CHK_DIR_EXISTS) objects/ || $(MKDIR) objects/
 	$(CXX) -c -o $@ $< $(CFLAGS) $(INCPATH)

@@ -21,54 +21,34 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "RTIMUNull.h"
-#include "RTIMUSettings.h"
 
-RTIMUNull::RTIMUNull(RTIMUSettings *settings) : RTIMU(settings)
-{
-}
+#ifndef _RTIMUGYROCAL_H
+#define	_RTIMUGYROCAL_H
 
-RTIMUNull::~RTIMUNull()
-{
-}
+#include "RTIMUCalDefs.h"
+#include "RTIMULib.h"
 
-bool RTIMUNull::IMUInit()
+class RTIMUGyroCal
 {
 
-    m_imuData.fusionPoseValid = false;
-    m_imuData.fusionQPoseValid = false;
-    m_imuData.gyroValid = true;
-    m_imuData.accelValid = true;
-    m_imuData.compassValid = true;
-    m_imuData.motion = true;
-    m_imuData.IMUtemperatureValid = false;
-    m_imuData.IMUtemperature = 0.0;
-    m_imuData.humidityValid = false;
-    m_imuData.humidity = -1.0;
-    m_imuData.humidityTemperatureValid = false;
-    m_imuData.humidityTemperature = 0.0;
-    m_imuData.pressureValid = false;
-    m_imuData.pressure = 0.0;
-    m_imuData.pressureTemperatureValid = false;
-    m_imuData.pressureTemperature = 0.0;
-    m_imuData.tTemperatureValid = false;
-    m_imuData.tTemperature = 0.0;
+public:
+    RTIMUGyroCal(RTIMUSettings *settings);
+    virtual ~RTIMUGyroCal();
 
-    return true;
-}
+    void gyroCalInit();                                      // inits everything
+    void gyroCalReset();                                     // clears everything
 
-int RTIMUNull::IMUGetPollInterval()
-{
-    return (100);                                           // just a dummy value really
-}
+    // magCalValid() determines if the min/max data is basically valid
+    bool gyroCalValid();
 
-bool RTIMUNull::IMURead()
-{
-    updateFusion();
-    return true;
-}
+    // magCalSaveMinMax() saves the current min/max values to settings
+    void gyroCalSaveBias();
 
-void RTIMUNull::setIMUData(const RTIMU_DATA& data)
-{
-    m_imuData = data;
-}
+    // these vars used during the calibration process
+
+    RTIMUSettings *m_settings;
+
+private:
+};
+
+#endif // _RTIMUGYROCAL_H

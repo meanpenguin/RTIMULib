@@ -51,7 +51,7 @@ int main()
     uint64_t now;
     bool ismoving = false;
     bool enableCompass = true;
-    char keystatus[26] = " ------M-M->----------- \n";
+    char keystatus[26] = " ------M-G->----------- \n";
     char sysstatus1[64] = " -------------------------------------------- \n";
     char sysstatus2[64] = " -------------------------------------------- \n";
     
@@ -256,6 +256,16 @@ int main()
                     keystatus[9] ='M';
                     enableCompass = true;
                     imu->setCompassEnable(enableCompass);
+                    break;
+                case 'g' :
+                    // Gyro Bias runtime OFF
+                    keystatus[9] ='g';
+					imu->setGyroRunTimeCalibrationEnable(false);
+                    break;
+                case 'G' :
+                    // runtime Gyro Bias ON
+                    keystatus[9] ='G';
+					imu->setGyroRunTimeCalibrationEnable(true);
                     break;
                 case 'x' :
                     // must exit

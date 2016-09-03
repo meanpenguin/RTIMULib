@@ -53,6 +53,7 @@ bool RTIMUGD20M303DLHC::IMUInit()
     m_imuData.gyroValid = true;
     m_imuData.accelValid = true;
     m_imuData.compassValid = true;
+    m_imuData.motion = true;
     m_imuData.IMUtemperatureValid = false;
     m_imuData.IMUtemperature = 0.0;
     m_imuData.humidityValid = false;
@@ -63,6 +64,9 @@ bool RTIMUGD20M303DLHC::IMUInit()
     m_imuData.pressure = 0.0;
     m_imuData.pressureTemperatureValid = false;
     m_imuData.pressureTemperature = 0.0;
+    m_imuData.tTemperatureValid = false;
+    m_imuData.tTemperature = 0.0;
+
 
 
     //  configure IMU
@@ -266,19 +270,19 @@ bool RTIMUGD20M303DLHC::setAccelCTRL4()
 
     switch (m_settings->m_GD20M303DLHCAccelFsr) {
     case LSM303DLHC_ACCEL_FSR_2:
-        m_accelScale = (RTFLOAT)0.001 / (RTFLOAT)64;
+        m_accelScale = (RTFLOAT)0.001 / (RTFLOAT)16;
         break;
 
     case LSM303DLHC_ACCEL_FSR_4:
-        m_accelScale = (RTFLOAT)0.002 / (RTFLOAT)64;
+        m_accelScale = (RTFLOAT)0.002 / (RTFLOAT)16;
         break;
 
     case LSM303DLHC_ACCEL_FSR_8:
-        m_accelScale = (RTFLOAT)0.004 / (RTFLOAT)64;
+        m_accelScale = (RTFLOAT)0.004 / (RTFLOAT)16;
         break;
 
     case LSM303DLHC_ACCEL_FSR_16:
-        m_accelScale = (RTFLOAT)0.012 / (RTFLOAT)64;
+        m_accelScale = (RTFLOAT)0.012 / (RTFLOAT)16;
         break;
 
     default:
@@ -286,9 +290,9 @@ bool RTIMUGD20M303DLHC::setAccelCTRL4()
         return false;
     }
 
-    ctrl4 = (m_settings->m_GD20M303DLHCAccelFsr << 4);
+    ctrl4 = 0x80 + (m_settings->m_GD20M303DLHCAccelFsr << 4);
 
-    return m_settings->HALWrite(m_accelSlaveAddr,  LSM303DLHC_CTRL2_A, ctrl4, "Failed to set LSM303DLHC CTRL4");
+    return m_settings->HALWrite(m_accelSlaveAddr,  LSM303DLHC_CTRL4_A, ctrl4, "Failed to set LSM303DLHC CTRL4");
 }
 
 

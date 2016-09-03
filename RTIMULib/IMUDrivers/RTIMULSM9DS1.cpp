@@ -49,6 +49,7 @@ bool RTIMULSM9DS1::IMUInit()
     m_imuData.gyroValid = true;
     m_imuData.accelValid = true;
     m_imuData.compassValid = true;
+    m_imuData.motion = true;
     m_imuData.IMUtemperatureValid = false;
     m_imuData.IMUtemperature = 0.0;
     m_imuData.humidityValid = false;
@@ -59,6 +60,9 @@ bool RTIMULSM9DS1::IMUInit()
     m_imuData.pressure = 0.0;
     m_imuData.pressureTemperatureValid = false;
     m_imuData.pressureTemperature = 0.0;
+    m_imuData.tTemperatureValid = false;
+    m_imuData.tTemperature = 0.0;
+
 
 	
     //  configure IMU

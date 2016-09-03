@@ -29,12 +29,10 @@ void RTMotion::motionInit()
     m_motion = false;
     m_motion_previous = false;
     
-
     m_MotionData.worldAcceleration.zero();
     m_MotionData.worldVelocity.zero();
     m_MotionData.worldPosition.zero();
     m_MotionData.motion = false;
-    
 }
 
 void RTMotion::motionReset()
@@ -103,7 +101,7 @@ bool RTMotion::detectMotion(RTVector3& acc, RTVector3& gyr) {
   }
  
 }
-
+	
 void RTMotion::updateVelocityPosition(RTVector3& residuals, RTQuaternion& q, float accScale, uint64_t& timestamp, bool& motion)
 {
 // Input:

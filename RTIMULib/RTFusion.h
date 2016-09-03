@@ -62,6 +62,10 @@ public:
     void setAccelEnable(bool enable) { m_enableAccel = enable; }
     void setCompassEnable(bool enable) { m_enableCompass = enable;}
 
+    bool getGyroEnable() { return m_enableGyro;}
+    bool getAccelEnable() { return m_enableAccel; }
+    bool getCompassEnable() { return m_enableCompass;}
+
     inline const RTVector3& getMeasuredPose() {return m_measuredPose;}
     inline const RTQuaternion& getMeasuredQPose() {return m_measuredQPose;}
 

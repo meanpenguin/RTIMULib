@@ -74,7 +74,8 @@ public:
 
     RTVector3 m_magMin;                                     // the min values
     RTVector3 m_magMax;                                     // the max values
-
+   	RTVector3 m_magMinAutoTune;                                     // the min values
+	RTVector3 m_magMaxAutoTune;                                     // the max values
     RTIMUSettings *m_settings;
 
 private:

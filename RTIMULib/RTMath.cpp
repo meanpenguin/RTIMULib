@@ -238,6 +238,13 @@ RTVector3& RTVector3::operator =(const RTVector3& vec)
     return *this;
 }
 
+RTVector3& RTVector3::operator =(const RTFLOAT val)
+{
+    for (int i = 0; i < 3; i++)
+        m_data[i] = val;
+    return *this;
+}
+
 RTVector3& RTVector3::operator +=(const RTFLOAT val)
 {
     for (int i = 0; i < 3; i++)
@@ -479,6 +486,13 @@ RTQuaternion& RTQuaternion::operator =(const RTQuaternion& quat)
     m_data[2] = quat.m_data[2];
     m_data[3] = quat.m_data[3];
 
+    return *this;
+}
+
+RTQuaternion& RTQuaternion::operator =(const RTFLOAT val)
+{
+    for (int i = 0; i < 4; i++)
+        m_data[i] = val;
     return *this;
 }
 

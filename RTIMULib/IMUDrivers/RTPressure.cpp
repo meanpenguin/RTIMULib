@@ -29,6 +29,7 @@
 #include "RTPressureMS5611.h"
 #include "RTPressureMS5637.h"
 #include "RTPressureMS5803.h"
+#include "RTPressureMS5837.h"
 
 RTPressure *RTPressure::createPressure(RTIMUSettings *settings)
 {
@@ -47,6 +48,9 @@ RTPressure *RTPressure::createPressure(RTIMUSettings *settings)
 
     case RTPRESSURE_TYPE_MS5803:
         return new RTPressureMS5803(settings);
+
+    case RTPRESSURE_TYPE_MS5837:
+        return new RTPressureMS5837(settings);
         
     case RTPRESSURE_TYPE_AUTODISCOVER:
         if (settings->discoverPressure(settings->m_pressureType, settings->m_I2CPressureAddress)) {

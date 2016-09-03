@@ -64,6 +64,7 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/RTFusionAHRS.h \
     $(RTIMULIBPATH)/RTIMUSettings.h \
     $(RTIMULIBPATH)/RTIMUAccelCal.h \
+    $(RTIMULIBPATH)/RTIMUGyroCal.h \
     $(RTIMULIBPATH)/RTIMUMagCal.h \
     $(RTIMULIBPATH)/RTIMUTemperatureCal.h \
     $(RTIMULIBPATH)/RTMotion.h \
@@ -73,6 +74,7 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUNull.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUMPU9150.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUMPU9250.h \
+    $(RTIMULIBPATH)/IMUDrivers/RTIMUMPU9255.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUGD20HM303D.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUGD20M303DLHC.h \
     $(RTIMULIBPATH)/IMUDrivers/RTIMUGD20HM303DLHC.h \
@@ -87,6 +89,7 @@ DEPS    = $(RTIMULIBPATH)/RTMath.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5611.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5637.h \
     $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5803.h \
+    $(RTIMULIBPATH)/IMUDrivers/RTPressureMS5837.h \
     $(RTIMULIBPATH)/IMUDrivers/RTHumidity.h \
     $(RTIMULIBPATH)/IMUDrivers/RTHumidityDefs.h \
     $(RTIMULIBPATH)/IMUDrivers/RTHumidityHTS221.h \
@@ -102,6 +105,7 @@ OBJECTS = objects/RTIMULibDrive11.o \
     objects/RTIMUSettings.o \
     objects/RTIMUAccelCal.o \
     objects/RTIMUMagCal.o \
+    objects/RTIMUGyroCal.o \
     objects/RTIMUTemperatureCal.o \
     objects/RTMotion.o \
     objects/RunningAverage.o \
@@ -109,6 +113,7 @@ OBJECTS = objects/RTIMULibDrive11.o \
     objects/RTIMUNull.o \
     objects/RTIMUMPU9150.o \
     objects/RTIMUMPU9250.o \
+    objects/RTIMUMPU9255.o \
     objects/RTIMUGD20HM303D.o \
     objects/RTIMUGD20M303DLHC.o \
     objects/RTIMUGD20HM303DLHC.o \
@@ -122,6 +127,7 @@ OBJECTS = objects/RTIMULibDrive11.o \
     objects/RTPressureMS5611.o \
     objects/RTPressureMS5637.o \
     objects/RTPressureMS5803.o \
+    objects/RTPressureMS5837.o \
     objects/RTHumidity.o \
     objects/RTHumidityHTS221.o \
     objects/RTHumidityHTU21D.o \

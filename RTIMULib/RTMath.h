@@ -36,7 +36,7 @@ typedef float RTFLOAT;
 
 //  Useful constants
 
-#define	RTMATH_PI			3.1415926535
+#define	RTMATH_PI			        3.1415926535
 #define	RTMATH_DEGREE_TO_RAD		(RTMATH_PI / 180.0)
 #define	RTMATH_RAD_TO_DEGREE		(180.0 / RTMATH_PI)
 
@@ -91,12 +91,13 @@ public:
     RTVector3& operator +=(const RTVector3& vec);
     RTVector3& operator -=(const RTVector3& vec);
     RTVector3& operator *=(const RTVector3& vec);
+    RTVector3& operator  =(const RTVector3& vec);
     RTVector3& operator *=(const RTFLOAT val);
     RTVector3& operator -=(const RTFLOAT val);
     RTVector3& operator +=(const RTFLOAT val);
     RTVector3& operator /=(const RTFLOAT val);
+	RTVector3& operator  =(const RTFLOAT val);
     
-    RTVector3& operator =(const RTVector3& vec);
     const RTVector3 operator *(const RTVector3& qb) const;
     const RTVector3 operator *(const RTFLOAT val) const;
     const RTVector3 operator /(const RTVector3& qb) const;
@@ -148,12 +149,13 @@ public:
     RTQuaternion& operator -=(const RTQuaternion& quat);
     RTQuaternion& operator *=(const RTQuaternion& qb);
     RTQuaternion& operator /=(const RTQuaternion& qb);
+    RTQuaternion& operator  =(const RTQuaternion& quat);
     RTQuaternion& operator +=(const RTFLOAT val);
     RTQuaternion& operator -=(const RTFLOAT val);
     RTQuaternion& operator *=(const RTFLOAT val);
     RTQuaternion& operator /=(const RTFLOAT val);
+    RTQuaternion& operator  =(const RTFLOAT val);
 
-    RTQuaternion& operator =(const RTQuaternion& quat);
     const RTQuaternion operator *(const RTQuaternion& qb) const;
     const RTQuaternion operator *(const RTFLOAT val) const;
     const RTQuaternion operator /(const RTQuaternion& qb) const;

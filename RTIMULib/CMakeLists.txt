@@ -55,7 +55,7 @@ SET(LIBRTIMU_SRCS
     RTIMUAccelCal.cpp
     RTIMUTemperatureCal.cpp
     RTIMUSettings.cpp
-    RTIMUMotion.cpp
+    RTMotion.cpp
     RunningAverage.cpp
     IMUDrivers/RTIMU.cpp
     IMUDrivers/RTIMUGD20M303DLHC.cpp
@@ -65,6 +65,7 @@ SET(LIBRTIMU_SRCS
     IMUDrivers/RTIMULSM9DS1.cpp
     IMUDrivers/RTIMUMPU9150.cpp
     IMUDrivers/RTIMUMPU9250.cpp
+    IMUDrivers/RTIMUMPU9255.cpp
     IMUDrivers/RTIMUBMX055.cpp
     IMUDrivers/RTIMUBNO055.cpp
     IMUDrivers/RTIMUNull.cpp
@@ -74,6 +75,7 @@ SET(LIBRTIMU_SRCS
     IMUDrivers/RTPressureMS5611.cpp
     IMUDrivers/RTPressureMS5637.cpp
     IMUDrivers/RTPressureMS5803.cpp
+    IMUDrivers/RTPressureMS5837.cpp
     IMUDrivers/RTHumidity.cpp
     IMUDrivers/RTHumidityHTS221.cpp
     IMUDrivers/RTHumidityHTU21D.cpp

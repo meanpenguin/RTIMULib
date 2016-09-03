@@ -21,54 +21,51 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "RTIMUNull.h"
-#include "RTIMUSettings.h"
+#ifndef _RTPRESSUREMS5837_H_
+#define _RTPRESSUREMS5837_H_
 
-RTIMUNull::RTIMUNull(RTIMUSettings *settings) : RTIMU(settings)
+#include "RTPressure.h"
+
+//  State definitions
+
+#define MS5837_STATE_IDLE               0
+#define MS5837_STATE_TEMPERATURE        1
+#define MS5837_STATE_PRESSURE           2
+
+class RTIMUSettings;
+
+class RTPressureMS5837 : public RTPressure
 {
-}
+public:
+    RTPressureMS5837(RTIMUSettings *settings);
+    ~RTPressureMS5837();
 
-RTIMUNull::~RTIMUNull()
-{
-}
+    virtual const char *pressureName() { return "MS5837"; }
+    virtual int pressureType() { return RTPRESSURE_TYPE_MS5837; } 
+    virtual bool pressureInit();
+    virtual bool pressureReset();
+    virtual bool pressureRead(RTIMU_DATA& data);
 
-bool RTIMUNull::IMUInit()
-{
+private:
+    void pressureBackground();
+    void setTestData();
+	uint8_t crc4(uint16_t n_prom[]);
 
-    m_imuData.fusionPoseValid = false;
-    m_imuData.fusionQPoseValid = false;
-    m_imuData.gyroValid = true;
-    m_imuData.accelValid = true;
-    m_imuData.compassValid = true;
-    m_imuData.motion = true;
-    m_imuData.IMUtemperatureValid = false;
-    m_imuData.IMUtemperature = 0.0;
-    m_imuData.humidityValid = false;
-    m_imuData.humidity = -1.0;
-    m_imuData.humidityTemperatureValid = false;
-    m_imuData.humidityTemperature = 0.0;
-    m_imuData.pressureValid = false;
-    m_imuData.pressure = 0.0;
-    m_imuData.pressureTemperatureValid = false;
-    m_imuData.pressureTemperature = 0.0;
-    m_imuData.tTemperatureValid = false;
-    m_imuData.tTemperature = 0.0;
+    unsigned char m_pressureAddr;                           // I2C address
+    RTFLOAT m_pressure;                                     // the current pressure
+    RTFLOAT m_temperature;                                  // the current temperature
 
-    return true;
-}
+    int m_state;
 
-int RTIMUNull::IMUGetPollInterval()
-{
-    return (100);                                           // just a dummy value really
-}
+    uint16_t m_calData[8];                                  // calibration data
 
-bool RTIMUNull::IMURead()
-{
-    updateFusion();
-    return true;
-}
+    uint32_t m_D1;
+    uint32_t m_D2;
 
-void RTIMUNull::setIMUData(const RTIMU_DATA& data)
-{
-    m_imuData = data;
-}
+    uint64_t m_timer;                                       // used to time coversions
+
+    bool m_validReadings;
+};
+
+#endif // _RTPRESSUREMS5837_H_
+

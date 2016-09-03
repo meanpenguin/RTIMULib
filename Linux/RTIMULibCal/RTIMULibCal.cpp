@@ -83,6 +83,7 @@ void doMagEllipsoidCal();
 void doAccelMinMaxCal();
 void doAccelEllipsoidCal();
 void doTemperatureCal();
+void doRuntimeAccelCal();
 void processEllipsoid();
 void processAccelEllipsoid();
 void processTemperature();
@@ -101,7 +102,7 @@ static bool temperatureDone;
 
 static bool accelEnables[3];
 static bool accelEllipsoidEnable;
-static int accelCurrentAxis;
+static int  accelCurrentAxis;
 
 int main(int argc, char **argv)
 {
@@ -117,6 +118,7 @@ int main(int argc, char **argv)
     settings = new RTIMUSettings(settingsFile);
 
     bool mustExit = false;
+	
     imu = NULL;
     newIMU();
 
@@ -170,6 +172,10 @@ int main(int argc, char **argv)
 
         case 'T' :
             doTemperatureCal();
+            break;
+
+		case 'r' :
+            doRuntimeAccelCal();
             break;
         }
     }
@@ -459,6 +465,83 @@ void processEllipsoid()
     }
 }
 
+void doRuntimeAccelCal()
+{
+    uint64_t displayTimer;
+    uint64_t now;
+    char input;
+	bool engageRuntimeCalib = false;
+
+    printf("\nAccelerometer Runtime Calibration\n");
+    printf("-----------------------------------\n");
+    printf("Available options are:\n");
+    printf("  R - enable runtime calibration.\n");
+    printf("  r - disbale runtime calibration.\n");
+    printf("  s - save the data once all 6 extrema have been collected.\n");
+    printf("  x - abort and discard the data.\n");
+    printf("\nPress any key to start...");
+    getchar();
+    
+    now = RTMath::currentUSecsSinceEpoch();
+    displayTimer = now;
+
+    while (1) {
+
+        while (pollIMU()) {
+
+            now = RTMath::currentUSecsSinceEpoch();
+            
+            //  display 10 times per second
+
+            if ((now - displayTimer) > 100000) {
+				printf("\n");
+			    printf("Accel x: %6.2f  y: %6.2f  z: %6.2f  s: %6.2f\n", imuData.accel.x(), imuData.accel.y(), imuData.accel.z(), imuData.accel.length());
+				printf("Min x: %6.2f  min y: %6.2f  min z: %6.2f\n", settings->m_accelCalMin.data(0),
+					settings->m_accelCalMin.data(1), settings->m_accelCalMin.data(2));
+				printf("Max x: %6.2f  max y: %6.2f  max z: %6.2f\n", settings->m_accelCalMax.data(0),
+					settings->m_accelCalMax.data(1), settings->m_accelCalMax.data(2));
+				fflush(stdout);
+                displayTimer = now;
+            }
+			
+			if (engageRuntimeCalib) {
+				imu->runtimeAdjustAccelCal();
+			}
+        }
+
+        if ((input = getUserChar()) != 0) {
+            switch (input) {
+	
+			case 'R':
+				engageRuntimeCalib = true;
+				break;
+
+			case 'r':
+				engageRuntimeCalib = false;
+				break;
+
+			 case 's' :
+			    settings->saveSettings();
+				accelMinMaxDone = true;
+				accelCal->m_accelMin = settings->m_accelCalMin;
+				accelCal->m_accelMax = settings->m_accelCalMax;
+				printf("\nAccelerometer calibration data saved.\n");
+				return;
+		
+			case 'x' :
+				printf("\nAborting.\n");
+				return;
+			}
+        }
+        
+        //  poll at the rate recommended by the IMU
+        uint64_t time_elapsed = RTMath::currentUSecsSinceEpoch() - now;
+        if ( (int)time_elapsed < imu->IMUGetPollInterval()*1000) {
+            usleep(imu->IMUGetPollInterval() * 1000 - time_elapsed);
+        }
+	}
+}
+
 void doAccelMinMaxCal()
 {
     uint64_t displayTimer;
@@ -542,7 +625,7 @@ void doAccelMinMaxCal()
                 accelMinMaxDone = true;
                 printf("\nAccelerometer calibration data saved to file.\n");
                 return;
-                
+    
             case 'x' :
                 printf("\nAborting.\n");
                 return;
@@ -692,6 +775,7 @@ void displayMenu()
     printf("  M - calibrate magnetometer with ellipsoid (do min/max first)\n");
     printf("  a - calibrate accelerometers with min/max\n");
     printf("  A - calibrate accelerometers with ellipsoid (do min/max first)\n");
+    printf("  r - runtime accelerometer calibration)\n");
     printf("  x - exit\n");
     printf("Enter option: ");
 }

@@ -64,6 +64,15 @@
 #define RTIMULIB_MPU9250_GYRO_FSR           "MPU9250GyroFSR"
 #define RTIMULIB_MPU9250_ACCEL_FSR          "MPU9250AccelFSR"
 
+//  MPU9255 settings keys
+
+#define RTIMULIB_MPU9255_GYROACCEL_SAMPLERATE "MPU9255GyroAccelSampleRate"
+#define RTIMULIB_MPU9255_COMPASS_SAMPLERATE "MPU9255CompassSampleRate"
+#define RTIMULIB_MPU9255_GYRO_LPF           "MPU9255GyroLpf"
+#define RTIMULIB_MPU9255_ACCEL_LPF          "MPU9255AccelLpf"
+#define RTIMULIB_MPU9255_GYRO_FSR           "MPU9255GyroFSR"
+#define RTIMULIB_MPU9255_ACCEL_FSR          "MPU9255AccelFSR"
+
 //  GD20HM303D settings keys
 
 #define RTIMULIB_GD20HM303D_GYRO_SAMPLERATE   "GD20HM303DGyroSampleRate"
@@ -296,7 +305,7 @@ public:
     int m_humidityType;                                     // type code of humidity sensor in use
     unsigned char m_I2CHumidityAddress;                     // I2C slave address of the humidity sensor
 
-    bool  m_temperatureCalValid;                                    // true if there is valid temperature bias correction data
+    bool  m_temperatureCalValid;                            // true if there is valid temperature bias correction data
     float m_c3[9];                                          // Temperature Bias:
     float m_c2[9];                                          // c3 * T^3 + c2 * T^2 + c1 * T + c0
     float m_c1[9];                                          // for acc, gyro and mag
@@ -313,8 +322,10 @@ public:
     float m_compassCalEllipsoidCorr[3][3];                  // the correction matrix
 
     float m_compassAdjDeclination;                          // magnetic declination adjustment - subtracted from measured
-
-    bool m_accelCalValid;                                   // true if there is valid accel calibration data
+    void  setDeclination(float declination) { m_compassAdjDeclination = declination;}
+    float getDeclination()                  { return m_compassAdjDeclination;}
+    
+	bool m_accelCalValid;                                   // true if there is valid accel calibration data
     RTVector3 m_accelCalMin;                                // the minimum values
     RTVector3 m_accelCalMax;                                // the maximum values
 
@@ -343,6 +354,15 @@ public:
     int m_MPU9250AccelLpf;                                  // low pass filter code for the accel
     int m_MPU9250GyroFsr;                                   // FSR code for the gyro
     int m_MPU9250AccelFsr;                                  // FSR code for the accel
+
+    //  MPU9255
+
+    int m_MPU9255GyroAccelSampleRate;                       // the sample rate (samples per second) for gyro and accel
+    int m_MPU9255CompassSampleRate;                         // same for the compass
+    int m_MPU9255GyroLpf;                                   // low pass filter code for the gyro
+    int m_MPU9255AccelLpf;                                  // low pass filter code for the accel
+    int m_MPU9255GyroFsr;                                   // FSR code for the gyro
+    int m_MPU9255AccelFsr;                                  // FSR code for the accel
 
     //  GD20HM303D
 

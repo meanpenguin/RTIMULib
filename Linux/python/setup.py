@@ -33,11 +33,16 @@ RTIMU_sources = [
     "RTFusionRTQF.cpp",
     "RTFusionAHRS.cpp",
     "RTIMUSettings.cpp",
-	"RTMotion.cpp"
+    "RTIMUAccelCal.cpp",
+    "RTIMUGyroCal.cpp",
+    "RTIMUMagCal.cpp",
+    "RTIMUTemperatureCal.cpp",
+    "RunningAverage.cpp",
     "IMUDrivers/RTIMU.cpp",
     "IMUDrivers/RTIMUNull.cpp",
     "IMUDrivers/RTIMUMPU9150.cpp",
     "IMUDrivers/RTIMUMPU9250.cpp",
+    "IMUDrivers/RTIMUMPU9255.cpp",
     "IMUDrivers/RTIMUGD20HM303D.cpp",
     "IMUDrivers/RTIMUGD20HM303DLHC.cpp",
     "IMUDrivers/RTIMUGD20M303DLHC.cpp",
@@ -51,15 +56,16 @@ RTIMU_sources = [
     "IMUDrivers/RTPressureMS5611.cpp",
     "IMUDrivers/RTPressureMS5637.cpp",
     "IMUDrivers/RTPressureMS5803.cpp",
+    "IMUDrivers/RTPressureMS5837.cpp",
     "IMUDrivers/RTHumidity.cpp",
     "IMUDrivers/RTHumidityHTS221.cpp",
-    "IMUDrivers/RTHumidityHTU21D.cpp",
-   ]
+    "IMUDrivers/RTHumidityHTU21D.cpp"
+    ]
 RTIMU_sourcedir = "../../RTIMULib"
 
 mod = Extension('RTIMU',
                 sources = ['PyRTIMU.cpp', 'PyRTIMU_Settings.cpp', 'PyRTIMU_RTIMU.cpp', 
-                'PyRTIMU_RTPressure.cpp', 'PyRTIMU_RTHumidity.cpp', 'PyRTIMU_Motion.cpp'] +
+                'PyRTIMU_RTPressure.cpp', 'PyRTIMU_RTHumidity.cpp'] +
                 [ os.path.join(RTIMU_sourcedir, sr) for sr in RTIMU_sources],
                 include_dirs = [RTIMU_sourcedir],
                 extra_compile_args = ['-std=c++0x'],
@@ -67,6 +73,6 @@ mod = Extension('RTIMU',
                 )
 
 setup (name = 'RTIMULib',
-       version = '7.3.0',
+       version = '8.0.1',
        description = 'richards-tech IMU Sensor Fusion Library',
        ext_modules = [mod])
