@@ -2,9 +2,7 @@
 
 RTIMULib is the simplest way to connect a 9-dof, 10-dof or 11-dof IMU to an embedded Linux system and obtain quaternion or Euler angle pose data. Basically, two simple function calls (IMUInit() and IMURead()) are pretty much all that's needed to integrate RTIMULib.
 
-## Please note that this library is now under developement as RTIMULib2 supported by Richards-Tech.
-
-Additions to this distro are indicated below after version 7.2.1 
+## Please note that this library contains all changes of RTIMULib2. The orginal developr Richards-Tech is not longer supporting these libraries.
 
 ## Features
 
@@ -24,10 +22,11 @@ Check out www.richards-tech.com for more details, updates and news.
 
 RTIMULib currently supports the following IMUs:
 
-* InvenSense MPU-9150 single chip IMU.
 * InvenSense MPU-6050 plus HMC5883 magnetometer on MPU-6050's aux bus (handled by the MPU-9150 driver).
 * InvenSense MPU-6050 gyros + acclerometers. Treated as MPU-9150 without magnetometers.
+* InvenSense MPU-9150 single chip IMU.
 * InvenSense MPU-9250 single chip IMU (I2C and SPI).
+* InvenSense MPU-9255 single chip IMU (I2C and SPI).
 * STM LSM9DS0 single chip IMU.
 * STM LSM9DS1 single chip IMU.
 * L3GD20H + LSM303D (optionally with the LPS25H) as used on the Pololu AltIMU-10 v4.
@@ -35,6 +34,8 @@ RTIMULib currently supports the following IMUs:
 * L3GD20H + LSM303DLHC (optionally with BMP180) as used on the new Adafruit 10-dof IMU.
 * Bosch BMX055 (although magnetometer support is experimental currently).
 * Bosch BNO055 IMU with onchip fusion. Note: will not work reliably with RaspberryPi/Pi2 due to clock-stretching issues.
+
+9250 and 9150 are set to provide temperature readings and use FIFO for all sensor readings.
 
 The LSM9DS1 implementation was generously supplied by XECDesign.
 
@@ -44,7 +45,8 @@ Pressure/temperature sensing is supported for the following pressure sensors:
 * LPS25H
 * MS5611
 * MS5637
-* MS5803 (10atm underwater?
+* MS5803 (10atm underwater)
+* MS5837 (30atm underwater)
 
 Humidity/temperature sensing is supported for the following humidity sensors:
 
@@ -92,285 +94,4 @@ This contains Octave code used by the ellipsiod fit data generation in RTIMULibC
 It is essential to calibrate the magnetometer or else very poor fusion results will be obtained. For more about this, see http://wp.me/p4qcHg-b4. RTIMULibDemo (GUI) and RTIMULibCal (command line) can be used to do this. They both support magnetometer min/max, magnetometer ellipsoid fit and accelerometer min/max calibration.
 
 Also, if using a non-standard axis rotation (see http://wp.me/p4qcHg-cO), magnetometer calibration (and accelerometer calibration if that has been performed) MUST be run AFTER changing the axis rotation.
-
-
-## Release history
-
-### December 2015 - 7.3.1
-
-Incorporation of RTIMULib2 Mag self calibration
-Incroporation of runtime tuning of Max/Min in runtime mode
-
-### July 2015 - 7.3.0
-
-Inclusion of MS5803 Pressure Sensor
-Inclusion of Temperature Bias Calibration
-Inclusion of Accelerometer Ellipsoid Fit
-Addition are propagated to RTIMULibCal, RTIMUDrive11, python/test/Fusion11.py 
-
-### June 22 2015 - 7.2.1
-
-Improvement to Linux CMakeLists.txt. Added temp comp to HTU21D.
-
-### June 21 2015 - 7.2.0
-
-Added support for HTU21D humidity sensor.
-
-### June 17 2015 - 7.1.0
-
-Added humidity support to the demo apps and created RTIMULibDrive11 and Fusion11.py. Fixed some related build problems. Updated some source headers.
-
-### June 15 2015 - 7.0.3
-
-Improved CMake versioning system.
-
-### June 12 2015 - 7.0.2
-
-Also added SOVERSION to RTIMULibGL build via CMake. Note - on Linux it may be necessary to run "sudo ldconfig" after building.
-
-### June 12 2015 - 7.0.1
-
-Added SOVERSION to CMake build library.
-
-### June 9 2015 - 7.0.0
-
-New humidity infrastructure and HTS221 support added. Thanks to XECDesign for this. Due to lack of hardware for testing at this time, this release is somewhat experimental - use 6.3.0 if problems are encountered.
-
-LSM9DS1 support added.
-
-### May 17 2015 - 6.3.0
-
-Added support for the BNO055. The BNO055 always uses its onchip fusion rather than RTIMULib filters. This will not work reliably with the Raspberry Pi/Pi2 due to clock-stretching issues.
-
-### April 30 2015 - 6.2.1
-
-Added second order temperature compensation for MS5611 and MS5637. MS5637 still seems to be affected by temperature - this is being investigated.
-
-### April 24 2015 - 6.2.0
-
-Add support for Bosch BMX055 IMU and MS5637 pressure sensor. See notes above about auto-detection for the MS5637.
-
-The BMX055 implementation is slightly experimental as the magnetometer results show significant asymmetry about zero. The processing of the magnetometer data is fairly complex and there could be an error in it. Calibration is essential for this IMU at the moment.
-
-### March 31 2015 - 6.1.0
-
-Allow RTQF Slerp power to be changed while running while fusion running. Some performance improvements and cleanups.
-
-### March 29 2015 - 6.0.0
-
-Changed RTQF state correction mechanism to use quaternion SLERP. This is a little experimental - if you encounter problems, please use the 5.6.0 release (from the Releases tab).
-
-### March 21 2015 - 5.6.0
-
-Added support for MPU6050 + HMC5883 IMUs (HMC5883 on MPU-6050's aux bus).
-
-### March 20 2015 - 5.5.0
-
-Added support for the MS5611 pressure sensor and also modified MPU-9150 driver to also support the MPU-6050.
-
-### February 21 2015 - 5.4.0
-
-Python API now works with Python 2.7 and Python 3.4.
-
-Changed MPU9150 and MPU9250 drivers so that compass adjust is performed before axis swap.
-
-### January 31 2015 - 5.3.0
-
-Added abilty to set magnetic declination in the .ini file. This value in radians is subtracted from the measured heading before being used by the fusion algorithm.
-
-### January 24 2015 - 5.2.3
-
-Fixed problem with CMakeLists.txt for RTIMULibGL.
-
-### January 19 2015 - 5.2.2
-
-Improved some CMakeLists. RTIMULib can now be built with cmake independently.
-
-### December 29 2014 - 5.2.1
-
-Some improvements to the RTHost CMakelists.txt. Changed Visual Studio version to VS2013.
-
-### December 29 2014 - 5.2.0
-
-Added support for vrpn. There is a new demo app, RTIMULibvrpn, that shows how this works.
-
-RTSettings constructor now optionally allows the directory used for the .ini settings file to be specified. The original constructor uses the working directory whereas the additional constructor allows this bevaiour to be overridden.
-
-Changed install directory to /usr/local/bin when using the supplid Makefiles and qmake instead of /usr/bin. This is to be consistent with cmake-generated makefiles.
-
-### December 15 2014 - 5.1.0
-
-Added support for the LPS25H pressure/temperature sensor.
-
-Addeed support for SPI chip select 1 in addition to chip select 0. A new field, SPISelect, has been added. RTIMULib will try to autodetect SPI bus 0, select 0 and SPI bus 0 select 1 but others can be used if the RTIMULib.ini file is hand-edited.
-
-### December 10 2014 - 5.0.0
-
-Top level directory structure completely reorganized.
-
-Support for pressure sensors.
-
-New demo app, RTIMULibDrive10, to demonstrate use of pressure sensors with RTIMULib.
-
-RTIMULibDemo and RTIMULibDemoGL upgraded to support pressure sensors.
-
-Python library upgraded to support pressure sensors. A new demo script, Fusion10.py, shows how to use the interface.
-
-### December 3 2014 - 4.4.0
-
-Added RTIMULibDemoGL and reorganized the OpenGL components.
-
-### December 3 2014 - 4.3.2
-
-CMake build system now works for the RTHostIMU and RTHostIMUGL apps on Windows and Mac OS X. The full set of apps are built on Linux.
-
-Some minor driver fixes.
-
-RTHostIMUGL now runs on the Raspberry Pi. Simpler (non-ADS) shading is used to imporve performance.
-
-### December 2 2014 - 4.3.1
-
-Fixed the CMakeLists.txt for RTIMULibDemo.
-
-### December 2 2014 - 4.3.0
-
-Added cmake support (see build instructions for more info). This was based on work by Moritz Fischer at ettus.com. As part of this, the qextserialport folder was renamed to RTSerialPort. There are also some small fixes in the MPU-9150/9250 and GD20HM303D drivers.
-
-### November 18 2014 - 4.2.0
-
-Add the IMU axis rotation capability to better handle IMUs in non-standard orientations. See http://wp.me/p4qcHg-cO for more details of how to use this capability.
-
-### November 14 2014 - 4.1.0
-
-Corrected some problems with the continuous gyro bias update system. There is a new function in RTIMU called setGyroContinuousLearningAlpha() that allows the continuous learning rate to be set. RTIMULIB uses a rapid learning rate to collect the initial gyro bias data but then uses a much slower rate for continuous tracking of bias. This function allows the rate to be set if necessary - values can be between 0.0 and 1.0. Setting it to 0.0 turns off continuous learning completely so that gyro bias calculation only occurs during the rapid learning period.
-
-loadSettings() and saveSettings() in RTSettings.cpp are now virtual to give more flexibility in how settings are stored.
-
-### November 8 2014 - 4.0.1
-
-Fixed some missing MPU-9250 related defs in python interface.
-
-### November 7 2014 - 4.0.0
-
-Restructured library to add support for the MPU-9250 and SPI bus. This is a little experimental right now - use V3.1.1 if problems are encountered with existing supported IMUs. The MPU-9250 has been seen to hang when used on the SPI bus at sample rates above 300 samples per second. However, sample rates up to 1000 seem to work fine using I2C.
-
-The RTIMULib apps are now able to auto-detect on the I2C and SPI bus so, if only one supported IMU is present on either bus, the code should find it. Note that only the MPU-9250 is supported by the SPI driver at the moment. There are some new settings in the RTIMULib.ini file related to the SPI bus that may need editing in some systems. The default SPI bus is set 0 which works nicely for the Raspberry Pi. Connect the MPU-9250 to SPI0 and CS0 and it should work without needing to change anythin in RTIMULib.ini.
-
-### November 4 2014 - 3.1.1
-
-Can now supply the .ini name as a command line argument. For example:
-
-    RTIMULibCal Palm
-    
-would calibrate a settings file called Palm.ini.
-
-### November 1 2014 - 3.1.0
-
-Added the RTIMULibCal application. This implements IMU calibration in no GUI (command line) environments.
-
-### October 13 2014 - 3.0.3
-
-Increased time allowed for ellipse fitting to complete before declaring it finished.
-
-### October 13 2014 - 3.0.2
-
-Added license information to Calibrate.pdf.
-
-### October 13 2014 - 3.0.1
-
-Fixed missing license header in RTEllipsoidFit.
-
-### October 13 2014 - 3.0.0
-
-RTIMULib now support accelerometer calibration and enhanced magnetometer calibration using ellipsoid fitting. Please check the Calibration.pdf document for instructions on how to create the calibration data.
-
-### October 8 2014 - 2.1.2
-
-Fixed some missed license header changes.
-
-### October 8 2014 - 2.1.1
-
-Fixed bug where the first com put was missed on the GUI dropdown in RTHostIMU and RTHostIMUGL.
-
-### October 8 2014 - 2.1.0
-
-Changed license to MIT.
-
-Added RTHostIMU and RTHostIMUGL. These apps use RTArduLink to connect the host system to an IMU connected to an Arduino. This allows processing to be split between the Arduino and the host system. Sensor data collection is performed on the Arduino, sensor fusion and display is performed on the host. This means that the apps will run on hosts without I2C ports (such as PCs). See below for more details.
-
-### October 2 2014 - 2.0.0
-
-Changed the gyro bias calculation to run automatically when the IMU is detected as being stable. This means
-that the IMU no longer needs to be kept still for 5 seconds after restart and gyro bias is continually tracked. IMUGyroBiasValid can be called to check if enough stable samples have been obtained for a reasonable bias calculation to be made. If the IMU is stable, this will normally occur within 5 seconds. If not stable at the start, it may take longer but it will occur eventually once enough stable samples have been obtained. If RTIMULibDemo never indicates a valid bias, the #defines RTIMU_FUZZY_GYRO_ZERO and/or RTIMU_FUZZY_ACCEL_ZERO may need to be increased if the gyro bias or accelerometer noise is unusually high. These should be set to be greater than the readings observed using RTIMULibDemo when the IMU is completely stable. In the case of the gyros, this should be the absolute values when the IMU isn't being moved. In the case of the accels, this should be the maximum change in values when the IMU isn't being moved.
-
-Stable gyro bias values are saved to the RTIMULib.ini file in order to speed up restarts. The values will once again be 
-updated after enough stable samples have been obtained in order to track long term changes in gyro bias.
-
-If problems are encountered, try version 1.0.4 which is available under the GitHub repo releases tab. Please also report any issues via the GitHub issue system to help improve RTIMULib!
-
-### September 3 2014 - 1.0.4
-
-Fixed message error in RTIMUSettings.
-
-### September 2 2014 - 1.0.3
-
-CompassCalMax was returning m_compassCalMin in PyRTIMU_settings.cpp - changed to max instead. Thanks to Stefan Grufman for finding that.
-
-### August 6 2014 - 1.0.2
-
-Added missing compass sample rate defines for LSM303DLHC and updated settings comments. Thanks to Bill Robertson (broberts4) for spotting that!
-
-### July 29 2014 - 1.0.1
-
-Fixed the python getIMUData function.
-
-### July 7 2014 - 1.0.0
-
-#### Added python bindings
-
-Thanks to avishorp for the python code and Luke Heidelberger for a bug fix.
-
-### April 13 2014 - 0.9.4
-
-#### Added new RTQF fusion filter
-
-RTQF is a very highly stripped down Kalman filter that avoids matrix inversion and lot of other matrix operations. It makes a small performance difference on the Raspberry Pi but would have more impact on lower powered processors.
-
-### April 10 2014 - 0.9.3
-
-#### STM LSM9DS0 IMU Implementation now working
-
-The single chip IMU LSM9DS0 is now working with RTIMULib. An example breakout is available from Sparkfun - https://www.sparkfun.com/products/12636.
-
-### April 9 2014 - 0.9.2
-
-#### STM L3GD20H + LSM303D IMU Implementation now working
-
-The combination of the L3GD20H gyro and LSM303D accel/mag chip is now working. The physical configuration supported is as used on the Pololu Altimu V3 - http://www.pololu.com/product/2469. The pressure chip on the 10-dof version will be supported shortly but 9-dof is working now.
-
-#### STM L3GD20 + LSM303DLHC IMU Implementation now working
-
-The combination of the L3GD20 and LSM303DLHC accel/mag chip is now working. The physical configuration supported is as used on the Adafruit 9-dof IMU - http://www.adafruit.com/products/1714.
-
-### April 7 2014 - 0.9.1
-
-#### Improved performance with MPU-9150
-
-A new caching strategy for the MPU-9150 seems to be achieving 1000 samples per second without fifo overflows using a 900MHz Raspberry Pi and 400kHz I2C bus. This is as reported by RTIMULibDrive with a CPU utilization of 28%. RTIMULibDemo manages 890 samples per second with the MPU-9150 set to 1000 samples per second. The driver gracefully handles this situation although there is increased delay when the application cannot handle the full sample rate.
-
-#### Auto detection of IMU
-
-RTIMULib can now scan for supported IMUs and configure automatically. This is the default behavior now. It handles IMUs at alternate address automatically as well (for example, it will detect an MPU-9150 at 0x68 or 0x69).
-
-#### Partial support for STM L3GD20H/LSM303D IMUs
-
-This is in a very early state and only supports the gyro sensor at the moment.
-
-### April 4 2014 - 0.9.0
-
-Initial release with support for MPU9150.
-
-
-
-
 

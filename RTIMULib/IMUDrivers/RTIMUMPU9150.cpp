@@ -709,7 +709,7 @@ bool RTIMUMPU9150::IMURead()
         while (count >= m_fifoChunkLength * 10) {
             if (!m_settings->HALRead(m_slaveAddr, MPU9150_FIFO_R_W, m_fifoChunkLength, fifoData, "Failed to read fifo data"))
                 return false;
-            count -= m_fifoChunkLengthE;
+            count -= m_fifoChunkLength;
             m_imuData.timestamp += m_sampleInterval;
         }
     }
@@ -767,7 +767,7 @@ bool RTIMUMPU9150::IMURead()
         #if MPU9150_FIFO_WITH_COMPASS == 1
             if (m_compassIs5883)
                 RTMath::convertToVector(fifoData + 14, m_imuData.compass, 0.092f, true);
-            else
+           else
                 RTMath::convertToVector(fifoData + 14 + 1, m_imuData.compass, 0.3f, false);
         #else
             if (m_compassIs5883)
