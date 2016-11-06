@@ -185,6 +185,16 @@ static PyMethodDef RTIMU_RTIMU_methods[] = {
     METH_VARARGS,
     "Enable or disable the Compass reading" },
 
+    //////// setGyroRunTimeCalibrationEnable
+    {"setGyroRunTimeCalibrationEnable", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
+        int en;
+        PyArg_ParseTuple(args, "i", &en);
+            ((RTIMU_RTIMU*)self)->val->setGyroRunTimeCalibrationEnable(en > 0);
+        Py_RETURN_NONE;
+        }),
+    METH_VARARGS,
+    "Enable or disable the Gyroscope Runtime Calibration" },
+
     //////// getIMUData
     {"getIMUData", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
         const RTIMU_DATA& data = ((RTIMU_RTIMU*)self)->val->getIMUData();

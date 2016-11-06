@@ -140,7 +140,6 @@ RTIMU *RTIMU::createIMU(RTIMUSettings *settings)
         return NULL;
     }
 }
-
 RTIMU::RTIMU(RTIMUSettings *settings)
 {
     m_settings = settings;
@@ -153,7 +152,7 @@ RTIMU::RTIMU(RTIMUSettings *settings)
 	
     m_gyroCalibrationMode = false;
     m_temperatureCalibrationMode = false;
-
+	m_gyroManualCalibrationEnable = false;
 	m_gyroRunTimeCalibrationEnable = true;
 	m_accelRunTimeCalibrationEnable = false;
 	m_compassRunTimeCalibrationEnable = false;
@@ -364,16 +363,27 @@ void RTIMU::handleGyroBias()
     RTVector3 deltaAccel = m_previousAccel;
     deltaAccel -= m_imuData.accel;   // compute accel variations
     m_previousAccel = m_imuData.accel;
-    //printf("Delta Accel: %f, Gyration: %f\n", deltaAccel.length(), m_imuData.gyro.length());
+    RTVector3 deltaGyro = m_previousGyro;
+    deltaGyro -= m_imuData.gyro;     // compute gyro variations
+	m_previousGyro = m_imuData.gyro;
+    //printf("Delta Accel: %f, Gyration: %f, Delta Gyration: %f\n", deltaAccel.length(), m_imuData.gyro.length(), deltaGyro.length());
 	m_previousMotion = m_imuData.motion;  // to keep track of motion transitions
 	// is the IMU moving?
-    if ((deltaAccel.length() < RTIMU_FUZZY_ACCEL_ZERO) && (m_imuData.gyro.length() < RTIMU_FUZZY_GYRO_ZERO)) {
-		m_imuData.motion = false;
+    if ((deltaAccel.length() < RTIMU_FUZZY_ACCEL_ZERO) && (deltaGyro.length() < RTIMU_FUZZY_DELTA_GYRO_ZERO) && (m_imuData.gyro.length() < RTIMU_FUZZY_GYRO_ZERO)) {
+		m_imuData.motion = false; 
     } else {
 		m_imuData.motion = true;
 	}
     // if (m_imuData.motion) { Serial.println("Sensor is moving."); } else { Serial.println("Sensor is still."); } 
-    // is this the start of still phase
+
+	// GyroBias
+	// The goal is to discard the first 0.1 sec of no motion and the last 0.1 sec of no motion
+	// from bias updates
+	// bias update is passed through low pass filter
+    //
+    // Start of still phase?
+	//   Is this the start of a still phase?
+	//   Then prepare for potential bias updates
 	if ((m_previousMotion == true) && (m_imuData.motion==false)) { 
 		// initialize potential bias update
 		m_intervalCount=0; //
@@ -385,12 +395,6 @@ void RTIMU::handleGyroBias()
 		m_noMotionStarted = true;
 	}
 	// GyroBias
-	//---------
-	// The goal is to discard the first 0.1 sec of "no motion" phase 
-	// and the last 0.1 sec of "no motion" phase from bias updates
-    //
-	// bias update is passed through low pass filter
-	//
     if ( m_gyroRunTimeCalibrationEnable ) {
 		if (!m_imuData.motion) { // Update Gyro Bias if there is no motion
 			m_intervalCount++; 
@@ -426,7 +430,6 @@ void RTIMU::handleGyroBias()
 		} //  no motion
 		// store new bias every 60 seconds in EEPROM
 		m_EEPROMCount++;
-
 		if (m_EEPROMCount >= (60 * m_sampleRate)) {
 			m_EEPROMCount = 0;
 			m_settings->m_gyroBiasValid = true;
@@ -434,12 +437,14 @@ void RTIMU::handleGyroBias()
 			// Serial.println("Gyro bias saved in EEPROM");
 		} 
 	} // runtimeCalibrationEnable
+    if ( m_gyroManualCalibrationEnable ) {
+		m_settings->m_gyroBias = m_settings->m_gyroBias * (1.0 - m_gyroLearningAlpha) + m_imuData.gyro * m_gyroLearningAlpha;
+	} // manual gyro bias update
 	// Apply Gyro Bias
 	if (getGyroCalibrationValid()) {
 		m_imuData.gyro -= m_settings->m_gyroBias;
 	}
 }
-
 
 void RTIMU::calibrateAverageCompass()
 {
@@ -514,7 +519,6 @@ void RTIMU::calibrateAverageCompass()
                 magMaxDelta /= 2.0;
 
                 for (int i = 0; i < 3; i++)
-
                 {
                     delta = (m_runtimeMagCalMax.data(i) - m_runtimeMagCalMin.data(i)) / 2.0;
                     m_compassCalScale[i] = magMaxDelta / delta;
@@ -583,7 +587,6 @@ void RTIMU::resetCompassRunTimeMaxMin()
     //m_runtimeMagCalMin.setY( 1000.0);
     //m_runtimeMagCalMin.setZ( 1000.0);
 	//m_runtimeMagCalValid = false;
-
 }
 
 void RTIMU::calibrateAccel()
@@ -630,7 +633,6 @@ void RTIMU::calibrateAccel()
     // printf("%s", RTMath::displayRadians("Accel 3)", m_imuData.accel));
 
 }
-
 
 // UU automatic Accel Max/Min calibration/adjustment
 // When there is no motion the sensor should experience 1g

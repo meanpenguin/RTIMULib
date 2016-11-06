@@ -384,6 +384,7 @@ bool RTIMUSettings::discoverIMU(int& imuType, bool& busIsI2C, unsigned char& sla
                 busIsI2C = false;
                 HAL_INFO("Detected MPU9250 on SPI bus 0, select 1\n");
                 return true;
+			}
         }
         HALClose();
     }
@@ -563,10 +564,10 @@ void RTIMUSettings::setDefaults()
 
     m_MPU9250GyroAccelSampleRate = 80;
     m_MPU9250CompassSampleRate = 40;
-    m_MPU9250GyroLpf = MPU9250_GYRO_LPF_41;
-    m_MPU9250AccelLpf = MPU9250_ACCEL_LPF_41;
-    m_MPU9250GyroFsr = MPU9250_GYROFSR_1000;
-    //m_MPU9250AccelFsr = MPU9250_ACCELFSR_8;    // +/- 8g
+    m_MPU9250GyroLpf = MPU9250_GYRO_LPF_41;    // 41Hz Lowpass
+    m_MPU9250AccelLpf = MPU9250_ACCEL_LPF_41;  // 41Hz Lowpass
+    m_MPU9250GyroFsr = MPU9250_GYROFSR_1000;   // +/- 1000 deg/second
+    //m_MPU9250AccelFsr = MPU9250_ACCELFSR_8;  // +/- 8g
     m_MPU9250AccelFsr = MPU9250_ACCELFSR_2;    // +/- 2g
 
     //  MPU9255 defaults

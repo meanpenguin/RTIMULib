@@ -115,12 +115,14 @@ public:
 
     void setDebugEnable(bool enable) { m_fusion->setDebugEnable(enable); }
 
-	// enables/disables runtime calibration
-	void setGyroRunTimeCalibrationEnable(bool enable) { m_gyroRunTimeCalibrationEnable = enable;}
+    // enables/disables runtime calibration
+    void setGyroRunTimeCalibrationEnable(bool enable) { m_gyroRunTimeCalibrationEnable = enable;}
+    void setGyroManualCalibrationEnable(bool enable)  { m_gyroManualCalibrationEnable = enable;}
     void setAccelRunTimeCalibrationEnable(bool enable) { m_accelRunTimeCalibrationEnable = enable;}
     void setCompassRunTimeCalibrationEnable(bool enable) { m_compassRunTimeCalibrationEnable = enable;}
 
-	bool getGyroRunTimeCalibrationEnable()          { return m_gyroRunTimeCalibrationEnable;}
+    bool getGyroRunTimeCalibrationEnable()          { return m_gyroRunTimeCalibrationEnable;}
+    bool getGyroManualCalibrationEnable()           { return m_gyroManualCalibrationEnable;}
     bool getAccelRunTimeCalibrationEnable()         { return m_accelRunTimeCalibrationEnable;}
     bool getCompassRunTimeCalibrationEnable()       { return m_compassRunTimeCalibrationEnable;}
     const RTVector3& getCompassRunTimeMagCalMax()   { return m_runtimeMagCalMax; }
@@ -206,9 +208,10 @@ protected:
     bool m_accelCalibrationMode;                            // true if cal mode so don't use cal data!
     bool m_temperatureCalibrationMode;                      // true if cal mode so don't use cal data!
     bool m_gyroCalibrationMode;                             // true if cal mode so don't use cal data!
-	bool m_gyroRunTimeCalibrationEnable; 
-	bool m_accelRunTimeCalibrationEnable; 
-	bool m_compassRunTimeCalibrationEnable; 
+    bool m_gyroRunTimeCalibrationEnable; 
+    bool m_accelRunTimeCalibrationEnable; 
+    bool m_compassRunTimeCalibrationEnable; 
+    bool m_gyroManualCalibrationEnable;
     RTIMU_DATA m_imuData;                                   // the data from the IMU
 
     void updateTempBias(RTFLOAT senTemp);                   // Computes bias for raw data
@@ -223,24 +226,25 @@ protected:
 
     RTFLOAT m_gyroLearningAlpha;                            // gyro bias rapid learning rate
     RTFLOAT m_gyroContinuousAlpha;                          // gyro bias continuous (slow) learning rate
-    //int m_gyroSampleCount;                                  // number of gyro samples used
     
     RTVector3 m_previousAccel;                              // previous step accel for gyro learningboo
+    RTVector3 m_previousGyro;                               // previous step gyro for motion detection
     RTVector3 m_gyroBiasTemp;                               // current bias that is modified in the gyro learning algorithm
     RTVector3 m_gyroBiasCandidate;                          // bias that will become active once all exclusion criteria are met
-	bool m_noMotionStarted;									// the bias algorithm just started
+    bool m_noMotionStarted;									// the bias algorithm just started
     	
-	int m_EEPROMCount;										// measure how many no motions we had, save bias every 5 seconds of new motion
-	int m_intervalCount;									// make sure there is was motion for 0.1 secs until gyro bias is updated
-	bool m_previousMotion;									// to figure out if imu transitioned from motion to no motion
+    int m_EEPROMCount;										// measure how many no motions we had, save bias every 5 seconds of new motion
+    int m_intervalCount;									// make sure there is was motion for 0.1 secs until gyro bias is updated
+    bool m_previousMotion;									// to figure out if imu transitioned from motion to no motion
     float m_compassCalOffset[3];
     float m_compassCalScale[3];
     RTVector3 m_compassAverage;                             // a running average to smooth the mag outputs
 
-	RunningAverage *m_compassAverageX;					// Average filter for Compass X
-	RunningAverage *m_compassAverageY;	     			// Average filter for Compass Y
-	RunningAverage *m_compassAverageZ;					// Average filter for Compass Z
+    RunningAverage *m_compassAverageX;					// Average filter for Compass X
+    RunningAverage *m_compassAverageY;	     			// Average filter for Compass Y
+    RunningAverage *m_compassAverageZ;					// Average filter for Compass Z
     bool m_runtimeMagCalValid;                              // true if the runtime mag calibration has valid data
+
     RTVector3 m_runtimeMagCalMax;                           // runtime max mag values seen
     RTVector3 m_runtimeMagCalMin;                           // runtime min mag values seen
     static float m_axisRotation[RTIMU_AXIS_ROTATION_COUNT][9];    // array of rotation matrices

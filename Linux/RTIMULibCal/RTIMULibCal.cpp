@@ -174,7 +174,7 @@ int main(int argc, char **argv)
             doTemperatureCal();
             break;
 
-		case 'r' :
+        case 'r' :
             doRuntimeAccelCal();
             break;
         }
@@ -470,7 +470,7 @@ void doRuntimeAccelCal()
     uint64_t displayTimer;
     uint64_t now;
     char input;
-	bool engageRuntimeCalib = false;
+    bool engageRuntimeCalib = false;
 
     printf("\nAccelerometer Runtime Calibration\n");
     printf("-----------------------------------\n");
@@ -494,52 +494,52 @@ void doRuntimeAccelCal()
             //  display 10 times per second
 
             if ((now - displayTimer) > 100000) {
-				printf("\n");
-			    printf("Accel x: %6.2f  y: %6.2f  z: %6.2f  s: %6.2f\n", imuData.accel.x(), imuData.accel.y(), imuData.accel.z(), imuData.accel.length());
-				printf("Min x: %6.2f  min y: %6.2f  min z: %6.2f\n", settings->m_accelCalMin.data(0),
-					settings->m_accelCalMin.data(1), settings->m_accelCalMin.data(2));
-				printf("Max x: %6.2f  max y: %6.2f  max z: %6.2f\n", settings->m_accelCalMax.data(0),
-					settings->m_accelCalMax.data(1), settings->m_accelCalMax.data(2));
-				fflush(stdout);
-                displayTimer = now;
+               printf("\n");
+               printf("Accel x: %6.2f  y: %6.2f  z: %6.2f  s: %6.2f\n", imuData.accel.x(), imuData.accel.y(), imuData.accel.z(), imuData.accel.length());
+               printf("Min x: %6.2f  min y: %6.2f  min z: %6.2f\n", settings->m_accelCalMin.data(0),
+                      settings->m_accelCalMin.data(1), settings->m_accelCalMin.data(2));
+               printf("Max x: %6.2f  max y: %6.2f  max z: %6.2f\n", settings->m_accelCalMax.data(0),
+                      settings->m_accelCalMax.data(1), settings->m_accelCalMax.data(2));
+               fflush(stdout);
+               displayTimer = now;
             }
 			
-			if (engageRuntimeCalib) {
-				imu->runtimeAdjustAccelCal();
-			}
-        }
+            if (engageRuntimeCalib) {
+               imu->runtimeAdjustAccelCal();
+            }
+        } // poll IMU
 
         if ((input = getUserChar()) != 0) {
             switch (input) {
 	
-			case 'R':
-				engageRuntimeCalib = true;
-				break;
+            case 'R':
+               engageRuntimeCalib = true;
+               break;
 
-			case 'r':
-				engageRuntimeCalib = false;
-				break;
+            case 'r':
+               engageRuntimeCalib = false;
+               break;
 
-			 case 's' :
-			    settings->saveSettings();
-				accelMinMaxDone = true;
-				accelCal->m_accelMin = settings->m_accelCalMin;
-				accelCal->m_accelMax = settings->m_accelCalMax;
-				printf("\nAccelerometer calibration data saved.\n");
-				return;
+           case 's' :
+               settings->saveSettings();
+               accelMinMaxDone = true;
+               accelCal->m_accelMin = settings->m_accelCalMin;
+               accelCal->m_accelMax = settings->m_accelCalMax;
+               printf("\nAccelerometer calibration data saved.\n");
+               return;
 		
-			case 'x' :
-				printf("\nAborting.\n");
-				return;
-			}
-        }
+           case 'x' :
+               printf("\nAborting.\n");
+               return;
+	   } // case
+        } // if
         
         //  poll at the rate recommended by the IMU
         uint64_t time_elapsed = RTMath::currentUSecsSinceEpoch() - now;
         if ( (int)time_elapsed < imu->IMUGetPollInterval()*1000) {
             usleep(imu->IMUGetPollInterval() * 1000 - time_elapsed);
         }
-	}
+   } // while
 }
 
 void doAccelMinMaxCal()

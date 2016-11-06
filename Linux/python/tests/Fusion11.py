@@ -83,6 +83,7 @@ imu.setSlerpPower(0.02)
 imu.setGyroEnable(True)
 imu.setAccelEnable(True)
 imu.setCompassEnable(True)
+imu.setGyroRunTimeCalibrationEnable(False); # at startup there might be some hickups
 
 if (not pressure.pressureInit()):
     print("Pressure sensor Init Failed")
@@ -97,10 +98,17 @@ else:
 poll_interval = imu.IMUGetPollInterval()
 print("Recommended Poll Interval: %dmS\n" % poll_interval)
 
-while (not imu.IMURead()):
-  data = imu.getIMUData()
-  staticpressure=data["pressure"];
-
+# Dry run 
+i = 0;
+while (i < 80): 
+	if  imu.IMURead(): 
+		i = i + 1;
+		
+# Set conditions for continous operation
+data = imu.getIMUData()
+staticpressure=data["pressure"];
+imu.setGyroRunTimeCalibrationEnable(True);
+  
 while True:
   if imu.IMURead():
     # x, y, z = imu.getFusionData()

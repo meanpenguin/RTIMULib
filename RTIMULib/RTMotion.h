@@ -14,12 +14,12 @@
 //  this defines the gyroscope noise level
 
 // #define RTIMU_FUZZY_GYRO_ZERO      0.20
-#define RTIMU_FUZZY_GYRO_ZERO      0.07
+#define RTIMU_FUZZY_GYRO_ZERO         0.07
+#define RTIMU_FUZZY_DELTA_GYRO_ZERO   0.01
 // defines the threshold for fast/slow learning
-#define RTIMU_FUZZY_GYRO_BIAS      0.02
-
+#define RTIMU_FUZZY_GYRO_BIAS         0.01
 //  this defines the accelerometer noise level
-#define RTIMU_FUZZY_ACCEL_ZERO     0.007
+#define RTIMU_FUZZY_ACCEL_ZERO        0.01
 
 class RTMotion
 {
@@ -75,6 +75,7 @@ protected:
     float     m_dtmotion;
 	
     RTVector3  m_previousAccel;
+    RTVector3  m_previousGyro;
     
     RunningAverage *m_accnorm_avg;   // Running average for acceleration (motion detection)
     RunningAverage *m_accnorm_var;   // Running average for acceleration variance (motion detection)

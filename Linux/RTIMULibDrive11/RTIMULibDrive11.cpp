@@ -84,15 +84,13 @@ int main()
     //  This is an opportunity to manually override any settings before the call IMUInit
 
     //  set up IMU
-
     imu->IMUInit();
-
     //  this is a convenient place to change fusion parameters
-
+    imu->setGyroRunTimeCalibrationEnable(false);             // turn off gyro bias calibration at startup, allow system to equiblirate first
     imu->setSlerpPower(0.02);
     imu->setGyroEnable(true);
     imu->setAccelEnable(true);
-    imu->setCompassEnable(true);
+    imu->setCompassEnable(false);
     imu->setDebugEnable(false); // turn on if you want to see Fusion information
         
     //  set up pressure sensor
@@ -111,12 +109,17 @@ int main()
     ctty.c_lflag &= ~(ICANON);
     tcsetattr(fileno(stdout), TCSANOW, &ctty);
 
-    //  set up for rate timer
+	// dry run of the system
+	int i=0;
+	while (i < 80) {
+		if  (imu->IMURead()) { i++; }
+	}		
+	imu->setGyroRunTimeCalibrationEnable(true);     // enable background gyro calibration
 
+    //  set up for rate timer
     rateTimer = displayTimer = RTMath::currentUSecsSinceEpoch();
 
     //  now just process data
-
     while (!mustExit) {
         //  poll at the rate recommended by the IMU
 
@@ -201,6 +204,10 @@ int main()
                 printf("%s", sysstatus1);
                 printf("%s", sysstatus2);
 
+                printf("%s", "a: runtm Acc cal, A: disp max/min, p: zero stat press, z: zero\n");
+                printf("%s", "m/M: Mag off/on, g/G: Gyro runtm cal off/on \n");
+                printf("%s", "d/D: Gyro manual bias off/on, x: exit\n");
+
                 fflush(stdout);
                 displayTimer = now;
             }
@@ -219,13 +226,13 @@ int main()
             switch (input) {
                 case 'a' :
                     // conduct Accelerometer Max/Min calibration
-                    keystatus[1] ='.';
+                    keystatus[1] ='A';
                     keystatus[3] ='-';
                     keystatus[5] ='-';
                     imu->runtimeAdjustAccelCal();
                     break;
                 case 'A' :
-                    keystatus[1] ='A';
+                    keystatus[1] ='-';
                     sprintf(sysstatus1, "%s", RTMath::displayRadians("Acc Cal Max ", settings->m_accelCalMax));
                     sprintf(sysstatus2, "%s", RTMath::displayRadians("Acc Cal Min ", settings->m_accelCalMin));
                     break;
@@ -266,6 +273,17 @@ int main()
                     // runtime Gyro Bias ON
                     keystatus[9] ='G';
 					imu->setGyroRunTimeCalibrationEnable(true);
+                    break;
+                case 'd' :
+                    // Gyro Bias manual OFF
+                    keystatus[9] ='d';
+					imu->setGyroManualCalibrationEnable(false);
+                    break;
+                case 'D' :
+                    // manual Gyro Bias ON
+					imu->setGyroRunTimeCalibrationEnable(false);
+                    keystatus[9] ='D';
+					imu->setGyroManualCalibrationEnable(true);
                     break;
                 case 'x' :
                     // must exit

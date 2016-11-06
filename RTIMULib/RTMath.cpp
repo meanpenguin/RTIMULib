@@ -50,7 +50,7 @@ uint64_t RTMath::currentUSecsSinceEpoch()
 
 const char *RTMath::displayRadians(const char *label, RTVector3& vec)
 {
-    sprintf(m_string, "%s: x:%+4.2f, y:%+4.2f, z:%+4.2f, s:%+4.2f\n", label, vec.x(), vec.y(), vec.z(), vec.length());
+    sprintf(m_string, "%s: x:%+4.3f, y:%+4.3f, z:%+4.3f, s:%+4.4f\n", label, vec.x(), vec.y(), vec.z(), vec.length());
     //sprintf(m_string, "%s: x:%f, y:%f, z:%f, s:%f s2:%f\n", label, vec.x(), vec.y(), vec.z(), vec.length(), vec.squareLength());
     return m_string;
 }
