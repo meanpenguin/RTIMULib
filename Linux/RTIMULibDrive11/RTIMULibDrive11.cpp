@@ -46,9 +46,15 @@ int main()
 {
     int sampleCount = 0;
     int sampleRate = 0;
+    int timeout;
     uint64_t rateTimer;
-    uint64_t displayTimer;
     uint64_t now;
+    uint64_t lastPoll;
+    uint64_t lastIMUPoll;
+    uint64_t lastPressurePoll;
+    uint64_t lastHumidityPoll;
+    uint64_t lastDisplayPoll;
+    
     bool ismoving = false;
     bool enableCompass = true;
     char keystatus[26] = " ------M-G->----------- \n";
@@ -104,40 +110,67 @@ int main()
         humidity->humidityInit();
     
     //  set up console io
-    struct termios	ctty;
+    struct termios    ctty;
     tcgetattr(fileno(stdout), &ctty);
     ctty.c_lflag &= ~(ICANON);
     tcsetattr(fileno(stdout), TCSANOW, &ctty);
 
-	// dry run of the system
-	int i=0;
-	while (i < 80) {
-		if  (imu->IMURead()) { i++; }
-	}		
-	imu->setGyroRunTimeCalibrationEnable(true);     // enable background gyro calibration
+    // dry run of the system
+    int i=0;
+    while (i < 80) {
+        if  (imu->IMURead()) { i++; }
+    }        
+    imu->setGyroRunTimeCalibrationEnable(true);     // enable background gyro calibration
 
-    //  set up for rate timer
-    rateTimer = displayTimer = RTMath::currentUSecsSinceEpoch();
-
+    //  set up timers
+    rateTimer = lastDisplayPoll = lastPoll = lastIMUPoll = lastHumidityPoll = lastPressurePoll = lastUserPoll = RTMath::currentUSecsSinceEpoch();
+    timeout= 10*(imu->IMUGetPollInterval() * 1000);
+    
     //  now just process data
     while (!mustExit) {
+   
         //  poll at the rate recommended by the IMU
+        now = RTMath::currentUSecsSinceEpoch();
+        usleep((imu->IMUGetPollInterval() * 1000) - (now - lastPoll);
+        lastPoll = now;
 
-        usleep(imu->IMUGetPollInterval() * 1000);
-
+        // check IMU stalled
+        if ( (now - lastIMUPoll) > timeout ) {
+            // We have IMU stalled and need to reset it
+            HAL_ERROR("!!!!!!!!!!!!!!!!!!!! IMU RESET !!!!!!!!!!!!!!!!!!!!\n");
+            imu->IMUInit();
+			lastPoll = RTMath::currentUSecsSinceEpoch();
+        }
+            
         while (imu->IMURead()) {
+            // set loop time stamp
+            now = lastIMUPoll = RTMath::currentUSecsSinceEpoch();
+
             imuData = imu->getIMUData();
-
+            // check data in ragne
+            if ( (imuData.gyro.length() > 35.0) || (imuData.accel.length() > 16.0) || (imuData.compass.length() > 1000.0) ) {
+                // IMU Data Error
+                HAL_ERROR("!!!!!!!!!!!!!!!!!!!! IMU RESET !!!!!!!!!!!!!!!!!!!!\n");
+                imu->IMUInit();
+				lastIMUPoll = RTMath::currentUSecsSinceEpoch();
+				break;
+            }
+            
             //  add the pressure data to the structure
-
-            if (pressure != NULL)
+            if (pressure != NULL) {
+              if ( (now - lastPressurePoll) >= 20000 ) { // 20ms
+                lastPressurePoll = now;
                 pressure->pressureRead(imuData);
-
+              }
+            }
+            
             //  add the humidity data to the structure
-
             if (humidity != NULL) {
+              if ( (now - lastHumidityPoll) >= 80000 ) { // 12.5Hz = 80ms
+                lastHumidityPoll = now;
                 humidity->humidityRead(imuData);
                 humidity_avg = humidity->updateAverageHumidity(imuData.humidity); // smooth it out to approx. 10Hz update rate
+              }
             }
 
             // Motion detection
@@ -158,11 +191,9 @@ int main()
             // 
             sampleCount++;
 
-            now = RTMath::currentUSecsSinceEpoch();
-
             //  display 10 times per second
-            if ((now - displayTimer) > 100000) {
-           
+            if ((now - lastDisplayPoll) > 100000) {
+                lastDisplayPoll = now;           
                 printf("\e[1;1H\e[2J");  // clear screen and move cursor 1/1
 
                 printf("RTIMU: Fusion %s, Compass is %s ", RTFusion::fusionName(settings->m_fusionType), enableCompass ? "On" : "Off" );
@@ -209,7 +240,6 @@ int main()
                 printf("%s", "d/D: Gyro manual bias off/on, x: exit\n");
 
                 fflush(stdout);
-                displayTimer = now;
             }
 
             //  update rate every second
@@ -222,78 +252,81 @@ int main()
             
         } // end check for new IMU data
         
-        if ((input = getUserChar()) != 0) {
-            switch (input) {
-                case 'a' :
-                    // conduct Accelerometer Max/Min calibration
-                    keystatus[1] ='A';
-                    keystatus[3] ='-';
-                    keystatus[5] ='-';
-                    imu->runtimeAdjustAccelCal();
-                    break;
-                case 'A' :
-                    keystatus[1] ='-';
-                    sprintf(sysstatus1, "%s", RTMath::displayRadians("Acc Cal Max ", settings->m_accelCalMax));
-                    sprintf(sysstatus2, "%s", RTMath::displayRadians("Acc Cal Min ", settings->m_accelCalMin));
-                    break;
-                case 'p' :
-                    keystatus[1] ='-';
-                    keystatus[3] ='.';
-                    keystatus[5] ='-';
-                    staticPressure = imuData.pressure;
-                    break;
-                case 'z' :
-                    // zero motion & position
-                    keystatus[1] ='-';
-                    keystatus[3] ='-';
-                    keystatus[5] ='.';
-                    strcpy(keystatus, " ----.----------------- \n");
-                    motion->motionReset();
-                    break;
-                case 'm' :
-                    // magnetometer OFF
-                    keystatus[7] ='m';
-                    keystatus[9] ='m';
-                    enableCompass = false;
-                    imu->setCompassEnable(enableCompass);
-                    break;
-                case 'M' :
-                    // magnetometer ON
-                    keystatus[7] ='M';
-                    keystatus[9] ='M';
-                    enableCompass = true;
-                    imu->setCompassEnable(enableCompass);
-                    break;
-                case 'g' :
-                    // Gyro Bias runtime OFF
-                    keystatus[9] ='g';
-					imu->setGyroRunTimeCalibrationEnable(false);
-                    break;
-                case 'G' :
-                    // runtime Gyro Bias ON
-                    keystatus[9] ='G';
-					imu->setGyroRunTimeCalibrationEnable(true);
-                    break;
-                case 'd' :
-                    // Gyro Bias manual OFF
-                    keystatus[9] ='d';
-					imu->setGyroManualCalibrationEnable(false);
-                    break;
-                case 'D' :
-                    // manual Gyro Bias ON
-					imu->setGyroRunTimeCalibrationEnable(false);
-                    keystatus[9] ='D';
-					imu->setGyroManualCalibrationEnable(true);
-                    break;
-                case 'x' :
-                    // must exit
-                    keystatus[11] ='X';
-                    mustExit = true;
-                    break;
-                } // end switch input
-        } // end if user pressed key
+        if ( (now - lastUserPoll) > 500000 ) { // 20Hz
+            lastUserPoll = now;
 
-    }
+            if ((input = getUserChar()) != 0) {
+                switch (input) {
+                    case 'a' :
+                        // conduct Accelerometer Max/Min calibration
+                        keystatus[1] ='A';
+                        keystatus[3] ='-';
+                        keystatus[5] ='-';
+                        imu->runtimeAdjustAccelCal();
+                        break;
+                    case 'A' :
+                        keystatus[1] ='-';
+                        sprintf(sysstatus1, "%s", RTMath::displayRadians("Acc Cal Max ", settings->m_accelCalMax));
+                        sprintf(sysstatus2, "%s", RTMath::displayRadians("Acc Cal Min ", settings->m_accelCalMin));
+                        break;
+                    case 'p' :
+                        keystatus[1] ='-';
+                        keystatus[3] ='.';
+                        keystatus[5] ='-';
+                        staticPressure = imuData.pressure;
+                        break;
+                    case 'z' :
+                        // zero motion & position
+                        keystatus[1] ='-';
+                        keystatus[3] ='-';
+                        keystatus[5] ='.';
+                        strcpy(keystatus, " ----.----------------- \n");
+                        motion->motionReset();
+                        break;
+                    case 'm' :
+                        // magnetometer OFF
+                        keystatus[7] ='m';
+                        keystatus[9] ='m';
+                        enableCompass = false;
+                        imu->setCompassEnable(enableCompass);
+                        break;
+                    case 'M' :
+                        // magnetometer ON
+                        keystatus[7] ='M';
+                        keystatus[9] ='M';
+                        enableCompass = true;
+                        imu->setCompassEnable(enableCompass);
+                        break;
+                    case 'g' :
+                        // Gyro Bias runtime OFF
+                        keystatus[9] ='g';
+                        imu->setGyroRunTimeCalibrationEnable(false);
+                        break;
+                    case 'G' :
+                        // runtime Gyro Bias ON
+                        keystatus[9] ='G';
+                        imu->setGyroRunTimeCalibrationEnable(true);
+                        break;
+                    case 'd' :
+                        // Gyro Bias manual OFF
+                        keystatus[9] ='d';
+                        imu->setGyroManualCalibrationEnable(false);
+                        break;
+                    case 'D' :
+                        // manual Gyro Bias ON
+                        imu->setGyroRunTimeCalibrationEnable(false);
+                        keystatus[9] ='D';
+                        imu->setGyroManualCalibrationEnable(true);
+                        break;
+                    case 'x' :
+                        // must exit
+                        keystatus[11] ='X';
+                        mustExit = true;
+                        break;
+                    } // end switch input
+            } // end if user pressed key
+        } // user poll
+    } // while
     printf("\nRTIMULibDrive11 exiting\n");
     settings->saveSettings(); // should update gyro bias
     return 0;

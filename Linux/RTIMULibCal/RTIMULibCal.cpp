@@ -550,13 +550,13 @@ void doAccelMinMaxCal()
 
     printf("\nAccelerometer Calibration\n");
     printf("-------------------------\n");
-    printf("The code normally ignores readings until an axis has been enabled.\n");
-    printf("The idea is to orient the IMU near the current extrema (+x, -x, +y, -y, +z, -z)\n");
-    printf("and then enable the axis, moving the IMU very gently around to find the\n");
-    printf("extreme value. Now disable the axis again so that the IMU can be inverted.\n");
-    printf("When the IMU has been inverted, enable the axis again and find the extreme\n");
-    printf("point. Disable the axis again and press the space bar to move to the next\n");
-    printf("axis and repeat. The software will display the current axis and enable state.\n");
+    printf("This code should ignores calibration readings until an axis has been selected.\n");
+    printf("Orient the IMU near an extrema (+x, -x, +y, -y, +z, -z).");
+    printf("Then enable that axis, moving the IMU very gently around to find the");
+    printf("maximum reading. Then disable the axis so that the IMU can be inverted.");
+    printf("Enable the axis again and find the opposite maximum reading.");
+    printf("point. Disable the axis again and press the space bar to move to the next");
+    printf("axis and repeat. The software will display the current axis and enable state.");
     printf("Available options are:\n");
     printf("  e - enable the current axis.\n");
     printf("  d - disable the current axis.\n");

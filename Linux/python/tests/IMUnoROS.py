@@ -2,11 +2,11 @@
 #/////////////////////////////////////////////////////////////
 #
 # ROS related imports
-import rospy
-from sensor_msgs.msg import Imu
-from std_msgs.msg import Float64
-from std_msgs.msg import Bool
-from rospy_tutorials.msg import Floats
+#import rospy
+#from sensor_msgs.msg import Imu
+#from std_msgs.msg import Float64
+#from std_msgs.msg import Bool
+#from rospy_tutorials.msg import Floats
 
 # RTIMU reltate imports
 import RTIMU
@@ -202,6 +202,10 @@ yawInitial = 0.0
 height = 0.0
 IMUready =  False
 
+lastHumidityPoll = time.time()
+lastPressurePoll = time.time()
+lastIMUPoll = time.time();
+
 # 
 while True:
   currentTimeS = time.time()
@@ -211,17 +215,35 @@ while True:
   # IMU, humidity and pressure section
   #
   
+  # do we have IMU stalled ?
+  if (currentTimeS - lastIMUPoll) > 10.0*poll_interval/1000.0 :
+	   imu.IMUInit()
+  
   if imu.IMURead():
     # x, y, z = imu.getFusionData()
     # print("%f %f %f" % (x,y,z))
     data = imu.getIMUData()
-    (data["pressureValid"], data["pressure"], data["pressureTemperatureValid"], data["pressureTemperature"]) = pressure.pressureRead()
-    (data["humidityValid"], data["humidity"], data["humidityTemperatureValid"], data["humidityTemperature"]) = humidity.humidityRead()
-    fusionPose = data["fusionPose"]
-    fusionQPose = data["fusionQPose"]
+	
+    lastIMUPoll = currentTime
     acc = data["accel"]
     gyr = data["gyro"]
     mag = data["compass"]
+
+	# data in expected range ?
+	if ( (gyr[0]*gyr[0]+gyr[1]*gyr[1]+gyr[2]*gyr[2]) >= 35*35 ) or ( (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2]) >= 16*16 ) or ( (mag[0]*mag[0]+mag[1]*mag[1]+mag[2]*mag[2]) >= 1000*1000) :
+	   imu.IMUInit()
+	else:
+	   fusionPose = data["fusionPose"]
+       fusionQPose = data["fusionQPose"]
+	
+    if 	currentTimeS - lastPressurePoll >= 20 :
+        (data["pressureValid"], data["pressure"], data["pressureTemperatureValid"], data["pressureTemperature"]) = pressure.pressureRead()
+        lastPressurePoll = currentTimeS
+		
+    if currentTimeS = lastHumidityPoll >= 80 :
+        (data["humidityValid"], data["humidity"], data["humidityTemperatureValid"], data["humidityTemperature"]) = humidity.humidityRead()
+        lastHumidityPoll = currentTimeS
+
     #
     depthPressure = low_pass(data["pressure"], depthPressure, 0.1)
     depth  = computeDepthSaltWater(depthPressure, staticPressure)
@@ -233,7 +255,7 @@ while True:
     if ( (IMUready == False) and (not data["motion"]) ) :
         if ( gyr[0]*gyr[0]+gyr[1]*gyr[1]+gyr[2]*gyr[2] <= 0.000004 ):
             IMUready = True;
-  
+    
   #        
   # At reduced rate display data (10Hz)
   # 

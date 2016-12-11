@@ -132,6 +132,7 @@ public:
     //  getIMUData returns the standard outputs of the IMU and fusion filter
 
     const RTIMU_DATA& getIMUData() { return m_imuData; }
+    bool checkIMUData() 
 
     //  setExtIMUData allows data from some external IMU to be injected to the fusion algorithm
 

@@ -51,7 +51,7 @@ bool RTHumidityHTS221::humidityInit()
 
     m_humidityAddr = m_settings->m_I2CHumidityAddress;
 
-    if (!m_settings->HALWrite(m_humidityAddr, HTS221_CTRL1, 0x87, "Failed to set HTS221 CTRL_REG_1"))
+    if (!m_settings->HALWrite(m_humidityAddr, HTS221_CTRL1, 0x87, "Failed to set HTS221 CTRL_REG_1")) //12.5Hz
         return false;
 
     if (!m_settings->HALWrite(m_humidityAddr, HTS221_AV_CONF, 0x1b, "Failed to set HTS221 AV_CONF"))

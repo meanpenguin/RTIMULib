@@ -591,47 +591,46 @@ void RTIMU::resetCompassRunTimeMaxMin()
 
 void RTIMU::calibrateAccel()
 {
-    if ((getAccelCalibrationValid()==false) && (m_accelCalibrationMode==false) )
-        return;
-    
-    // printf("%s", RTMath::displayRadians("Accel 1)", m_imuData.accel));
+    if (getAccelCalibrationValid() ) {
+   
+		// printf("%s", RTMath::displayRadians("Accel 1)", m_imuData.accel));
 
-    if (m_imuData.accel.x() >= 0)
-        m_imuData.accel.setX(m_imuData.accel.x() / m_settings->m_accelCalMax.x());
-    else
-        m_imuData.accel.setX(m_imuData.accel.x() / -m_settings->m_accelCalMin.x());
+		if (m_imuData.accel.x() >= 0)
+			m_imuData.accel.setX(m_imuData.accel.x() / m_settings->m_accelCalMax.x());
+		else
+			m_imuData.accel.setX(m_imuData.accel.x() / -m_settings->m_accelCalMin.x());
 
-    if (m_imuData.accel.y() >= 0)
-        m_imuData.accel.setY(m_imuData.accel.y() / m_settings->m_accelCalMax.y());
-    else
-        m_imuData.accel.setY(m_imuData.accel.y() / -m_settings->m_accelCalMin.y());
+		if (m_imuData.accel.y() >= 0)
+			m_imuData.accel.setY(m_imuData.accel.y() / m_settings->m_accelCalMax.y());
+		else
+			m_imuData.accel.setY(m_imuData.accel.y() / -m_settings->m_accelCalMin.y());
 
-    if (m_imuData.accel.z() >= 0)
-        m_imuData.accel.setZ(m_imuData.accel.z() / m_settings->m_accelCalMax.z());
-    else
-        m_imuData.accel.setZ(m_imuData.accel.z() / -m_settings->m_accelCalMin.z());
+		if (m_imuData.accel.z() >= 0)
+			m_imuData.accel.setZ(m_imuData.accel.z() / m_settings->m_accelCalMax.z());
+		else
+			m_imuData.accel.setZ(m_imuData.accel.z() / -m_settings->m_accelCalMin.z());
 
-    // printf("%s", RTMath::displayRadians("Accel 2)", m_imuData.accel));
+		// printf("%s", RTMath::displayRadians("Accel 2)", m_imuData.accel));
 
-    if (m_settings->m_accelCalEllipsoidValid) {
-        RTVector3 ev = m_imuData.accel;
-        ev -= m_settings->m_accelCalEllipsoidOffset;
+		if (m_settings->m_accelCalEllipsoidValid) {
+			RTVector3 ev = m_imuData.accel;
+			ev -= m_settings->m_accelCalEllipsoidOffset;
 
-        m_imuData.accel.setX(ev.x() * m_settings->m_accelCalEllipsoidCorr[0][0] +
-            ev.y() * m_settings->m_accelCalEllipsoidCorr[0][1] +
-            ev.z() * m_settings->m_accelCalEllipsoidCorr[0][2]);
+			m_imuData.accel.setX(ev.x() * m_settings->m_accelCalEllipsoidCorr[0][0] +
+				ev.y() * m_settings->m_accelCalEllipsoidCorr[0][1] +
+				ev.z() * m_settings->m_accelCalEllipsoidCorr[0][2]);
 
-        m_imuData.accel.setY(ev.x() * m_settings->m_accelCalEllipsoidCorr[1][0] +
-            ev.y() * m_settings->m_accelCalEllipsoidCorr[1][1] +
-            ev.z() * m_settings->m_accelCalEllipsoidCorr[1][2]);
+			m_imuData.accel.setY(ev.x() * m_settings->m_accelCalEllipsoidCorr[1][0] +
+				ev.y() * m_settings->m_accelCalEllipsoidCorr[1][1] +
+				ev.z() * m_settings->m_accelCalEllipsoidCorr[1][2]);
 
-        m_imuData.accel.setZ(ev.x() * m_settings->m_accelCalEllipsoidCorr[2][0] +
-            ev.y() * m_settings->m_accelCalEllipsoidCorr[2][1] +
-            ev.z() * m_settings->m_accelCalEllipsoidCorr[2][2]);
-    }
+			m_imuData.accel.setZ(ev.x() * m_settings->m_accelCalEllipsoidCorr[2][0] +
+				ev.y() * m_settings->m_accelCalEllipsoidCorr[2][1] +
+				ev.z() * m_settings->m_accelCalEllipsoidCorr[2][2]);
+		}
 
-    // printf("%s", RTMath::displayRadians("Accel 3)", m_imuData.accel));
-
+		// printf("%s", RTMath::displayRadians("Accel 3)", m_imuData.accel));
+	}
 }
 
 // UU automatic Accel Max/Min calibration/adjustment
@@ -684,18 +683,29 @@ bool RTIMU::IMUGyroBiasValid()
     return m_settings->m_gyroBiasValid;
 }
 
- void RTIMU::setExtIMUData(RTFLOAT gx, RTFLOAT gy, RTFLOAT gz, RTFLOAT ax, RTFLOAT ay, RTFLOAT az,
-        RTFLOAT mx, RTFLOAT my, RTFLOAT mz, uint64_t timestamp)
- {
-     m_imuData.gyro.setX(gx);
-     m_imuData.gyro.setY(gy);
-     m_imuData.gyro.setZ(gz);
-     m_imuData.accel.setX(ax);
-     m_imuData.accel.setY(ay);
-     m_imuData.accel.setZ(az);
-     m_imuData.compass.setX(mx);
-     m_imuData.compass.setY(my);
-     m_imuData.compass.setZ(mz);
-     m_imuData.timestamp = timestamp;
-     updateFusion();
+void RTIMU::setExtIMUData(RTFLOAT gx, RTFLOAT gy, RTFLOAT gz, RTFLOAT ax, RTFLOAT ay, RTFLOAT az,
+	RTFLOAT mx, RTFLOAT my, RTFLOAT mz, uint64_t timestamp)
+{
+    m_imuData.gyro.setX(gx);
+    m_imuData.gyro.setY(gy);
+    m_imuData.gyro.setZ(gz);
+    m_imuData.accel.setX(ax);
+    m_imuData.accel.setY(ay);
+    m_imuData.accel.setZ(az);
+    m_imuData.compass.setX(mx);
+    m_imuData.compass.setY(my);
+    m_imuData.compass.setZ(mz);
+    m_imuData.timestamp = timestamp;
+    updateFusion();
+}
+
+
+bool checkIMUData()
+{
+	// Gyro 2000 deg/sec (driver converts to radians = 35 rad)
+	// Acc 16 g
+	// Compass 12000 uT
+	if (m_imuData.gyro.length() > 1000.0) return false;
+    if (m_imuData.accel.length() > 1000.0) return false;;
+    if (m_imuData.compass.length() > 100000.0) return false;;
 }

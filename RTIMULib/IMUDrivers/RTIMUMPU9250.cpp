@@ -851,10 +851,11 @@ bool RTIMUMPU9250::IMURead()
         // Then do
         handleTempBias(); 	// temperature Correction
     }
+	
+	// calibrate the data
     handleGyroBias();
     calibrateAverageCompass();
     calibrateAccel();
-
     //  now update the filter
     updateFusion();
 
