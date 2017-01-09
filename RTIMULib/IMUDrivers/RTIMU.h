@@ -22,7 +22,7 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #ifndef _RTIMU_H
-#define	_RTIMU_H
+#define    _RTIMU_H
 
 #include "RTMath.h"
 #include "RTFusion.h"
@@ -79,9 +79,9 @@ public:
     //  These functions must be provided by sub classes
 
     virtual const char *IMUName() = 0;                      // the name of the IMU
-    virtual int IMUType() = 0;                              // the type code of the IMU
+    virtual int  IMUType() = 0;                             // the type code of the IMU
     virtual bool IMUInit() = 0;                             // set up the IMU
-    virtual int IMUGetPollInterval() = 0;                   // returns the recommended poll interval in mS
+    virtual int  IMUGetPollInterval() = 0;                  // returns the recommended poll interval in mS
     virtual bool IMURead() = 0;                             // get a sample
 
     // setGyroContinuousALearninglpha allows the continuous learning rate to be over-ridden
@@ -102,8 +102,7 @@ public:
     void resetFusion() { m_fusion->reset(); }
 
     // the following three functions control the influence of the gyro, accel and compass sensors
-	// on the fusion algorithm
-
+    // on the fusion algorithm
     void setGyroEnable(bool enable) { m_fusion->setGyroEnable(enable);}
     void setAccelEnable(bool enable) { m_fusion->setAccelEnable(enable);}
     void setCompassEnable(bool enable) { m_fusion->setCompassEnable(enable);}
@@ -112,7 +111,6 @@ public:
     bool getAccelEnable() { return m_fusion->getAccelEnable();}
     bool getCompassEnable() { return m_fusion->getCompassEnable();}
     //  call the following to enable debug messages
-
     void setDebugEnable(bool enable) { m_fusion->setDebugEnable(enable); }
 
     // enables/disables runtime calibration
@@ -125,17 +123,17 @@ public:
     bool getGyroManualCalibrationEnable()           { return m_gyroManualCalibrationEnable;}
     bool getAccelRunTimeCalibrationEnable()         { return m_accelRunTimeCalibrationEnable;}
     bool getCompassRunTimeCalibrationEnable()       { return m_compassRunTimeCalibrationEnable;}
+
     const RTVector3& getCompassRunTimeMagCalMax()   { return m_runtimeMagCalMax; }
     const RTVector3& getCompassRunTimeMagCalMin()   { return m_runtimeMagCalMin; }
 
     void resetCompassRunTimeMaxMin();
-    //  getIMUData returns the standard outputs of the IMU and fusion filter
 
+    //  getIMUData returns the standard outputs of the IMU and fusion filter
     const RTIMU_DATA& getIMUData() { return m_imuData; }
-    bool checkIMUData() 
+    // void getIMUData(RTIMU_DATA& data);
 
     //  setExtIMUData allows data from some external IMU to be injected to the fusion algorithm
-
     void setExtIMUData(RTFLOAT gx, RTFLOAT gy, RTFLOAT gz, RTFLOAT ax, RTFLOAT ay, RTFLOAT az,
         RTFLOAT mx, RTFLOAT my, RTFLOAT mz, uint64_t timestamp);
 
@@ -183,19 +181,16 @@ public:
     //  getGyroCalibrationValid() returns true if the compass min/max calibration data is being used
     bool getGyroCalibrationValid() { return !m_gyroCalibrationMode && m_settings->m_gyroBiasValid; }
 
-    bool getMotion()               { return m_imuData.motion; } // gets motion status
-	
-    const RTVector3& getGyro()       { return m_imuData.gyro; }   // gets gyro rates in radians/sec
-    const RTVector3& getAccel()      { return m_imuData.accel; } // get accel data in gs
+    bool getMotion()                 { return m_imuData.motion; }  // gets motion status
+    
+    const RTVector3& getGyro()       { return m_imuData.gyro; }    // gets gyro rates in radians/sec
+    const RTVector3& getAccel()      { return m_imuData.accel; }   // get accel data in gs
     const RTVector3& getCompass()    { return m_imuData.compass; } // gets compass data in uT
-    const RTFLOAT& getIMUTemp()      { return m_imuData.IMUtemperature; } // gets temperature data in C
-    const RTFLOAT& getHumidityTemp() { return m_imuData.humidityTemperature; } // gets temperature data in C
-    const RTFLOAT& getPressureTemp() { return m_imuData.pressureTemperature; } // gets temperature data in C
-    const RTFLOAT& getTemp()         { return m_imuData.tTemperature; } // gets temperature data in C
+    const RTFLOAT& getTemp()         { return m_imuData.temperature; } // gets temperature data in C
 
     RTVector3 getAccelResiduals() { return m_fusion->getAccelResiduals(); }
 
-    //bool m_motion;                                          // motion detected
+    //bool m_motion;                                        // motion detected
     void runtimeAdjustAccelCal();                           // adjusts accelerometer Max/Min so that scaler becomes 1
 
 protected:
@@ -209,10 +204,11 @@ protected:
     bool m_accelCalibrationMode;                            // true if cal mode so don't use cal data!
     bool m_temperatureCalibrationMode;                      // true if cal mode so don't use cal data!
     bool m_gyroCalibrationMode;                             // true if cal mode so don't use cal data!
-    bool m_gyroRunTimeCalibrationEnable; 
-    bool m_accelRunTimeCalibrationEnable; 
-    bool m_compassRunTimeCalibrationEnable; 
-    bool m_gyroManualCalibrationEnable;
+    bool m_gyroRunTimeCalibrationEnable;                    //
+    bool m_accelRunTimeCalibrationEnable;                   //
+    bool m_compassRunTimeCalibrationEnable;                 //
+    bool m_gyroManualCalibrationEnable;                     //
+    //
     RTIMU_DATA m_imuData;                                   // the data from the IMU
 
     void updateTempBias(RTFLOAT senTemp);                   // Computes bias for raw data
@@ -232,18 +228,18 @@ protected:
     RTVector3 m_previousGyro;                               // previous step gyro for motion detection
     RTVector3 m_gyroBiasTemp;                               // current bias that is modified in the gyro learning algorithm
     RTVector3 m_gyroBiasCandidate;                          // bias that will become active once all exclusion criteria are met
-    bool m_noMotionStarted;									// the bias algorithm just started
-    	
-    int m_EEPROMCount;										// measure how many no motions we had, save bias every 5 seconds of new motion
-    int m_intervalCount;									// make sure there is was motion for 0.1 secs until gyro bias is updated
-    bool m_previousMotion;									// to figure out if imu transitioned from motion to no motion
+    bool m_noMotionStarted;                                 // the bias algorithm just started
+        
+    int m_EEPROMCount;                                      // measure how many no motions we had, save bias every 5 seconds of new motion
+    int m_intervalCount;                                    // make sure there is was motion for 0.1 secs until gyro bias is updated
+    bool m_previousMotion;                                  // to figure out if imu transitioned from motion to no motion
     float m_compassCalOffset[3];
     float m_compassCalScale[3];
     RTVector3 m_compassAverage;                             // a running average to smooth the mag outputs
 
-    RunningAverage *m_compassAverageX;					// Average filter for Compass X
-    RunningAverage *m_compassAverageY;	     			// Average filter for Compass Y
-    RunningAverage *m_compassAverageZ;					// Average filter for Compass Z
+    RunningAverage *m_compassAverageX;                      // Average filter for Compass X
+    RunningAverage *m_compassAverageY;                      // Average filter for Compass Y
+    RunningAverage *m_compassAverageZ;                      // Average filter for Compass Z
     bool m_runtimeMagCalValid;                              // true if the runtime mag calibration has valid data
 
     RTVector3 m_runtimeMagCalMax;                           // runtime max mag values seen

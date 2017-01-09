@@ -63,15 +63,16 @@ static int RTIMUClear(PyObject *m) {
 
 static struct PyModuleDef moduledef = {
         PyModuleDef_HEAD_INIT,
-        "RTIMU",
-        NULL,
-        sizeof(struct module_state),
-        RTIMUMethods,
-        NULL,
-        RTIMUTraverse,
-        RTIMUClear,
-        NULL
+        "RTIMU",  /* module name */
+        NULL,     /* module doc */
+        sizeof(struct module_state), /* module size */
+        RTIMUMethods, /* module methods */
+        NULL, /* module reload */
+        RTIMUTraverse, /* module transverse */
+        RTIMUClear, /* module clear */
+        NULL /*  module free */
 };
+
 PyMODINIT_FUNC PyInit_RTIMU(void)
 #else
 PyMODINIT_FUNC initRTIMU()
@@ -108,7 +109,3 @@ PyMODINIT_FUNC initRTIMU()
     return;
 #endif
 }
-
-
-
-

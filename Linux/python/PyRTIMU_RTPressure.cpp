@@ -30,9 +30,9 @@
 
 // Forwards
 ///////////
-static void RTIMU_RTPressure_dealloc(RTIMU_RTPressure* self);
+static void      RTIMU_RTPressure_dealloc(RTIMU_RTPressure* self);
 static PyObject* RTIMU_RTPressure_new(PyTypeObject *type, PyObject *args, PyObject *kwds);
-static int RTIMU_RTPressure_init(RTIMU_RTPressure *self, PyObject *args, PyObject *kwds);
+static int       RTIMU_RTPressure_init(RTIMU_RTPressure *self, PyObject *args, PyObject *kwds);
 
 
 // The RTIMU_Settings struct
@@ -84,19 +84,34 @@ static PyMethodDef RTIMU_RTPressure_methods[] = {
         METH_NOARGS,
     "Set up the pressure sensor" },
 
+	//////// pressureGetPollInterval
+    {"pressureGetPollInterval", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
+#if PY_MAJOR_VERSION >= 3
+	        return PyLong_FromLong(((RTIMU_RTPressure*)self)->val->pressureGetPollInterval());
+#else
+	        return PyInt_FromLong(((RTIMU_RTPressure*)self)->val->pressureGetPollInterval());
+#endif
+        }),
+	    METH_NOARGS,
+    "Get the recommended poll interval in mS" },
+
     //////// pressureRead
     {"pressureRead", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
-        RTIMU_DATA data;
-        if (((RTIMU_RTPressure*)self)->val == NULL) {
-            data.pressureTemperatureValid = data.pressureValid = false;
-            data.pressureTemperature = 0;
-            data.pressure = 0;
-        } else {
-            ((RTIMU_RTPressure*)self)->val->pressureRead(data);
-        }
-
-        return Py_BuildValue("idid", data.pressureValid, data.pressure, data.pressureTemperatureValid, data.pressureTemperature);
+        return PyBool_FromLong(((RTIMU_RTPressure*)self)->val->pressureRead());
         }),
+    METH_NOARGS,
+    "Get a sample" },
+
+    //////// pressureData
+    {"getPressureData", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
+        const PRESSURE_DATA& data = ((RTIMU_RTPressure*)self)->val->getPressureData();
+		// printf("Pressure %f: PressureTemp: %f\n", data.pressure, data.temperature);
+        return Py_BuildValue("{s:O,s:d,s:O,s:d}",
+                "pressureValid", PyBool_FromLong(data.pressureValid), 
+				"pressure", data.pressure, 
+				"temperatureValid", PyBool_FromLong(data.temperatureValid), 
+				"temperature", data.temperature);
+	    }),
     METH_NOARGS,
     "Get current values" },
 
@@ -109,35 +124,35 @@ static PyTypeObject RTIMU_RTPressure_type = {
     PyVarObject_HEAD_INIT(NULL, 0)
 #else
     PyObject_HEAD_INIT(NULL)
-    0,                          /*ob_size*/
+    0,                          /* ob_size*/
 #endif
-     "RTIMU.RTPressure",        /*tp_name*/
-    sizeof(RTIMU_RTPressure),   /*tp_basicsize*/
-    0,                          /*tp_itemsize*/
+    "RTIMU.RTPressure",         /* tp_name*/
+    sizeof(RTIMU_RTPressure),   /* tp_basicsize*/
+    0,                          /* tp_itemsize*/
     (destructor)RTIMU_RTPressure_dealloc,  /*tp_dealloc*/
-    0,                          /*tp_print*/
-    0,                          /*tp_getattr*/
-    0,                          /*tp_setattr*/
-    0,                          /*tp_compare*/
-    0,                          /*tp_repr*/
-    0,                          /*tp_as_number*/
-    0,                          /*tp_as_sequence*/
-    0,                          /*tp_as_mapping*/
-    0,                          /*tp_hash */
-    0,                          /*tp_call*/
-    0,                          /*tp_str*/
-    0,                          /*tp_getattro*/
-    0,                          /*tp_setattro*/
-    0,                          /*tp_as_buffer*/
-    Py_TPFLAGS_DEFAULT,         /*tp_flags*/
-    "RTIMU.RTPressure object",    /* tp_doc */
+    0,                          /* tp_print*/
+    0,                          /* tp_getattr*/
+    0,                          /* tp_setattr*/
+    0,                          /* tp_compare*/
+    0,                          /* tp_repr*/
+    0,                          /* tp_as_number*/
+    0,                          /* tp_as_sequence*/
+    0,                          /* tp_as_mapping*/
+    0,                          /* tp_hash */
+    0,                          /* tp_call*/
+    0,                          /* tp_str*/
+    0,                          /* tp_getattro*/
+    0,                          /* tp_setattro*/
+    0,                          /* tp_as_buffer*/
+    Py_TPFLAGS_DEFAULT,         /* tp_flags*/
+    "RTIMU.RTPressure object",  /* tp_doc */
     0,                          /* tp_traverse */
     0,                          /* tp_clear */
     0,                          /* tp_richcompare */
     0,                          /* tp_weaklistoffset */
     0,                          /* tp_iter */
     0,                          /* tp_iternext */
-    RTIMU_RTPressure_methods,     /* tp_methods */
+    RTIMU_RTPressure_methods,   /* tp_methods */
     0,                          /* tp_members */
     0,                          /* tp_getset */
     0,                          /* tp_base */

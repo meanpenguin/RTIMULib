@@ -99,8 +99,8 @@
 //	commands
 
 #define MS5611_CMD_RESET            0x1e // reset
-#define MS5611_CMD_CONV_D1          0x48 // convert D1 OSR=4096
-#define MS5611_CMD_CONV_D2          0x58 // convert D2 OSR=4096
+#define MS5611_CMD_CONV_D1          0x48 // convert D1 OSR=4096, 8.22ms
+#define MS5611_CMD_CONV_D2          0x58 // convert D2 OSR=4096, 8.22ms
 #define MS5611_CMD_PROM             0xa0 // PROM read a0-ae
 #define MS5611_CMD_ADC              0x00 // adc read
 #define MS5611_CMD_ADC_CONV         0x40 // adc conversion command

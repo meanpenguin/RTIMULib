@@ -54,20 +54,8 @@ bool RTIMUGD20HM303DLHC::IMUInit()
     m_imuData.accelValid = true;
     m_imuData.compassValid = true;
     m_imuData.motion = true;
-    m_imuData.IMUtemperatureValid = false;
-    m_imuData.IMUtemperature = 0.0;
-    m_imuData.humidityValid = false;
-    m_imuData.humidity = -1.0;
-    m_imuData.humidityTemperatureValid = false;
-    m_imuData.humidityTemperature = 0.0;
-    m_imuData.pressureValid = false;
-    m_imuData.pressure = 0.0;
-    m_imuData.pressureTemperatureValid = false;
-    m_imuData.pressureTemperature = 0.0;
-    m_imuData.tTemperatureValid = false;
-    m_imuData.tTemperature = 0.0;
-
-
+    m_imuData.temperatureValid = false;
+    m_imuData.temperature = 0.0;
 
     //  configure IMU
 

@@ -232,24 +232,14 @@ bool RTIMUMPU9150::IMUInit()
     m_imuData.accelValid = true;
     m_imuData.compassValid = true;
     m_imuData.motion = true;
-    m_imuData.IMUtemperatureValid = false;
-    m_imuData.IMUtemperature = 0.0;
-    m_imuData.humidityValid = false;
-    m_imuData.humidity = -1.0;
-    m_imuData.humidityTemperatureValid = false;
-    m_imuData.humidityTemperature = 0.0;
-    m_imuData.pressureValid = false;
-    m_imuData.pressure = 0.0;
-    m_imuData.pressureTemperatureValid = false;
-    m_imuData.pressureTemperature = 0.0;
-    m_imuData.tTemperatureValid = false;
-    m_imuData.tTemperature = 0.0;
+    m_imuData.temperatureValid = false;
+    m_imuData.temperature = 0.0;
 
     //  configure IMU configuration variables
 
     m_slaveAddr = m_settings->m_I2CSlaveAddress;
     
-    m_IMUtemperature_previous = 0.0;
+    m_temperature_previous = 0.0;
 
     setSampleRate(m_settings->m_MPU9150GyroAccelSampleRate);
     setCompassRate(m_settings->m_MPU9150CompassSampleRate);
@@ -759,8 +749,8 @@ bool RTIMUMPU9150::IMURead()
     
     #if MPU9150_FIFO_WITH_TEMP == 1
         // Temperature
-        m_imuData.IMUtemperature =  (RTFLOAT) ((int16_t)( ((uint16_t)fifoData[6] << 8) | (uint16_t)fifoData[7] )) / 340.0f + 36.51f;  // combined registers and convert to temperature
-        m_imuData.IMUtemperatureValid = true;
+        m_imuData.temperature =  (RTFLOAT) ((int16_t)( ((uint16_t)fifoData[6] << 8) | (uint16_t)fifoData[7] )) / 340.0f + 36.51f;  // combined registers and convert to temperature
+        m_imuData.temperatureValid = true;
         // Gyroscope
         RTMath::convertToVector(fifoData + 8, m_imuData.gyro, m_gyroScale, true);
         // Compass
@@ -777,8 +767,8 @@ bool RTIMUMPU9150::IMURead()
         #endif
     #else // no temperature in fifo
         // Temperature
-        m_imuData.IMUtemperature =  (RTFLOAT) ((int16_t)( ((uint16_t)temperatureData[0] << 8 ) | (uint16_t)temperatureData[1] )) / 340.0f + 36.51f;  // combined registers and convert to temperature
-        m_imuData.IMUtemperatureValid = true;
+        m_imuData.temperature =  (RTFLOAT) ((int16_t)( ((uint16_t)temperatureData[0] << 8 ) | (uint16_t)temperatureData[1] )) / 340.0f + 36.51f;  // combined registers and convert to temperature
+        m_imuData.temperatureValid = true;
         // Gyroscope
         RTMath::convertToVector(fifoData + 6, m_imuData.gyro, m_gyroScale, true);
         //Compass
@@ -840,12 +830,12 @@ bool RTIMUMPU9150::IMURead()
     m_firstTime = false;
 
     //  now do standard processing
-    if (m_imuData.IMUtemperatureValid == true) {
+    if (m_imuData.temperatureValid == true) {
         // Check if temperature changed
-        if (fabs(m_imuData.IMUtemperature - m_IMUtemperature_previous) >= TEMPERATURE_DELTA) {
+        if (fabs(m_imuData.temperature - m_temperature_previous) >= TEMPERATURE_DELTA) {
             // If yes, update bias
-            updateTempBias(m_imuData.IMUtemperature);
-            m_IMUtemperature_previous = m_imuData.IMUtemperature;
+            updateTempBias(m_imuData.temperature);
+            m_temperature_previous = m_imuData.temperature;
         }
         // Then do
         handleTempBias(); 	// temperature Correction

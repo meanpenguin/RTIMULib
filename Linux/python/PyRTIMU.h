@@ -48,4 +48,3 @@ bool RTIMU_Settings_typecheck(PyObject* obj);
 
 // Create the RTIMU type
 int RTIMU_RTIMU_create(PyObject* module);
-

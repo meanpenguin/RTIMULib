@@ -92,6 +92,7 @@ void processTemperature();
 
 static RTIMUSettings *settings;
 static RTIMU_DATA imuData;
+
 static RTIMU *imu;
 static RTIMUMagCal *magCal;
 static RTIMUAccelCal *accelCal;
@@ -236,7 +237,7 @@ void doTemperatureCal()
 
         while (pollIMU()) {
             now = RTMath::currentUSecsSinceEpoch();
-            if ( temperatureCal->newData(imuData.accel,imuData.gyro,imuData.compass,imuData.IMUtemperature) )
+            if ( temperatureCal->newData(imuData.accel,imuData.gyro,imuData.compass,imuData.temperature) )
                displayTemperature();
         }
 
@@ -476,7 +477,7 @@ void doRuntimeAccelCal()
     printf("-----------------------------------\n");
     printf("Available options are:\n");
     printf("  R - enable runtime calibration.\n");
-    printf("  r - disbale runtime calibration.\n");
+    printf("  r - disable runtime calibration.\n");
     printf("  s - save the data once all 6 extrema have been collected.\n");
     printf("  x - abort and discard the data.\n");
     printf("\nPress any key to start...");
@@ -657,7 +658,7 @@ void doAccelEllipsoidCal()
     printf("Any rapid movements will falsely increase accelerometer readings.\n");
     printf("Please refer to supplementary instructions.\n");
     printf("The counts for each of the 8 pose quadrants will be displayed.\n");
-    printf("When enough data (%d samples per octant) has been collected,\n", RTIMUCALDEFS_OCTANT_MIN_SAMPLES);
+    printf("When enough data (%d samples per octant) have been collected,\n", RTIMUCALDEFS_OCTANT_MIN_SAMPLES);
     printf("ellipsoid processing will begin.\n");
     printf("Enter 'x' at any time to abort and discard the data.\n");
     printf("Enter 'e' to enable data acquisition.\n");

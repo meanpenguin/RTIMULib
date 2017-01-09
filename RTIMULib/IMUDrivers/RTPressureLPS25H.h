@@ -35,17 +35,14 @@ public:
     ~RTPressureLPS25H();
 
     virtual const char *pressureName() { return "LPS25H"; }
-    virtual int pressureType() { return RTPRESSURE_TYPE_LPS25H; }
+    virtual int  pressureType() { return RTPRESSURE_TYPE_LPS25H; }
     virtual bool pressureInit();
-    virtual bool pressureRead(RTIMU_DATA& data);
+    virtual bool pressureRead();
+    virtual int  pressureGetPollInterval();
+
 
 private:
     unsigned char m_pressureAddr;                           // I2C address
-
-    RTFLOAT m_pressure;                                     // the current pressure
-    RTFLOAT m_temperature;                                  // the current temperature
-    bool m_pressureValid;
-    bool m_temperatureValid;
 
 };
 

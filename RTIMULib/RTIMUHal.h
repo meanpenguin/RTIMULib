@@ -34,6 +34,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+//#define HAL_QUIET
+#undef HAL_QUIET
+
 #ifndef HAL_QUIET
 #define HAL_INFO(m) { printf("%s", m); fflush(stdout); }
 #define HAL_INFO1(m, x) { printf(m, x); fflush(stdout); }

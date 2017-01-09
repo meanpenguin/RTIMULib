@@ -12,22 +12,8 @@ The easiest way to connect the IMU to the Raspberry Pi is to use something like 
 
 #### Enabling and Configuring the I2C Bus
 
-Add the following two lines to /etc/modules:
-
-	i2c-bcm2708
-	i2c-dev
-
-If present, comment out the following line in /etc/modprobe.d/raspi-blacklist.conf:
-
-	# blacklist i2c-bcm2708
-
-Also start
-
-    # sudo raspi-config
-	
-Then Advanced Options, enable Device Tree, Enable SPI, Enable I2C. If you use Serial interface for any application you want to disable Serial (shell and kernel messages over serial)
-
-Restart the Raspberry Pi and /dev/i2c-0 and /dev/i2c-1 should appear. It’s also useful to install the I2C tools:
+In RasPI Jessie under Preference COnfiguration enable the I2C and SPI bus
+It’s  useful to install the I2C tools:
 
 	sudo apt-get install i2c-tools
 
@@ -37,15 +23,9 @@ Then:
 
 will detect any devices on /dev/i2c-1. If you have the MPU9150 wired up, you should see it at address 0x68. This is the default address expected by the demo programs. If it is at 0x69, the address expected by the demo programs will need to be changed (there's a settings file for doing things like that so it's easy to do).
 
-By default, the I2C devices are owned by root. To fix this, reate a file /etc/udev/rules.d/90-i2c.rules and add the line:
-
-	KERNEL=="i2c-[0-7]",MODE="0666"
-
-The Raspberry Pi will need to be rebooted to implement this change.
-
 Another thing worth doing is to change the I2C bus speed to 400KHz. Add the following line to /boot/config.txt:
 
-	dtparam=i2c1_baudrate=400000
+	dtparam=i2c_arm_baudrate=400000
 
 Simplest thing is then to reboot to make this change.
 
@@ -54,10 +34,6 @@ The I2C bus should now be ready for operation.
 The Raspberry Pi requires that cmake is installed. Enter:
 
     sudo apt-get install cmake
-
-If the Qt-based GUI programs are to be compiled, also install Qt:
-
-	sudo apt-get install libqt4-dev
 
 ### Setting up the Intel Edison
 
@@ -110,7 +86,7 @@ The resulting RTIMULib.ini can then be used by any other RTIMULib application.
 Please consult https://github.com/mjs513/FreeIMU-Updates/wiki/images/Rotations.png for proper rotations that will cover all quadrants. An exam[le approach is shown here: https://youtu.be/sf_8jcDyO0Q
 
 
-### Run the RTIMULibDrive, RTIMULibDrive10 and RTIMULibDrive11 Demo Apps
+### Run the RTIMULibDrive11 Demo App
 
 RTIMULibDrive is a simple command line program that shows how simple it is to use RTIMULib. RTIMULibDrive10 extends this to also support 10-dof IMUs with pressure/temperature sensors. RTIMULibDrive11 adds humidity sensor support to RTIMULibDrive10.
 
@@ -120,23 +96,4 @@ The displayed pose shows the roll, pitch and yaw seen by the IMU. Using an aircr
 
 Various parameters can be changed by editing the RTIMULib.ini file. These are described later.
 
-Take a look at RTIMULibDrive.cpp. Quite a few of the code lines are just to calculate rates and display outputs!
-
-### Run the RTIMULibDemo and RTIMULibDemoGL Programs (Raspberry Pi only)
-
-To run the program, the Raspberry Pi needs to be running the desktop. To do this (if it isn't already), enter:
-
-	startx
-
-Then open a command window and enter:
-
-	RTIMULibDemo
-
-You should see the GUI pop up and, if everything is ok, it will start displaying data from the IMU and the output of the Kalman filter. If the MPU9150 is at the alternate address, you'll need to edit the RTIMULib.ini file that RTIMULibDemo generated and restart the program.
-
-To calibrate the compass, click on the "Calibrate compass" tab. A new dialog will pop up showing the maximum and minimum readings seen from the magnetometers. You need to waggle the IMU around, ensuring that each axis (roll, pitch and yaw) point straight down and also straight up at some point. You need to do this in an area clear of magnetic fields otherwise the results will be distorted. Eventually, the readings will stop changing meaning that the real max and min values have been obtained. Click on "Ok" to save the values to the RTIMULib.ini file. Provided this .ini file is used in future (it just has to be in the current directory when RTIMULibDemo is run), the calibration will not have to be repeated. Now that RTIMULibDemo is using calibrated magnetometers, the yaw should be much more reliable.
-
-The .ini file created by RTIMULibDemo can also be used by RTIMULibDrive - just run RTIMULibDrive in the same directory and it will pick up the compass calibration data.
-
-Running RTIMULibDemoGL is exactly the same except that it takes place in the RTIMULibDemoGL directory.
-
+Take a look at RTIMULibDrive11.cpp. Quite a few of the code lines are just to calculate rates and display outputs!

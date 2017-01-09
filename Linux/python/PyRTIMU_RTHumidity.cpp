@@ -84,18 +84,33 @@ static PyMethodDef RTIMU_RTHumidity_methods[] = {
         METH_NOARGS,
     "Set up the humidity sensor" },
 
+	//////// HumidityGetPollInterval
+	{"humidityGetPollInterval", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
+#if PY_MAJOR_VERSION >= 3
+	        return PyLong_FromLong(((RTIMU_RTHumidity*)self)->val->humidityGetPollInterval());
+#else
+	        return PyInt_FromLong(((RTIMU_RTHumidity*)self)->val->humidityGetPollInterval());
+#endif
+	    }),
+	    METH_NOARGS,
+	"Get the recommended poll interval in mS" },
+
     //////// humidityRead
     {"humidityRead", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
-        RTIMU_DATA data;
-        if (((RTIMU_RTHumidity*)self)->val == NULL) {
-            data.humidityTemperatureValid = data.humidityValid = false;
-            data.humidityTemperature = 0;
-            data.humidity = 0;
-        } else {
-            ((RTIMU_RTHumidity*)self)->val->humidityRead(data);
-        }
-
-        return Py_BuildValue("idid", data.humidityValid, data.humidity, data.humidityTemperatureValid, data.humidityTemperature);
+        return PyBool_FromLong(((RTIMU_RTHumidity*)self)->val->humidityRead());
+        }),
+    METH_NOARGS,
+    "Get a sample" },
+	
+    //////// humidityData
+    {"getHumidityData", (PyCFunction)([] (PyObject *self, PyObject* args) -> PyObject* {
+        const HUMIDITY_DATA& data = ((RTIMU_RTHumidity*)self)->val->getHumidityData();
+		// printf("Humidity %f: HumdidtyTemp: %f\n", data.humidity, data.humidityTemperature);
+        return Py_BuildValue("{s:O,s:d,s:O,s:d}",
+		        "humidityValid", PyBool_FromLong(data.humidityValid), 
+				"humidity", data.humidity, 
+				"temperatureValid", PyBool_FromLong(data.temperatureValid), 
+				"temperature", data.temperature);
         }),
     METH_NOARGS,
     "Get current values" },
@@ -111,7 +126,7 @@ static PyTypeObject RTIMU_RTHumidity_type = {
     PyObject_HEAD_INIT(NULL)
     0,                          /*ob_size*/
 #endif
-     "RTIMU.RTHumidity",           /*tp_name*/
+    "RTIMU.RTHumidity",           /*tp_name*/
     sizeof(RTIMU_RTHumidity),     /*tp_basicsize*/
     0,                          /*tp_itemsize*/
     (destructor)RTIMU_RTHumidity_dealloc,  /*tp_dealloc*/

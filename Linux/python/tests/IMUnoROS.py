@@ -50,9 +50,9 @@ def low_pass(curr, prev, alpha):
 
 def computeHeight(pressure, staticPressure):
     if (staticPressure > 0):
-      return 44330.8 * (1 - pow(pressure / staticPressure, 0.190263));
+      return 44330.8 * (1 - pow(pressure / staticPressure, 0.190263))
     else:
-      return 0.0;
+      return 0.0
   
 #   
 # Compute Depth
@@ -80,11 +80,11 @@ def computeHeight(pressure, staticPressure):
 #
 
 def computeDepthFreshWater(pressure, staticPressure):
-    return (pressure - staticPressure) * 0.01019716;    
+    return (pressure - staticPressure) * 0.01019716
 
 def computeDepthSaltWater(pressure, staticPressure):
     p=(pressure-staticPressure)/100
-    return ((( (-1.82e-15*p + 2.279e-10 )*p - 2.2512e-5 )*p + 9.72659) * p) / 9.7954;    
+    return ((( (-1.82e-15*p + 2.279e-10 )*p - 2.2512e-5 )*p + 9.72659) * p) / 9.7954
 
 #
 #/////////////////////////////////////////////////////////////////
@@ -104,6 +104,7 @@ s = RTIMU.Settings(SETTINGS_FILE)
 imu = RTIMU.RTIMU(s)
 pressure = RTIMU.RTPressure(s)
 humidity = RTIMU.RTHumidity(s)
+
 #
 print("IMU Name: " + imu.IMUName())
 print("Pressure Name: " + pressure.pressureName())
@@ -113,7 +114,7 @@ if (not imu.IMUInit()):
     print("IMU Init Failed")
     sys.exit(1)
 else:
-    print("IMU Init Succeeded");
+    print("IMU Init Succeeded")
 
 #
 # this is a good time to set any fusion parameters
@@ -137,7 +138,8 @@ imu.setSlerpPower(0.02)
 imu.setGyroEnable(True)
 imu.setAccelEnable(True)
 imu.setCompassEnable(True)
-imu.setGyroRunTimeCalibrationEnable(False); # at startup there might be some hickups
+# at startup there might be some hickups:
+imu.setGyroRunTimeCalibrationEnable(False) 
 
 if (not pressure.pressureInit()):
     print("Pressure sensor Init Failed")
@@ -149,33 +151,51 @@ if (not humidity.humidityInit()):
 else:
     print("Humidity sensor Init Succeeded")
 #
-poll_interval = imu.IMUGetPollInterval()
-print("Recommended Poll Interval: %dmS\n" % poll_interval)
+IMU_poll_interval = imu.IMUGetPollInterval()*1.0/1000.0
+print("Recommended Poll Interval for IMU: %4.3fS" % IMU_poll_interval)
+pressure_poll_interval = pressure.pressureGetPollInterval()*1.0/1000.0
+print("Recommended Poll Interval for pressure sensor: %4.3fS" % pressure_poll_interval)
+humidity_poll_interval = humidity.humidityGetPollInterval()*1.0/1000.0
+print("Recommended Poll Interval for humidity sensor: %4.3fS" % humidity_poll_interval)
 
 #
 # read some values, after 1-2 secs IMU should be stable and static pressure measured
-i=100
-while (i>0):
-  i=i-1;
-  if imu.IMURead():
-    data = imu.getIMUData()
-    (data["pressureValid"], data["pressure"], data["pressureTemperatureValid"], data["pressureTemperature"]) = pressure.pressureRead()
-    (data["humidityValid"], data["humidity"], data["humidityTemperatureValid"], data["humidityTemperature"]) = humidity.humidityRead()
-    if data["pressure"] > 0.0:
-       staticPressure = low_pass(data["pressure"], staticPressure, 0.1)
-    # print("Pressure: %f, Static: %f" % (data["pressure"], staticPressure))
 
-  # Use rate class to accuratly time the loop
+print("Dry Run")
+
+i=int(2.0/IMU_poll_interval)
+firsttime = True
+while (i>0):
+  i -= 1
+  if imu.IMURead():
+    dataIMU = imu.getIMUData()
+    
+  if pressure.pressureRead():
+    dataPressure = pressure.getPressureData()
+
+  if humidity.humidityRead():     
+    dataHumidity = humidity.getHumidityData()
+    
+    if dataPressure["pressureValid"] :
+      if dataPressure["pressure"] > 500.0 and dataPressure["pressure"] < 1500.0  :
+        if firsttime :
+          staticPressure = dataPressure["pressure"]
+          firsttime = False
+        else :
+          staticPressure = low_pass(dataPressure["pressure"], staticPressure, 0.1)
+    # print("Pressure: %f, Static: %f" % (dataPressure["pressure"], staticPressure))
+
+  # Use rate class to accurately time the loop
   # rate.sleep()
-  time.sleep(poll_interval*1.0/1000.0)
+  time.sleep(IMU_poll_interval)
 
 #
 # Initialize values
-fusionPose = data["fusionPose"]
-fusionQPose = data["fusionQPose"]
-acc = data["accel"]
-gyr = data["gyro"]
-mag = data["compass"]
+fusionPose = dataIMU["fusionPose"]
+fusionQPose = dataIMU["fusionQPose"]
+acc = dataIMU["accel"]
+gyr = dataIMU["gyro"]
+mag = dataIMU["compass"]
 
 #  
 # Now turn off magnetometer, assuming to much interference,
@@ -184,7 +204,9 @@ mag = data["compass"]
 #//////////////////////////////////
 imu.setCompassEnable(False)
 # Enable Gyrobackgroun updates
-imu.setGyroRunTimeCalibrationEnable(True); 
+imu.setGyroRunTimeCalibrationEnable(True)
+
+print("Initialization completed")
 
 #
 # ////////////////////////////////////////////////////////////////////////
@@ -197,14 +219,37 @@ imu.setGyroRunTimeCalibrationEnable(True);
 currentTimeS = time.time()
 previousDisplayTimeS = currentTimeS 
 
-depthPressure = 0.0
-yawInitial = 0.0
-height = 0.0
 IMUready =  False
 
 lastHumidityPoll = time.time()
 lastPressurePoll = time.time()
-lastIMUPoll = time.time();
+lastIMUPoll = time.time()
+previousRateTime = time.time()
+
+depthPressure = staticPressure
+depth  = 0.0
+height = 0.0
+pressureFiltered = staticPressure
+
+humidityFiltered = dataHumidity["humidity"]
+
+#print(acc)
+#print(gyr)
+#print(mag)
+
+acc=(0.0, 0.0, 0.0)
+gyr=(0.0, 0.0, 0.0)
+mag=(0.0, 0.0, 0.0)
+
+fusionQPose = (0.0, 0.0, 0.0, 0.0)
+fusionPose = (0.0, 0.0, 0.0, 0.0)
+
+IMUCounter =0
+pressureCounter=0
+humidityCounter=0
+IMURate=0
+humidityRate=0
+pressureRate=0
 
 # 
 while True:
@@ -212,64 +257,96 @@ while True:
   #print("Time %+6.3f" % (currentTimeS))
   
   # 
-  # IMU, humidity and pressure section
+  # IMU
   #
   
   # do we have IMU stalled ?
-  if (currentTimeS - lastIMUPoll) > 10.0*poll_interval/1000.0 :
-	   imu.IMUInit()
+  if (currentTimeS - lastIMUPoll) > 50.0*IMU_poll_interval:
+    printf("IMU stalled!!!!!!!!!!!!")
+    imu.IMUInit()
   
-  if imu.IMURead():
-    # x, y, z = imu.getFusionData()
-    # print("%f %f %f" % (x,y,z))
-    data = imu.getIMUData()
-	
-    lastIMUPoll = currentTime
-    acc = data["accel"]
-    gyr = data["gyro"]
-    mag = data["compass"]
-
-	# data in expected range ?
-	if ( (gyr[0]*gyr[0]+gyr[1]*gyr[1]+gyr[2]*gyr[2]) >= 35*35 ) or ( (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2]) >= 16*16 ) or ( (mag[0]*mag[0]+mag[1]*mag[1]+mag[2]*mag[2]) >= 1000*1000) :
-	   imu.IMUInit()
-	else:
-	   fusionPose = data["fusionPose"]
-       fusionQPose = data["fusionQPose"]
-	
-    if 	currentTimeS - lastPressurePoll >= 20 :
-        (data["pressureValid"], data["pressure"], data["pressureTemperatureValid"], data["pressureTemperature"]) = pressure.pressureRead()
-        lastPressurePoll = currentTimeS
-		
-    if currentTimeS = lastHumidityPoll >= 80 :
-        (data["humidityValid"], data["humidity"], data["humidityTemperatureValid"], data["humidityTemperature"]) = humidity.humidityRead()
-        lastHumidityPoll = currentTimeS
-
-    #
-    depthPressure = low_pass(data["pressure"], depthPressure, 0.1)
-    depth  = computeDepthSaltWater(depthPressure, staticPressure)
-    height = computeHeight(data["pressure"],staticPressure)
-    
-    # If the IMU is not moving the gyroscope length needs to be smaller than 0.002
-    # Otherwise we have issue with gyroscope bias.
-    # Assume if gyro bias was ok once it will stay that way
-    if ( (IMUready == False) and (not data["motion"]) ) :
+  if currentTimeS - lastIMUPoll >= IMU_poll_interval :
+    if imu.IMURead():
+      dataIMU = imu.getIMUData()
+      lastIMUPoll = currentTimeS
+      IMUCounter +=1
+      if dataIMU["accelValid"]:
+        acc = dataIMU["accel"]
+      if dataIMU["gyroValid"]:
+        gyr = dataIMU["gyro"]
+      if dataIMU["compassValid"]:
+        mag = dataIMU["compass"]
+  
+      # data in expected range ?
+      if ( (gyr[0]*gyr[0]+gyr[1]*gyr[1]+gyr[2]*gyr[2]) >= 35*35 ) or ( (acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2]) >= 16*16 ) or ( (mag[0]*mag[0]+mag[1]*mag[1]+mag[2]*mag[2]) >= 1000*1000) :
+        imu.IMUInit()
+      else:
+        if dataIMU["fusionPoseValid"] :
+          fusionPose = dataIMU["fusionPose"]
+        if dataIMU["fusionQPoseValid"] :
+          fusionQPose = dataIMU["fusionQPose"]
+  
+      # If the IMU is not moving the gyroscope length needs to be smaller than 0.002
+      # Otherwise we have issue with gyroscope bias.
+      # Assume if gyro bias was ok once it will stay that way
+      if ( (IMUready == False) and (dataIMU["motion"] == False) ):
         if ( gyr[0]*gyr[0]+gyr[1]*gyr[1]+gyr[2]*gyr[2] <= 0.000004 ):
-            IMUready = True;
-    
+          IMUready = True
+          
+  # 
+  # Pressure
+  #
+
+  if currentTimeS - lastPressurePoll >= pressure_poll_interval :
+    if pressure.pressureRead():
+      lastPressurePoll = currentTimeS
+      dataPressure = pressure.getPressureData()
+      pressureCounter +=1
+      pressureFiltered = low_pass(dataPressure["pressure"], pressureFiltered, 0.1)
+      depth  = computeDepthSaltWater(pressureFiltered, staticPressure)
+      height = computeHeight(pressureFiltered,staticPressure)
+
+  # 
+  # Humidity
+  #
+      
+  if currentTimeS - lastHumidityPoll >= humidity_poll_interval :
+    if humidity.humidityRead():
+      lastHumidityPoll = currentTimeS
+      dataHumidity = humidity.getHumidityData()
+      humidityCounter +=1
+      humidityFiltered = low_pass(dataHumidity["humidity"], humidityFiltered, 0.1)
+
+  #        
+  # Compute Data Rates
+  # 
+
+  if ((currentTimeS - previousRateTime) >= 1.0):
+    IMURate= IMUCounter
+    pressureRate = pressureCounter
+    humidityRate = humidityCounter
+    pressureCounter = 0
+    humidityCounter = 0
+    IMUCounter = 0
+    previousRateTime = currentTimeS
+     
   #        
   # At reduced rate display data (10Hz)
   # 
+
   if ((currentTimeS - previousDisplayTimeS) > 0.1):
     if(displayIMU):
-      if (data["motion"]):
-          print("IMU is moving") 
+      if (dataIMU["motion"]):
+        print("IMU is moving") 
       else: 
-          print("IMU is still")
+        print("IMU is still")
 
       if (IMUready): 
-          print("Gyro Bias is ok")
+        print("Gyro Bias is ok")
       else:
-          print("Gyro Bias is not ok")
+        print("Gyro Bias is not ok")
+
+      print("IMU rate: %d pressure rate: %d humidity rate: %d" % (IMURate, pressureRate, humidityRate) ) 
               
       #print("IMU get data")
       print("Acc x: %+6.3f y: %+6.3f z: %+6.3f length: %+6.3f" % (acc[0], acc[1], acc[2], math.sqrt(acc[0]*acc[0]+acc[1]*acc[1]+acc[2]*acc[2]) ) ) 
@@ -278,27 +355,28 @@ while True:
       print("Q   x: %+6.2f y: %+6.2f z: %+6.2f w: %+6.2f" % (fusionQPose[1], fusionQPose[2], fusionQPose[3], fusionQPose[0] ) )
       #print("IMU get fusion Pose")
       print("Eul r: %+6.2f p: %+6.2f y: %+6.2f" % (math.degrees(fusionPose[0]), 
-          math.degrees(fusionPose[1]), math.degrees(fusionPose[2])))
-      print("IMU temperature: %+6.1f" % (data["IMUtemperature"]))
+        math.degrees(fusionPose[1]), math.degrees(fusionPose[2])))
+      print("IMU temperature: %+6.1f" % (dataIMU["temperature"]))
       #
       # Depth and Height
-      if (data["pressureValid"]):
-          print("Pressure: %f, height above sea level: %f, depth below sea level: %f" % (depthPressure, height, depth))
-      if (data["pressureTemperatureValid"]):
-          print("Pressure temperature: %+6.3f" % (data["pressureTemperature"]))
+      if (dataPressure["pressureValid"]):
+        print("Pressure: %+6.1f, %+6.1f, height above sea level: %+6.1f, depth below sea level: %+6.2f" % (dataPressure["pressure"], pressureFiltered, height, depth))
+      print("Static Pressure: %6.3f" % (staticPressure))
+      if (dataPressure["temperatureValid"]):
+        print("Pressure temperature: %+6.3f" % (dataPressure["temperature"]))        
       #
       # Humidity
-      if (data["humidityValid"]):
-          print("Humidity: %+6.1f" % (data["humidity"]))
-      if (data["humidityTemperatureValid"]):
-          print("Humidity temperature: %+6.1f" % (data["humidityTemperature"]))
-
-      print("Depth: %3.3f" % (depth))
-      print("Static Pressure: %6.3f" % (staticPressure))
+      if (dataHumidity["humidityValid"]):
+        print("Humidity: %+6.1f, %+6.1f" % (dataHumidity["humidity"],humidityFiltered))
+      if (dataHumidity["temperatureValid"]):
+        print("Humidity temperature: %+6.1f" % (dataHumidity["temperature"]))
     
     previousDisplayTimeS = currentTimeS
 
+  #
   # release task
-  timeRemaining = poll_interval/1000.0 - (time.time() - currentTimeS)
+  #
+  
+  timeRemaining = 0.001 - (time.time() - currentTimeS)
   if (timeRemaining > 0):
     time.sleep(timeRemaining)

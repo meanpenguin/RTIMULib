@@ -9,16 +9,10 @@ RTIMULib is the simplest way to connect a 9-dof, 10-dof or 11-dof IMU to an embe
 The Linux directory contains the main demo apps for embeeded Linux systems:
 
 * [Disfunct] RTIMULibDrive is a simple app that shows to to use the RTIMULib library in a basic way.
-* [Disfunct] RTIMULibDrive10 adds support for pressure/temperature sensors.
-* RTIMULibDrive11 adds support for pressure/temperature/humidity sensors.
+* RTIMULibDrive11 is a simple app that shows the use of the library and supports pressure/temperature/humidity sensors.
 * RTIMULibCal is a command line calibration tool for the magnetometers and accelerometers.
-* [Disfunct] RTIMULibvrpn shows how to use RTIMULib with vrpn.
-* [Disfunct] RTIMULibDemo is a simple GUI app that displays the fused IMU data in real-time.
-* [Disfunct] RTIMULibDemoGL adds OpenGL visualization to RTIMULibDemo.
 
-RTIMULib is a C++ library but there are also Python bindings in Linux/python. It's easy to build and install the Python RTIMULib library using the provided setup.py after which any Python script will have access to RTIMULib functionality. See Linux/python.README.md (https://github.com/richards-tech/RTIMULib/blob/master/Linux/python/README.md) for more details. Two demo scripts show how to use the Python interface.
-
-Check out www.richards-tech.com for more details, updates and news.
+RTIMULib is a C++ library but there are also Python bindings in Linux/python. It's easy to build and install the Python RTIMULib library using the provided setup.py after which any Python script will have access to RTIMULib functionality. 
 
 RTIMULib currently supports the following IMUs:
 

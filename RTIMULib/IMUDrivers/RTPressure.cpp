@@ -31,6 +31,8 @@
 #include "RTPressureMS5803.h"
 #include "RTPressureMS5837.h"
 
+#define PRESSURE_AVG_HISTORY   20                     // size of moving average filter
+
 RTPressure *RTPressure::createPressure(RTIMUSettings *settings)
 {
     switch (settings->m_pressureType) {
@@ -71,8 +73,15 @@ RTPressure *RTPressure::createPressure(RTIMUSettings *settings)
 RTPressure::RTPressure(RTIMUSettings *settings)
 {
     m_settings = settings;
+    m_pressure_avg = new RunningAverage(PRESSURE_AVG_HISTORY);
 }
 
 RTPressure::~RTPressure()
 {
+}
+
+RTFLOAT RTPressure::updateAveragePressure(RTFLOAT& pressure)
+{
+    m_pressure_avg->addValue(pressure);
+    return m_pressure_avg->getAverage();
 }

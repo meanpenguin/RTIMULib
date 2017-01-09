@@ -25,11 +25,17 @@
 
 RTPressureMS5611::RTPressureMS5611(RTIMUSettings *settings) : RTPressure(settings)
 {
-    m_validReadings = false;
 }
 
 RTPressureMS5611::~RTPressureMS5611()
 {
+}
+
+int RTPressureMS5611::pressureGetPollInterval()
+{
+    // return (400 / 122); // available: 0.54 / 1.06 / 2.08 / 4.13 / 8.22 ms
+    // osr 4096 takes 8.22ms
+    return (3);
 }
 
 bool RTPressureMS5611::pressureInit()
@@ -54,14 +60,13 @@ bool RTPressureMS5611::pressureInit()
     return true;
 }
 
-bool RTPressureMS5611::pressureRead(RTIMU_DATA& data)
+bool RTPressureMS5611::pressureRead()
 {
-    data.pressureValid = false;
-    data.pressureTemperatureValid = false;
-    data.pressureTemperature = 0;
-    data.pressure = 0;
+    uint8_t data[3];
+    bool validReadings = false;
 
-    if (m_state == MS5611_STATE_IDLE) {
+    switch (m_state) {
+        case MS5611_STATE_IDLE:
         // start pressure conversion
         if (!m_settings->HALWrite(m_pressureAddr, MS5611_CMD_CONV_D1, 0, 0, "Failed to start MS5611 pressure conversion")) {
             return false;
@@ -69,40 +74,20 @@ bool RTPressureMS5611::pressureRead(RTIMU_DATA& data)
             m_state = MS5611_STATE_PRESSURE;
             m_timer = RTMath::currentUSecsSinceEpoch();
         }
-    }
-
-    pressureBackground();
-
-    if (m_validReadings) {
-        data.pressureValid = true;
-        data.pressureTemperatureValid = true;
-        data.pressureTemperature = m_temperature;
-        data.pressure = m_pressure;
-    }
-    return true;
-}
-
-
-void RTPressureMS5611::pressureBackground()
-{
-    uint8_t data[3];
-
-    switch (m_state) {
-        case MS5611_STATE_IDLE:
         break;
 
         case MS5611_STATE_PRESSURE:
-        if ((RTMath::currentUSecsSinceEpoch() - m_timer) < 10000)
-            break;                                          // not time yet
+        if ((RTMath::currentUSecsSinceEpoch() - m_timer) < 9040)
+            return false;                                          // not time yet
         if (!m_settings->HALRead(m_pressureAddr, MS5611_CMD_ADC, 3, data, "Failed to read MS5611 pressure")) {
-            break;
+            return false;
         }
         m_D1 = (((uint32_t)data[0]) << 16) + (((uint32_t)data[1]) << 8) + (uint32_t)data[2];
 
         // start temperature conversion
 
         if (!m_settings->HALWrite(m_pressureAddr, MS5611_CMD_CONV_D2, 0, 0, "Failed to start MS5611 temperature conversion")) {
-            break;
+            return false;
         } else {
             m_state = MS5611_STATE_TEMPERATURE;
             m_timer = RTMath::currentUSecsSinceEpoch();
@@ -110,10 +95,10 @@ void RTPressureMS5611::pressureBackground()
         break;
 
         case MS5611_STATE_TEMPERATURE:
-        if ((RTMath::currentUSecsSinceEpoch() - m_timer) < 10000)
-            break;                                          // not time yet
+        if ((RTMath::currentUSecsSinceEpoch() - m_timer) < 9040)
+            return false;
         if (!m_settings->HALRead(m_pressureAddr, MS5611_CMD_ADC, 3, data, "Failed to read MS5611 temperature")) {
-            break;
+            return false;
         }
         m_D2 = (((uint32_t)data[0]) << 16) + (((uint32_t)data[1]) << 8) + (uint32_t)data[2];
 
@@ -146,14 +131,23 @@ void RTPressureMS5611::pressureBackground()
             sens -=sens2;
         }
 
-        m_pressure = (RTFLOAT)(((((int64_t)m_D1 * sens) >> 21) - offset) >> 15) / (RTFLOAT)100.0;
-        m_temperature = (RTFLOAT)temperature/(RTFLOAT)100;
+        m_pressureData.pressure = (RTFLOAT)(((((int64_t)m_D1 * sens) >> 21) - offset) >> 15) / (RTFLOAT)100.0;
+        m_pressureData.temperature = (RTFLOAT)temperature/(RTFLOAT)100;
+        m_pressureData.pressureValid = true;
+        m_pressureData.temperatureValid = true;
+        m_pressureData.timestamp = RTMath::currentUSecsSinceEpoch();
 
         // printf("Temp: %f, pressure: %f\n", m_temperature, m_pressure);
 
-        m_validReadings = true;
+        validReadings = true;
         m_state = MS5611_STATE_IDLE;
         break;
+    }
+
+	if (validReadings) {
+      return true;
+	} else {
+      return false;
     }
 }
 

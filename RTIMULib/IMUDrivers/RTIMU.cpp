@@ -116,7 +116,7 @@ RTIMU *RTIMU::createIMU(RTIMUSettings *settings)
 
     case RTIMU_TYPE_MPU9255:
         return new RTIMUMPU9255(settings);
-		
+        
     case RTIMU_TYPE_GD20HM303DLHC:
         return new RTIMUGD20HM303DLHC(settings);
 
@@ -140,6 +140,7 @@ RTIMU *RTIMU::createIMU(RTIMUSettings *settings)
         return NULL;
     }
 }
+
 RTIMU::RTIMU(RTIMUSettings *settings)
 {
     m_settings = settings;
@@ -149,13 +150,13 @@ RTIMU::RTIMU(RTIMUSettings *settings)
     m_runtimeMagCalValid = false;
     m_runtimeMagCalMax = -1000.0f;
     m_runtimeMagCalMin =  1000.0f;
-	
+    
     m_gyroCalibrationMode = false;
     m_temperatureCalibrationMode = false;
-	m_gyroManualCalibrationEnable = false;
-	m_gyroRunTimeCalibrationEnable = true;
-	m_accelRunTimeCalibrationEnable = false;
-	m_compassRunTimeCalibrationEnable = false;
+    m_gyroManualCalibrationEnable = false;
+    m_gyroRunTimeCalibrationEnable = true;
+    m_accelRunTimeCalibrationEnable = false;
+    m_compassRunTimeCalibrationEnable = false;
     switch (m_settings->m_fusionType) {
     case RTFUSION_TYPE_KALMANSTATE4:
         m_fusion = new RTFusionKalman4();
@@ -174,9 +175,9 @@ RTIMU::RTIMU(RTIMUSettings *settings)
         break;
     }
     HAL_INFO1("Using fusion algorithm %s\n", RTFusion::fusionName(m_settings->m_fusionType));
-	m_compassAverageX = new RunningAverage(20); // 0.1f * m_sampleRate;
-	m_compassAverageY = new RunningAverage(20);
-	m_compassAverageZ = new RunningAverage(20);
+    m_compassAverageX = new RunningAverage(20); // 0.1f * m_sampleRate;
+    m_compassAverageY = new RunningAverage(20);
+    m_compassAverageZ = new RunningAverage(20);
 }
 
 RTIMU::~RTIMU()
@@ -186,9 +187,9 @@ RTIMU::~RTIMU()
     delete m_compassAverageY;
     delete m_compassAverageZ;
     m_fusion = NULL;
-	m_compassAverageX = NULL;
-	m_compassAverageY = NULL;
-	m_compassAverageZ = NULL;
+    m_compassAverageX = NULL;
+    m_compassAverageY = NULL;
+    m_compassAverageZ = NULL;
 }
 
 void RTIMU::setCalibrationData()
@@ -250,15 +251,15 @@ void RTIMU::setCalibrationData()
 void RTIMU::updateTempBias(float senTemp)
 {
     if(m_settings->m_temperatureCalValid == true) {
-	if(senTemp < m_settings->m_senTemp_break) {
+    if(senTemp < m_settings->m_senTemp_break) {
             for(int i = 0; i < 9; i++) { 
                 m_settings->m_temperaturebias[i] = m_settings->m_c3[i]*(senTemp*senTemp*senTemp) + m_settings->m_c2[i]*(senTemp*senTemp) + m_settings->m_c1[i]*senTemp + m_settings->m_c0[i];
-            }		
-	} else {
+            }        
+    } else {
             for(int i = 0; i < 9; i++) { 
                 m_settings->m_temperaturebias[i] = 0.0f;
             }
-	}
+    }
     }
 }
 
@@ -294,10 +295,10 @@ void RTIMU::gyroBiasInit()
 {
     m_gyroLearningAlpha = 2.0f / m_sampleRate;
     m_gyroContinuousAlpha = 0.02f / m_sampleRate;
-	m_imuData.motion = true; // ensure that when system starts without motion the gyro bias learning is triggerd also
-	m_EEPROMCount = 0;
-	m_intervalCount = 0;
-	m_previousMotion = false;
+    m_imuData.motion = true; // ensure that when system starts without motion the gyro bias learning is triggerd also
+    m_EEPROMCount = 0;
+    m_intervalCount = 0;
+    m_previousMotion = false;
 }
 
 //  Note - code assumes that this is the first thing called after axis swapping
@@ -359,91 +360,91 @@ void RTIMU::handleGyroBias()
     } // end axis rotations
 
     // Motion Detection
-	// ----------------
+    // ----------------
     RTVector3 deltaAccel = m_previousAccel;
     deltaAccel -= m_imuData.accel;   // compute accel variations
     m_previousAccel = m_imuData.accel;
     RTVector3 deltaGyro = m_previousGyro;
     deltaGyro -= m_imuData.gyro;     // compute gyro variations
-	m_previousGyro = m_imuData.gyro;
+    m_previousGyro = m_imuData.gyro;
     //printf("Delta Accel: %f, Gyration: %f, Delta Gyration: %f\n", deltaAccel.length(), m_imuData.gyro.length(), deltaGyro.length());
-	m_previousMotion = m_imuData.motion;  // to keep track of motion transitions
-	// is the IMU moving?
+    m_previousMotion = m_imuData.motion;  // to keep track of motion transitions
+    // is the IMU moving?
     if ((deltaAccel.length() < RTIMU_FUZZY_ACCEL_ZERO) && (deltaGyro.length() < RTIMU_FUZZY_DELTA_GYRO_ZERO) && (m_imuData.gyro.length() < RTIMU_FUZZY_GYRO_ZERO)) {
-		m_imuData.motion = false; 
+        m_imuData.motion = false; 
     } else {
-		m_imuData.motion = true;
-	}
+        m_imuData.motion = true;
+    }
     // if (m_imuData.motion) { Serial.println("Sensor is moving."); } else { Serial.println("Sensor is still."); } 
 
-	// GyroBias
-	// The goal is to discard the first 0.1 sec of no motion and the last 0.1 sec of no motion
-	// from bias updates
-	// bias update is passed through low pass filter
+    // GyroBias
+    // The goal is to discard the first 0.1 sec of no motion and the last 0.1 sec of no motion
+    // from bias updates
+    // bias update is passed through low pass filter
     //
     // Start of still phase?
-	//   Is this the start of a still phase?
-	//   Then prepare for potential bias updates
-	if ((m_previousMotion == true) && (m_imuData.motion==false)) { 
-		// initialize potential bias update
-		m_intervalCount=0; //
-		// initialize the temporary bias with current bias
-		m_gyroBiasTemp = m_settings->m_gyroBias;
-		// if system was not still for more than 0.1 seconds, it will use initial bias as candidate 
-		m_gyroBiasCandidate = m_settings->m_gyroBias;
-	    // Serial.println("IMU transitioned from motion to still");
-		m_noMotionStarted = true;
-	}
-	// GyroBias
+    //   Is this the start of a still phase?
+    //   Then prepare for potential bias updates
+    if ((m_previousMotion == true) && (m_imuData.motion==false)) { 
+        // initialize potential bias update
+        m_intervalCount=0; //
+        // initialize the temporary bias with current bias
+        m_gyroBiasTemp = m_settings->m_gyroBias;
+        // if system was not still for more than 0.1 seconds, it will use initial bias as candidate 
+        m_gyroBiasCandidate = m_settings->m_gyroBias;
+        // Serial.println("IMU transitioned from motion to still");
+        m_noMotionStarted = true;
+    }
+    // GyroBias
     if ( m_gyroRunTimeCalibrationEnable ) {
-		if (!m_imuData.motion) { // Update Gyro Bias if there is no motion
-			m_intervalCount++; 
-			// if device was still for 0.1 seconds 
-			//    update current bias with candidate
-			//    update candidate bias with temporary bias
-			//    when noMotionStarted do not update bias for first interval
-			//    when IMU moves again, the candidate will not be applied, discarding the last candidate
-			if (m_intervalCount >= 0.1 * m_sampleRate) {
-				m_intervalCount = 0;
-				m_settings->m_gyroBias = m_gyroBiasCandidate; 	// activate candidate bias
-				m_gyroBiasCandidate = m_gyroBiasTemp; 			// update candidate
-				m_noMotionStarted = false;                      // first interval passed
-				// Serial.println("Gyro bias and candidate updated");
-			}
-			if (m_noMotionStarted == false) {
-				// update temporary bias
-				RTVector3 gyroTemp = m_imuData.gyro - m_gyroBiasTemp;
-				// Serial.printf("%s: ", "Gyro"); Serial.printf(", x:%+4.5f", gyroTemp.x()); Serial.printf(", y:%+4.5f", gyroTemp.y()); Serial.printf(", z:%+4.5f", gyroTemp.z()); Serial.printf(", s:%+4.5f\n", gyroTemp.length()); 
-				// Serial.printf("%s: ", "Gyro Bias"); Serial.printf(", x:%+4.5f", m_settings->m_gyroBias.x()); Serial.printf(", y:%+4.5f", m_settings->m_gyroBias.y()); Serial.printf(", z:%+4.5f", m_settings->m_gyroBias.z()); Serial.printf(", s:%+4.5f\n", m_settings->m_gyroBias.length());
-				if (gyroTemp.length() > RTIMU_FUZZY_GYRO_BIAS) { // Aggressive Bias Update
-					m_gyroBiasTemp.setX( (1.0 - m_gyroLearningAlpha) * m_gyroBiasTemp.x() + m_gyroLearningAlpha * m_imuData.gyro.x() );
-					m_gyroBiasTemp.setY( (1.0 - m_gyroLearningAlpha) * m_gyroBiasTemp.y() + m_gyroLearningAlpha * m_imuData.gyro.y() );
-					m_gyroBiasTemp.setZ( (1.0 - m_gyroLearningAlpha) * m_gyroBiasTemp.z() + m_gyroLearningAlpha * m_imuData.gyro.z() );
-					// Serial.println("Gyro learning fast");
-				} else { // Slow Bias Update
-					m_gyroBiasTemp.setX( (1.0 - m_gyroContinuousAlpha) * m_gyroBiasTemp.x() + m_gyroContinuousAlpha * m_imuData.gyro.x() );
-					m_gyroBiasTemp.setY( (1.0 - m_gyroContinuousAlpha) * m_gyroBiasTemp.y() + m_gyroContinuousAlpha * m_imuData.gyro.y() );
-					m_gyroBiasTemp.setZ( (1.0 - m_gyroContinuousAlpha) * m_gyroBiasTemp.z() + m_gyroContinuousAlpha * m_imuData.gyro.z() );
-					// Serial.println("Gyro learning slow");
-				}
-			} // end noMotion has been going on for more than interval
-		} //  no motion
-		// store new bias every 60 seconds in EEPROM
-		m_EEPROMCount++;
-		if (m_EEPROMCount >= (60 * m_sampleRate)) {
-			m_EEPROMCount = 0;
-			m_settings->m_gyroBiasValid = true;
-			m_settings->saveSettings();
-			// Serial.println("Gyro bias saved in EEPROM");
-		} 
-	} // runtimeCalibrationEnable
+        if (!m_imuData.motion) { // Update Gyro Bias if there is no motion
+            m_intervalCount++; 
+            // if device was still for 0.1 seconds 
+            //    update current bias with candidate
+            //    update candidate bias with temporary bias
+            //    when noMotionStarted do not update bias for first interval
+            //    when IMU moves again, the candidate will not be applied, discarding the last candidate
+            if (m_intervalCount >= 0.1 * m_sampleRate) {
+                m_intervalCount = 0;
+                m_settings->m_gyroBias = m_gyroBiasCandidate;     // activate candidate bias
+                m_gyroBiasCandidate = m_gyroBiasTemp;             // update candidate
+                m_noMotionStarted = false;                      // first interval passed
+                // Serial.println("Gyro bias and candidate updated");
+            }
+            if (m_noMotionStarted == false) {
+                // update temporary bias
+                RTVector3 gyroTemp = m_imuData.gyro - m_gyroBiasTemp;
+                // Serial.printf("%s: ", "Gyro"); Serial.printf(", x:%+4.5f", gyroTemp.x()); Serial.printf(", y:%+4.5f", gyroTemp.y()); Serial.printf(", z:%+4.5f", gyroTemp.z()); Serial.printf(", s:%+4.5f\n", gyroTemp.length()); 
+                // Serial.printf("%s: ", "Gyro Bias"); Serial.printf(", x:%+4.5f", m_settings->m_gyroBias.x()); Serial.printf(", y:%+4.5f", m_settings->m_gyroBias.y()); Serial.printf(", z:%+4.5f", m_settings->m_gyroBias.z()); Serial.printf(", s:%+4.5f\n", m_settings->m_gyroBias.length());
+                if (gyroTemp.length() > RTIMU_FUZZY_GYRO_BIAS) { // Aggressive Bias Update
+                    m_gyroBiasTemp.setX( (1.0 - m_gyroLearningAlpha) * m_gyroBiasTemp.x() + m_gyroLearningAlpha * m_imuData.gyro.x() );
+                    m_gyroBiasTemp.setY( (1.0 - m_gyroLearningAlpha) * m_gyroBiasTemp.y() + m_gyroLearningAlpha * m_imuData.gyro.y() );
+                    m_gyroBiasTemp.setZ( (1.0 - m_gyroLearningAlpha) * m_gyroBiasTemp.z() + m_gyroLearningAlpha * m_imuData.gyro.z() );
+                    // Serial.println("Gyro learning fast");
+                } else { // Slow Bias Update
+                    m_gyroBiasTemp.setX( (1.0 - m_gyroContinuousAlpha) * m_gyroBiasTemp.x() + m_gyroContinuousAlpha * m_imuData.gyro.x() );
+                    m_gyroBiasTemp.setY( (1.0 - m_gyroContinuousAlpha) * m_gyroBiasTemp.y() + m_gyroContinuousAlpha * m_imuData.gyro.y() );
+                    m_gyroBiasTemp.setZ( (1.0 - m_gyroContinuousAlpha) * m_gyroBiasTemp.z() + m_gyroContinuousAlpha * m_imuData.gyro.z() );
+                    // Serial.println("Gyro learning slow");
+                }
+            } // end noMotion has been going on for more than interval
+        } //  no motion
+        // store new bias every 60 seconds in EEPROM
+        m_EEPROMCount++;
+        if (m_EEPROMCount >= (60 * m_sampleRate)) {
+            m_EEPROMCount = 0;
+            m_settings->m_gyroBiasValid = true;
+            m_settings->saveSettings();
+            // Serial.println("Gyro bias saved in EEPROM");
+        } 
+    } //     gyro run time CalibrationEnable
     if ( m_gyroManualCalibrationEnable ) {
-		m_settings->m_gyroBias = m_settings->m_gyroBias * (1.0 - m_gyroLearningAlpha) + m_imuData.gyro * m_gyroLearningAlpha;
-	} // manual gyro bias update
-	// Apply Gyro Bias
-	if (getGyroCalibrationValid()) {
-		m_imuData.gyro -= m_settings->m_gyroBias;
-	}
+        m_settings->m_gyroBias = m_settings->m_gyroBias * (1.0 - m_gyroLearningAlpha) + m_imuData.gyro * m_gyroLearningAlpha;
+    } // manual gyro bias update
+    // Apply Gyro Bias
+    if (getGyroCalibrationValid()) {
+        m_imuData.gyro -= m_settings->m_gyroBias;
+    }
 }
 
 void RTIMU::calibrateAverageCompass()
@@ -524,8 +525,8 @@ void RTIMU::calibrateAverageCompass()
                     m_compassCalScale[i] = magMaxDelta / delta;
                     m_compassCalOffset[i] = (m_runtimeMagCalMax.data(i) + m_runtimeMagCalMin.data(i)) / 2.0;
                 }
-				m_settings->m_compassCalMax = m_runtimeMagCalMax;
-				m_settings->m_compassCalMin = m_runtimeMagCalMin;
+                m_settings->m_compassCalMax = m_runtimeMagCalMax;
+                m_settings->m_compassCalMin = m_runtimeMagCalMin;
             }
         }
     }
@@ -556,18 +557,18 @@ void RTIMU::calibrateAverageCompass()
 
     //  update running average
 
-	m_compassAverageX->addValue(m_imuData.compass.x());
-	m_compassAverageY->addValue(m_imuData.compass.y());
-	m_compassAverageZ->addValue(m_imuData.compass.z());
-	
-	//Serial.println(m_compassAverageX->getAverage() - m_imuData.compass.x());
-	//Serial.println(m_compassAverageY->getAverage() - m_imuData.compass.y());
-	//Serial.println(m_compassAverageZ->getAverage() - m_imuData.compass.z());
+    m_compassAverageX->addValue(m_imuData.compass.x());
+    m_compassAverageY->addValue(m_imuData.compass.y());
+    m_compassAverageZ->addValue(m_imuData.compass.z());
+    
+    //Serial.println(m_compassAverageX->getAverage() - m_imuData.compass.x());
+    //Serial.println(m_compassAverageY->getAverage() - m_imuData.compass.y());
+    //Serial.println(m_compassAverageZ->getAverage() - m_imuData.compass.z());
 
-	m_imuData.compass.setX(m_compassAverageX->getAverage());
-	m_imuData.compass.setY(m_compassAverageY->getAverage());
-	m_imuData.compass.setZ(m_compassAverageZ->getAverage());
-	
+    m_imuData.compass.setX(m_compassAverageX->getAverage());
+    m_imuData.compass.setY(m_compassAverageY->getAverage());
+    m_imuData.compass.setZ(m_compassAverageZ->getAverage());
+    
     //m_compassAverage.setX(m_imuData.compass.x() * COMPASS_ALPHA + m_compassAverage.x() * (1.0 - COMPASS_ALPHA));
     //m_compassAverage.setY(m_imuData.compass.y() * COMPASS_ALPHA + m_compassAverage.y() * (1.0 - COMPASS_ALPHA));
     //m_compassAverage.setZ(m_imuData.compass.z() * COMPASS_ALPHA + m_compassAverage.z() * (1.0 - COMPASS_ALPHA));
@@ -586,51 +587,51 @@ void RTIMU::resetCompassRunTimeMaxMin()
     //m_runtimeMagCalMin.setX( 1000.0);
     //m_runtimeMagCalMin.setY( 1000.0);
     //m_runtimeMagCalMin.setZ( 1000.0);
-	//m_runtimeMagCalValid = false;
+    //m_runtimeMagCalValid = false;
 }
 
 void RTIMU::calibrateAccel()
 {
     if (getAccelCalibrationValid() ) {
    
-		// printf("%s", RTMath::displayRadians("Accel 1)", m_imuData.accel));
+        // printf("%s", RTMath::displayRadians("Accel 1)", m_imuData.accel));
 
-		if (m_imuData.accel.x() >= 0)
-			m_imuData.accel.setX(m_imuData.accel.x() / m_settings->m_accelCalMax.x());
-		else
-			m_imuData.accel.setX(m_imuData.accel.x() / -m_settings->m_accelCalMin.x());
+        if (m_imuData.accel.x() >= 0)
+            m_imuData.accel.setX(m_imuData.accel.x() / m_settings->m_accelCalMax.x());
+        else
+            m_imuData.accel.setX(m_imuData.accel.x() / -m_settings->m_accelCalMin.x());
 
-		if (m_imuData.accel.y() >= 0)
-			m_imuData.accel.setY(m_imuData.accel.y() / m_settings->m_accelCalMax.y());
-		else
-			m_imuData.accel.setY(m_imuData.accel.y() / -m_settings->m_accelCalMin.y());
+        if (m_imuData.accel.y() >= 0)
+            m_imuData.accel.setY(m_imuData.accel.y() / m_settings->m_accelCalMax.y());
+        else
+            m_imuData.accel.setY(m_imuData.accel.y() / -m_settings->m_accelCalMin.y());
 
-		if (m_imuData.accel.z() >= 0)
-			m_imuData.accel.setZ(m_imuData.accel.z() / m_settings->m_accelCalMax.z());
-		else
-			m_imuData.accel.setZ(m_imuData.accel.z() / -m_settings->m_accelCalMin.z());
+        if (m_imuData.accel.z() >= 0)
+            m_imuData.accel.setZ(m_imuData.accel.z() / m_settings->m_accelCalMax.z());
+        else
+            m_imuData.accel.setZ(m_imuData.accel.z() / -m_settings->m_accelCalMin.z());
 
-		// printf("%s", RTMath::displayRadians("Accel 2)", m_imuData.accel));
+        // printf("%s", RTMath::displayRadians("Accel 2)", m_imuData.accel));
 
-		if (m_settings->m_accelCalEllipsoidValid) {
-			RTVector3 ev = m_imuData.accel;
-			ev -= m_settings->m_accelCalEllipsoidOffset;
+        if (m_settings->m_accelCalEllipsoidValid) {
+            RTVector3 ev = m_imuData.accel;
+            ev -= m_settings->m_accelCalEllipsoidOffset;
 
-			m_imuData.accel.setX(ev.x() * m_settings->m_accelCalEllipsoidCorr[0][0] +
-				ev.y() * m_settings->m_accelCalEllipsoidCorr[0][1] +
-				ev.z() * m_settings->m_accelCalEllipsoidCorr[0][2]);
+            m_imuData.accel.setX(ev.x() * m_settings->m_accelCalEllipsoidCorr[0][0] +
+                ev.y() * m_settings->m_accelCalEllipsoidCorr[0][1] +
+                ev.z() * m_settings->m_accelCalEllipsoidCorr[0][2]);
 
-			m_imuData.accel.setY(ev.x() * m_settings->m_accelCalEllipsoidCorr[1][0] +
-				ev.y() * m_settings->m_accelCalEllipsoidCorr[1][1] +
-				ev.z() * m_settings->m_accelCalEllipsoidCorr[1][2]);
+            m_imuData.accel.setY(ev.x() * m_settings->m_accelCalEllipsoidCorr[1][0] +
+                ev.y() * m_settings->m_accelCalEllipsoidCorr[1][1] +
+                ev.z() * m_settings->m_accelCalEllipsoidCorr[1][2]);
 
-			m_imuData.accel.setZ(ev.x() * m_settings->m_accelCalEllipsoidCorr[2][0] +
-				ev.y() * m_settings->m_accelCalEllipsoidCorr[2][1] +
-				ev.z() * m_settings->m_accelCalEllipsoidCorr[2][2]);
-		}
+            m_imuData.accel.setZ(ev.x() * m_settings->m_accelCalEllipsoidCorr[2][0] +
+                ev.y() * m_settings->m_accelCalEllipsoidCorr[2][1] +
+                ev.z() * m_settings->m_accelCalEllipsoidCorr[2][2]);
+        }
 
-		// printf("%s", RTMath::displayRadians("Accel 3)", m_imuData.accel));
-	}
+        // printf("%s", RTMath::displayRadians("Accel 3)", m_imuData.accel));
+    }
 }
 
 // UU automatic Accel Max/Min calibration/adjustment
@@ -683,8 +684,29 @@ bool RTIMU::IMUGyroBiasValid()
     return m_settings->m_gyroBiasValid;
 }
 
+/*
+void RTIMU::getIMUData(RTIMU_DATA& data)
+{
+    data.gyroValid = m_imuData.gyroValid;
+    data.gyro = m_imuData.gyro;
+    data.accelValid = m_imuData.accelValid;
+    data.accel = m_imuData.accel;
+    data.compassValid = m_imuData.compassValid;
+    data.compass = m_imuData.compass;
+    data.timestamp = m_imuData.timestamp;
+    data.fusionPoseValid = m_imuData.fusionPoseValid;
+    data.fusionPose = m_imuData.fusionPose;
+    data.fusionQPoseValid = m_imuData.fusionQPoseValid;;
+    data.fusionQPose = m_imuData.fusionQPose;
+    data.motion = m_imuData.motion;
+    data.temperatureValid = m_imuData.temperatureValid;
+    data.temperature = m_imuData.temperature;
+}
+*/
+
+
 void RTIMU::setExtIMUData(RTFLOAT gx, RTFLOAT gy, RTFLOAT gz, RTFLOAT ax, RTFLOAT ay, RTFLOAT az,
-	RTFLOAT mx, RTFLOAT my, RTFLOAT mz, uint64_t timestamp)
+    RTFLOAT mx, RTFLOAT my, RTFLOAT mz, uint64_t timestamp)
 {
     m_imuData.gyro.setX(gx);
     m_imuData.gyro.setY(gy);
@@ -697,15 +719,4 @@ void RTIMU::setExtIMUData(RTFLOAT gx, RTFLOAT gy, RTFLOAT gz, RTFLOAT ax, RTFLOA
     m_imuData.compass.setZ(mz);
     m_imuData.timestamp = timestamp;
     updateFusion();
-}
-
-
-bool checkIMUData()
-{
-	// Gyro 2000 deg/sec (driver converts to radians = 35 rad)
-	// Acc 16 g
-	// Compass 12000 uT
-	if (m_imuData.gyro.length() > 1000.0) return false;
-    if (m_imuData.accel.length() > 1000.0) return false;;
-    if (m_imuData.compass.length() > 100000.0) return false;;
 }

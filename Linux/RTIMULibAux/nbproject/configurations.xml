@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="RTIMULib" displayName="RTIMULib" projectFiles="true">
+      <logicalFolder name="IMUDrivers" displayName="IMUDrivers" projectFiles="true">
+        <logicalFolder name="datasheets" displayName="datasheets" projectFiles="true">
+          <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/HTS221.pdf</itemPath>
+          <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/HTU21D.pdf</itemPath>
+          <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/MS5611-01BA03.pdf</itemPath>
+          <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/PS-MPU-9150A.pdf</itemPath>
+          <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/RM-MPU-9150A-00-v3.0.pdf</itemPath>
+          <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/ms5803_14ba.pdf</itemPath>
+        </logicalFolder>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidity.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidity.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidityDefs.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidityHTS221.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidityHTS221.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidityHTU21D.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidityHTU21D.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMU.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMU.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUBMX055.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUBMX055.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUBNO055.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUBNO055.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUDefs.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUGD20HM303D.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUGD20HM303D.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUGD20HM303DLHC.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUGD20HM303DLHC.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUGD20M303DLHC.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUGD20M303DLHC.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMULSM9DS0.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMULSM9DS0.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMULSM9DS1.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMULSM9DS1.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150_old.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150_old.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9250.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9250.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUNull.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUNull.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressure.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressure.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureBMP180.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureBMP180.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureDefs.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureLPS25H.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureLPS25H.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureMS5611.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureMS5611.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureMS5637.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureMS5637.h</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureMS5803.cpp</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureMS5803.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="publications"
+                     displayName="publications"
+                     projectFiles="true">
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/EulerAngles.pdf</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/MAD_using_3-axis_mag.pdf</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/Madgwick_Estimation of IMU and MARG orientation using a gradient descent algorithm_ICORR2011.pdf</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/XR-EE-SB_2008_013.pdf</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/madgwick_internal_report.pdf</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/sensors-12-05791.pdf</itemPath>
+        <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/sensors-13-11797.pdf</itemPath>
+      </logicalFolder>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/CMakeLists.txt</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusion.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusion.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusionAHRS.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusionAHRS.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusionKalman4.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusionKalman4.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusionRTQF.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusionRTQF.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUAccelCal.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUAccelCal.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUCalDefs.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUHal.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUHal.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMULIB LICENSE</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMULib.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMULib.pri</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMULibDefs.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUMagCal.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUMagCal.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUSettings.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUSettings.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUTemperatureCal.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUTemperatureCal.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMath.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMath.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMotion.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMotion.h</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RunningAverage.cpp</itemPath>
+      <itemPath>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RunningAverage.h</itemPath>
+    </logicalFolder>
+    <df root="." name="0">
+      <in>RTIMULibDrive11.cpp</in>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>CMakeLists.txt</itemPath>
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+    <itemPath>Makefile</itemPath>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+    <Elem>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath>Output\RTIMULibDrive11</executablePath>
+          <ccTool>
+            <incDir>
+              <pElem></pElem>
+            </incDir>
+            <incFile>
+              <pElem>C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib</pElem>
+            </incFile>
+          </ccTool>
+        </makeTool>
+      </makefileType>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/CMakeLists.txt"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidity.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidity.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidityDefs.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidityHTS221.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidityHTS221.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidityHTU21D.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTHumidityHTU21D.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMU.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMU.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUBMX055.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUBMX055.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUBNO055.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUBNO055.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUDefs.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUGD20HM303D.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUGD20HM303D.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUGD20HM303DLHC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUGD20HM303DLHC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUGD20M303DLHC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUGD20M303DLHC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMULSM9DS0.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMULSM9DS0.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMULSM9DS1.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMULSM9DS1.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150_old.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9150_old.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9250.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUMPU9250.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUNull.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTIMUNull.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressure.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressure.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureBMP180.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureBMP180.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureDefs.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureLPS25H.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureLPS25H.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureMS5611.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureMS5611.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureMS5637.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureMS5637.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureMS5803.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/RTPressureMS5803.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/HTS221.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/HTU21D.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/MS5611-01BA03.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/PS-MPU-9150A.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/RM-MPU-9150A-00-v3.0.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/IMUDrivers/datasheets/ms5803_14ba.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusion.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusion.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusionAHRS.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusionAHRS.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusionKalman4.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusionKalman4.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusionRTQF.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTFusionRTQF.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUAccelCal.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUAccelCal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUCalDefs.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUHal.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUHal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMULIB LICENSE"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMULib.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMULib.pri"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMULibDefs.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUMagCal.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUMagCal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUSettings.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUSettings.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUTemperatureCal.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTIMUTemperatureCal.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMath.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMath.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMotion.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RTMotion.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RunningAverage.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/RunningAverage.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/EulerAngles.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/MAD_using_3-axis_mag.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/Madgwick_Estimation of IMU and MARG orientation using a gradient descent algorithm_ICORR2011.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/XR-EE-SB_2008_013.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/madgwick_internal_report.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/sensors-12-05791.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="C:/Users/utzinger/Documents/GitHub/RTIMULib/RTIMULib/publications/sensors-13-11797.pdf"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="Makefile" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="RTIMULibDrive11.cpp" ex="false" tool="1" flavor2="4">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
