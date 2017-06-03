@@ -2,7 +2,7 @@
 
 RTIMULib is the simplest way to connect a 9-dof, 10-dof or 11-dof IMU to an embedded Linux system and obtain quaternion or Euler angle pose data. Basically, two simple function calls (IMUInit() and IMURead()) are pretty much all that's needed to integrate RTIMULib.
 
-## Please note that this library contains all changes of RTIMULib2. The orginal developr Richards-Tech is not longer supporting these libraries.
+## Please note that this library contains all changes of RTIMULib2. The orginal developr Richards-Tech is not longer supporting these libraries. In addition to RTIMULib2 this library contains support for more pressure sensors and it has ability to adjust IMU readings based on temperature changes. Examples in python directory are usually most recent as those are used for the AUVUA underwater robot vehicle at the University of Arizona.
 
 ## Features
 
